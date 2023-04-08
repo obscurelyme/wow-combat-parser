@@ -1,14 +1,12 @@
 import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import { CombatEvent } from '../types';
 import './styles.css';
-
-interface CombatEvent {
-  dateTime: Date;
-  event: string[];
-}
+import { Typography } from '@mui/material';
 
 interface FileUploadProps {
   id: string;
@@ -71,14 +69,24 @@ function readFile(file?: File): Promise<CombatEvent[]> {
 
             combatLog = [
               ...combatLog,
-              ...splitPartition.map(s => {
+              ...splitPartition.map((s, index) => {
                 const e = s.split('  ');
                 const d = e[0].split(' ');
                 d[0] += `/${currentYear}`;
                 const finalDateString = d.join(' ');
+                const params = e[1].split(',');
                 return {
-                  dateTime: new Date(finalDateString),
-                  event: e[1].split(','),
+                  timestamp: new Date(finalDateString),
+                  id: uuidv4(),
+                  subevent: params[0],
+                  sourceGuid: params[1],
+                  sourceName: params[2]?.replaceAll('"', ''),
+                  sourceFlags: params[3],
+                  sourceRaidFlags: params[4],
+                  destGuid: params[5],
+                  destName: params[6]?.replaceAll('"', ''),
+                  destFlags: params[7],
+                  destRaidFlags: params[8],
                 };
               }),
             ];
@@ -123,7 +131,11 @@ export default function FileUpload({
   return (
     <Box display="flex">
       <Box mr={1}>
-        <label htmlFor={id}>{`${label}: ${value?.name ?? ''}`}</label>
+        <label htmlFor={id}>
+          <Typography variant="body2">{`${label}: ${
+            value?.name ?? ''
+          }`}</Typography>
+        </label>
       </Box>
       <Box>
         <input
