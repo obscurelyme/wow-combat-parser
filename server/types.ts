@@ -1,5 +1,5 @@
 export interface BaseParams {
-  timestamp: Date;
+  timestamp: number;
   id: string;
   subevent: string;
   sourceGuid: string;
@@ -52,6 +52,7 @@ export interface SuffixParams {
 }
 
 export interface CombatLogVersionEvent {
+  timestamp: number;
   id: string;
   subevent: 'COMBAT_LOG_VERSION';
   version: number;
@@ -61,6 +62,7 @@ export interface CombatLogVersionEvent {
 }
 
 export interface ZoneChangeEvent {
+  timestamp: number;
   id: string;
   subevent: 'ZONE_CHANGE';
   zoneId: string;
@@ -68,6 +70,7 @@ export interface ZoneChangeEvent {
 }
 
 export interface MapChangeEvent {
+  timestamp: number;
   id: string;
   subevent: 'MAP_CHANGE';
   mapId: string;
@@ -75,6 +78,7 @@ export interface MapChangeEvent {
 }
 
 export interface EncounterStartEvent {
+  timestamp: number;
   id: string;
   subevent: 'ENCOUNTER_START';
   encounterID: number;
@@ -84,6 +88,7 @@ export interface EncounterStartEvent {
 }
 
 export interface EncounterEndEvent {
+  timestamp: number;
   id: string;
   subevent: 'ENCOUNTER_END';
   encounterID: number;
