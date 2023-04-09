@@ -350,3 +350,10 @@ export enum SpellSubEvent {
   SPELL_SUMMON = 'SPELL_SUMMON',
   SPELL_RESSURECT = 'SPELL_RESSURECT',
 }
+
+export interface CompactWoWEvent {
+  timestamp: number;
+  id: string;
+  subevent: string;
+  params: string;
+}

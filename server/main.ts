@@ -4,9 +4,11 @@ import path from 'path';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { WoWEvent } from './types';
+import { CompactWoWEvent, WoWEvent } from './types';
 
 const combatLog: WoWEvent[] = [];
+const compactEventLog: CompactWoWEvent[] = [];
+const stringEventLog: string[] = [];
 
 function bufferToText(buffer: ArrayBuffer, start: number, end: number): string {
   const bufferLengthLeft = buffer.byteLength - start;
@@ -89,23 +91,57 @@ function parsedWoWEvent(timestamp: number, params: string[]): WoWEvent {
   }
 }
 
+function efficientParseEvent(timestamp: number, subevent: string, params: string[]) {
+  return {
+    timestamp,
+    subevent,
+    params: [...params],
+  };
+}
+
 export async function readFile(file: string) {
   const currentYear = new Date().getFullYear();
   const readInterface = readline.createInterface({
     input: fs.createReadStream(path.join('C:\\Program Files (x86)\\World of Warcraft\\_retail_\\Logs', `${file}.txt`)),
   });
-
   const rightNow = new Date().getTime();
   console.log('Parsing file', new Date().getTime());
-  for await (const line of readInterface) {
+
+  readInterface.on('line', line => {
     const e = line.split('  ');
     const d = e[0].split(' ');
     d[0] += `/${currentYear}`;
     const timestamp = new Date(d.join(' ')).getTime();
     const params = e[1].match(/("[^"]*")|[^,]+/g);
-    combatLog.push(parsedWoWEvent(timestamp, params as string[]));
-  }
-  console.log('Done parsing file', `${(new Date().getTime() - rightNow) / 1000} seconds`);
+    stringEventLog.push(line);
+    // compactEventLog.push({
+    //   timestamp,
+    //   id: uuidv4(),
+    //   subevent: params?.shift() ?? 'UNKNOWN',
+    //   params: params?.join('|') ?? '',
+    // });
+    // combatLog.push(parsedWoWEvent(timestamp, params as string[]));
+  });
+
+  readInterface.on('close', () => {
+    console.log('Done parsing file', `${(new Date().getTime() - rightNow) / 1000} seconds`);
+    console.log('done');
+    console.log('Memory usage: ', process.memoryUsage());
+
+    console.log('Example event', stringEventLog[10]);
+  });
+
+  // const rightNow = new Date().getTime();
+  // console.log('Parsing file', new Date().getTime());
+  // for await (const line of readInterface) {
+  //   const e = line.split('  ');
+  //   const d = e[0].split(' ');
+  //   d[0] += `/${currentYear}`;
+  //   const timestamp = new Date(d.join(' ')).getTime();
+  //   const params = e[1].match(/("[^"]*")|[^,]+/g);
+  //   combatLog.push(parsedWoWEvent(timestamp, params as string[]));
+  // }
+  // console.log('Done parsing file', `${(new Date().getTime() - rightNow) / 1000} seconds`);
 }
 
 const logToRead = process.argv[2];
