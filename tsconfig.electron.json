@@ -6,9 +6,10 @@
     "moduleResolution": "node",
     "rootDir": "electron",
     "outDir": "build",
-    "lib": ["es2021", "ES2021.String"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strictPropertyInitialization": false
   },
   "exclude": ["node_modules"],
   "include": ["electron/*"]

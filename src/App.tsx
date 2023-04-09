@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import Box from '@mui/material/Box';
+import { Box, Button } from '@mui/material';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 
 import './App.css';
@@ -59,9 +59,14 @@ const columns: GridColDef<CombatEvent>[] = [
 ];
 
 function App() {
-  const [combatLog, setCombatLog] = useState<readonly WoWEvent[]>([]);
-  const logsByEncounter = useEfficientCombatFilter(combatLog);
-  const hasEncounters = Boolean(logsByEncounter.length) && Boolean(combatLog.length);
+  // const [combatLog, setCombatLog] = useState<readonly WoWEvent[]>([]);
+  // const logsByEncounter = useEfficientCombatFilter(combatLog);
+  // const hasEncounters = Boolean(logsByEncounter.length) && Boolean(combatLog.length);
+
+  async function ping() {
+    const response = await window.api.ping();
+    console.log(response);
+  }
 
   return (
     <div className="App">
@@ -69,12 +74,14 @@ function App() {
         id="test-file"
         name="combatlog"
         label="Upload your Combat Log"
-        onFileUploaded={log => {
-          setCombatLog(log);
+        onFileUploaded={data => {
+          console.log(data);
         }}
       />
 
-      <Box>
+      <Button onClick={ping}>Ping the server</Button>
+
+      {/* <Box>
         <Typography variant="h2">Encounters</Typography>
         {!hasEncounters && <Typography variant="h4">You do not have any encounters to report in this log.</Typography>}
         {hasEncounters && (
@@ -87,7 +94,7 @@ function App() {
             ))}
           </List>
         )}
-      </Box>
+      </Box> */}
       {/* 
       <Box sx={{ height: 600, width: '100%' }}>
         <DataGrid

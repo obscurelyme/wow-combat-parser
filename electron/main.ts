@@ -1,5 +1,6 @@
-import { app, BrowserWindow, shell } from 'electron';
+import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { join } from 'path';
+import { FileReader } from './filereader';
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -54,4 +55,20 @@ app.on('activate', () => {
   } else {
     createWindow();
   }
+});
+
+ipcMain.handle('ping', () => {
+  console.log('main app pinged');
+  return 'pong';
+});
+
+ipcMain.handle('readFile', (_, args) => {
+  return new Promise(resolve => {
+    const fileReader = new FileReader();
+    fileReader.on('done', contents => {
+      console.log('completed', contents[0]);
+      resolve(contents[0]);
+    });
+    fileReader.read(args);
+  });
 });
