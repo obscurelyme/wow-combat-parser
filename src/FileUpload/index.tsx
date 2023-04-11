@@ -1,24 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useController, UseControllerProps, FieldValues } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Typography } from '@mui/material';
 
-import { WoWEvent } from '../types';
+import { WoWEvent, LogFormInput } from '../types';
 import './styles.css';
 
 export const workerInstance = new Worker(new URL('../sw/worker', import.meta.url), { type: 'module' });
 
-interface FileUploadProps {
+interface FileUploadProps extends UseControllerProps<LogFormInput, 'combatLog'> {
   id: string;
-  name: string;
   label: string;
   onFileUploaded?: (combatLog: string) => void;
 }
 
-export default function FileUpload({ id, name, label, onFileUploaded }: FileUploadProps) {
+export default function FileUpload({ id, label, onFileUploaded, ...rest }: FileUploadProps) {
   const [value, setValue] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const { field, fieldState } = useController<LogFormInput>({ name: 'combatLog' });
 
   async function handleChange(event?: React.ChangeEvent<HTMLInputElement>) {
     setLoading(true);
@@ -48,9 +49,7 @@ export default function FileUpload({ id, name, label, onFileUploaded }: FileUplo
           <Typography variant="body2">{`${label}: ${value?.name ?? ''}`}</Typography>
         </label>
       </Box>
-      <Box>
-        <input className="hidden" type="file" id={id} name={name} accept=".txt" onChange={handleChange} />
-      </Box>
+      <Box>{/* <input {...field} /> */}</Box>
     </Box>
   );
 }

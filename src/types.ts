@@ -1,3 +1,10 @@
+export * from '../globalTypes';
+
+export interface LogFormInput {
+  reportName: string | null;
+  combatLog: File | null;
+}
+
 export interface BaseParams {
   timestamp: Date;
   id: string;

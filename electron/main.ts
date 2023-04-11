@@ -1,6 +1,12 @@
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { join } from 'path';
 import { FileReader } from './filereader';
+import { getAllReports } from './reportfetcher';
+
+// Handle creating/removing shortcuts on Windows when installing/uninstalling.
+if (require('electron-squirrel-startup')) {
+  app.quit();
+}
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -10,6 +16,7 @@ if (!app.requestSingleInstanceLock()) {
 let mainWindow: BrowserWindow | null = null;
 
 async function createWindow() {
+  console.log(app.getPath('exe'));
   mainWindow = new BrowserWindow({
     title: 'WoW Combat Parser',
     width: 1024,
@@ -57,18 +64,19 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.handle('ping', () => {
-  console.log('main app pinged');
-  return 'pong';
-});
-
-ipcMain.handle('readFile', (_, args) => {
+ipcMain.handle('createReport', (_, reportName, filePath) => {
   return new Promise(resolve => {
+    console.log(reportName, filePath);
     const fileReader = new FileReader();
     fileReader.on('done', contents => {
-      console.log('completed', contents[0]);
-      resolve(contents[0]);
+      console.log('Report created');
+      resolve(contents);
     });
-    fileReader.read(args);
+    fileReader.read(reportName, filePath);
   });
+});
+
+ipcMain.handle('getAllReports', async () => {
+  const reports = await getAllReports();
+  return reports;
 });

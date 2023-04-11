@@ -12,6 +12,8 @@ dist
 build
 dist-ssr
 releases
+globalTypes/**/*.js
+globalTypes/**/*.js.map
 *.local
 
 # Editor directories and files
@@ -24,3 +26,4 @@ releases
 *.njsproj
 *.sln
 *.sw?
+out/

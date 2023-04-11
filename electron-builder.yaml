@@ -1,24 +1,27 @@
-appId: obscurely.wowcombatparser
-asar: true
-directories:
-  output: releases/${version}
+# appId: obscurely.wowcombatparser
+# asar: true
+# directories:
+#   output: releases/${version}
 
-files:
-  - dist
-  - build
+# files:
+#   - dist
+#   - build
 
-mac:
-  artifactName: "${productName}_${version}.${ext}"
-  target:
-    - dmg
-win:
-  target:
-    - target: nsis
-      arch:
-        - x64
-  artifactName: "${productName}_${version}.${ext}"
-nsis:
-  oneClick: false
-  perMachine: false
-  allowToChangeInstallationDirectory: true
-  deleteAppDataOnUninstall: false
+# extraResources:
+#   - database.db
+
+# mac:
+#   artifactName: "${productName}_${version}.${ext}"
+#   target:
+#     - dmg
+# win:
+#   target:
+#     - target: nsis
+#       arch:
+#         - x64
+#   artifactName: "${productName}_${version}.${ext}"
+# nsis:
+#   oneClick: false
+#   perMachine: false
+#   allowToChangeInstallationDirectory: true
+#   deleteAppDataOnUninstall: false

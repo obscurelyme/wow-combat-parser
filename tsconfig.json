@@ -14,8 +14,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "typeRoots": ["./globalTypes"]
   },
-  "include": ["src", "src/sw"],
+  "include": ["./src/**/*", "./globalTypes/**/*"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

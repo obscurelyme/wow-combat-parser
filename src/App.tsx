@@ -1,13 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
-import { Box, Button } from '@mui/material';
+import { Card, CardActions, CardContent, Grid } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 
 import './App.css';
-import FileUpload from './FileUpload';
-import { CombatEvent, WoWEvent } from './types';
-import { useEfficientCombatFilter } from './hooks/useCombatFilter';
+import FileInput from './FileInput';
+import TextInput from './TextInput';
+import { CombatEvent, LogFormInput, Report } from './types';
+import { wait } from './utils';
 import { Typography, List, ListItem } from '@mui/material';
+import { createReport, getAllReports } from './api';
 
 const columns: GridColDef<CombatEvent>[] = [
   {
@@ -58,28 +62,125 @@ const columns: GridColDef<CombatEvent>[] = [
   },
 ];
 
-function App() {
-  // const [combatLog, setCombatLog] = useState<readonly WoWEvent[]>([]);
-  // const logsByEncounter = useEfficientCombatFilter(combatLog);
-  // const hasEncounters = Boolean(logsByEncounter.length) && Boolean(combatLog.length);
+function useInitialReports(updateState: React.Dispatch<React.SetStateAction<Report[]>>): Report[] {
+  const isMounted = useRef<boolean>(false);
+  const [initialReports, setInitialReports] = useState<Report[]>([]);
 
-  async function ping() {
-    const response = await window.api.ping();
-    console.log(response);
-  }
+  useEffect(() => {
+    async function getInitialReports() {
+      const reports = await getAllReports();
+      setInitialReports(reports);
+      updateState(reports);
+    }
+    if (!isMounted.current) {
+      void getInitialReports();
+      isMounted.current = true;
+    }
+  }, []);
+
+  return initialReports;
+}
+
+function App() {
+  const {
+    handleSubmit,
+    control,
+    formState: { isSubmitting },
+  } = useForm<LogFormInput>({
+    defaultValues: {
+      reportName: '',
+      combatLog: null,
+    },
+    mode: 'onChange',
+  });
+  const [reports, setReports] = useState<Report[]>([]);
+  useInitialReports(setReports);
+
+  const onSubmit: SubmitHandler<LogFormInput> = async data => {
+    try {
+      if (data.reportName && data.combatLog?.path) {
+        const report = await createReport(data.reportName, data.combatLog.path);
+        setReports([report, ...reports]);
+        // success toast notification
+      }
+    } catch (e) {
+      console.error(e);
+      // failed toast notification
+    }
+  };
 
   return (
     <div className="App">
-      <FileUpload
-        id="test-file"
-        name="combatlog"
-        label="Upload your Combat Log"
-        onFileUploaded={data => {
-          console.log(data);
-        }}
-      />
+      <div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextInput
+                control={control}
+                id="reportName"
+                name="reportName"
+                rules={{ required: true }}
+                label="Report name"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FileInput
+                control={control}
+                name="combatLog"
+                rules={{
+                  required: true,
+                  validate: {
+                    fileType: value => {
+                      if (value instanceof File) {
+                        return value.type === 'text/plain';
+                      }
+                      return false;
+                    },
+                    maxFileSize: value => {
+                      if (value instanceof File) {
+                        // NOTE: convert to GBs and see if less than 2.5
+                        return value?.size / 1000 / 1000 / 1000 < 2.5;
+                      }
+                      // NOTE: if we are here, this is definitely an invalid value
+                      return false;
+                    },
+                  },
+                }}
+                id="myFile"
+                accept=".txt"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <LoadingButton type="reset" variant="outlined" disabled={isSubmitting}>
+                Cancel
+              </LoadingButton>
+              <LoadingButton type="submit" loading={isSubmitting} variant="outlined">
+                Submit
+              </LoadingButton>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
 
-      <Button onClick={ping}>Ping the server</Button>
+      <div>
+        {reports.map(report => (
+          <Card key={`report-${report.guid}`}>
+            <CardContent>
+              <Typography variant="h6">{report.name}</Typography>
+              <Typography variant="body2">{`Date: ${new Date(report.timestamp).toLocaleDateString()}`}</Typography>
+            </CardContent>
+            <CardActions>
+              <LoadingButton
+                variant="outlined"
+                onClick={() => {
+                  // Get more "details" about the report
+                }}>
+                Details
+              </LoadingButton>
+            </CardActions>
+          </Card>
+        ))}
+      </div>
 
       {/* <Box>
         <Typography variant="h2">Encounters</Typography>

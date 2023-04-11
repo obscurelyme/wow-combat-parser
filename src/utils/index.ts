@@ -4,6 +4,12 @@ import { WoWEvent } from '../types';
 
 const MAX_PARTITION_LENGTH = 1000000; // 10MB
 
+export function wait(seconds: number): Promise<void> {
+  return new Promise(resolve => {
+    setTimeout(() => resolve(), seconds);
+  });
+}
+
 function bufferToText(buffer: ArrayBuffer, start: number, end: number): string {
   const bufferLengthLeft = buffer.byteLength - start;
   const realEnd = end <= bufferLengthLeft ? end : bufferLengthLeft;

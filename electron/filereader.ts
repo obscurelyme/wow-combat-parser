@@ -3,16 +3,11 @@ import * as readline from 'readline';
 import path from 'path';
 import { EventEmitter } from 'node:events';
 import { v4 as uuidv4 } from 'uuid';
-
-interface RawCombatLog {
-  id: string;
-  timestamp: number;
-  subevent: string;
-  params: string;
-}
+import { RawCombatLog, Report } from './types';
+import { ReportBuilder } from './reportbuilder';
 
 export declare interface FileReader {
-  on(event: 'done', listener: (contents: RawCombatLog[]) => void): this;
+  on(event: 'done', listener: (contents: Report) => void): this;
 }
 
 export class FileReader extends EventEmitter {
@@ -31,8 +26,9 @@ export class FileReader extends EventEmitter {
     return this._currentFilePath;
   }
 
-  public read(filePath: string) {
-    console.log('reading', filePath);
+  public read(reportName: string, filePath: string) {
+    let firstLine = true;
+    const report = new ReportBuilder(reportName);
     this._currentFilePath = filePath;
     this._readInterface = readline.createInterface({
       input: fs.createReadStream(path.join(`${filePath}`)),
@@ -44,6 +40,13 @@ export class FileReader extends EventEmitter {
       d[0] += `/${this._currentYear}`;
       const timestamp = new Date(d.join(' ')).getTime();
       const params = e[1].match(/("[^"]*")|[^,]+/g);
+
+      if (firstLine) {
+        report.beginReport(timestamp);
+        firstLine = false;
+      }
+
+      // NOTE: this is nonsense because it wastes so much memory. get rid of this!!!
       this._rawCombatLog.push({
         timestamp,
         id: uuidv4(),
@@ -53,12 +56,11 @@ export class FileReader extends EventEmitter {
     });
 
     this._readInterface.on('close', () => {
-      console.log('done');
-      this.emitDone();
+      this.emitDone(report.getInfo());
     });
   }
 
-  private emitDone() {
-    this.emit('done', this._rawCombatLog);
+  private emitDone(reportInfo: Report) {
+    this.emit('done', reportInfo);
   }
 }

@@ -1,10 +1,12 @@
+import { Report } from './types';
+
 export {};
 
 declare global {
   interface Window {
     api: {
-      ping: () => Promise<string>;
-      readFile: (filePath: string) => Promise<string>;
+      createReport: (reportName: string, filePath: string) => Promise<Report>;
+      getAllReports: () => Promise<Report[]>;
     };
   }
 }

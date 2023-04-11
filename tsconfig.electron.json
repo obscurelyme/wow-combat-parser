@@ -1,16 +1,21 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
+    "allowJs": false,
     "module": "commonjs",
     "strict": true,
     "moduleResolution": "node",
-    "rootDir": "electron",
     "outDir": "build",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "strictPropertyInitialization": false
+    "sourceMap": true,
+    "baseUrl": ".",
+    "strictPropertyInitialization": false,
+    "paths": {
+      "*": ["node_modules/*"]
+    }
   },
   "exclude": ["node_modules"],
-  "include": ["electron/*"]
+  "include": ["./electron/**/*", "./globalTypes/**/*"]
 }
