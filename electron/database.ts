@@ -1,4 +1,3 @@
-import { dialog } from 'electron';
 import knex, { Knex } from 'knex';
 import { join } from 'path';
 

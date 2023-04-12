@@ -3,64 +3,63 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 
 import { Card, CardActions, CardContent, Grid } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
+// import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 
 import './App.css';
 import FileInput from './FileInput';
 import TextInput from './TextInput';
-import { CombatEvent, LogFormInput, Report } from './types';
-import { wait } from './utils';
-import { Typography, List, ListItem } from '@mui/material';
+import { LogFormInput, Report } from './types';
+import { Typography } from '@mui/material';
 import { createReport, getAllReports } from './api';
 
-const columns: GridColDef<CombatEvent>[] = [
-  {
-    field: 'timestamp',
-    headerName: 'Timestamp',
-    minWidth: 25,
-  },
-  {
-    field: 'subevent',
-    headerName: 'SubEvent',
-    width: 250,
-  },
-  {
-    field: 'sourceName',
-    headerName: 'Source Name',
-    width: 200,
-    valueGetter: params => {
-      return params.row.sourceName?.split('-')[0];
-    },
-  },
-  {
-    field: 'destName',
-    headerName: 'Destination Name',
-    width: 200,
-    valueGetter: params => {
-      return params.row.destName?.split('-')[0];
-    },
-  },
-  {
-    field: 'sourceFlags',
-    headerName: 'Source Flags',
-    width: 100,
-  },
-  {
-    field: 'sourceRaidFlags',
-    headerName: 'Source Raid Flags',
-    width: 100,
-  },
-  {
-    field: 'destFlags',
-    headerName: 'Destination Flags',
-    width: 100,
-  },
-  {
-    field: 'destRaidFlags',
-    headerName: 'Destination Raid Flags',
-    width: 100,
-  },
-];
+// const columns: GridColDef<CombatEvent>[] = [
+//   {
+//     field: 'timestamp',
+//     headerName: 'Timestamp',
+//     minWidth: 25,
+//   },
+//   {
+//     field: 'subevent',
+//     headerName: 'SubEvent',
+//     width: 250,
+//   },
+//   {
+//     field: 'sourceName',
+//     headerName: 'Source Name',
+//     width: 200,
+//     valueGetter: params => {
+//       return params.row.sourceName?.split('-')[0];
+//     },
+//   },
+//   {
+//     field: 'destName',
+//     headerName: 'Destination Name',
+//     width: 200,
+//     valueGetter: params => {
+//       return params.row.destName?.split('-')[0];
+//     },
+//   },
+//   {
+//     field: 'sourceFlags',
+//     headerName: 'Source Flags',
+//     width: 100,
+//   },
+//   {
+//     field: 'sourceRaidFlags',
+//     headerName: 'Source Raid Flags',
+//     width: 100,
+//   },
+//   {
+//     field: 'destFlags',
+//     headerName: 'Destination Flags',
+//     width: 100,
+//   },
+//   {
+//     field: 'destRaidFlags',
+//     headerName: 'Destination Raid Flags',
+//     width: 100,
+//   },
+// ];
 
 function useInitialReports(updateState: React.Dispatch<React.SetStateAction<Report[]>>): Report[] {
   const isMounted = useRef<boolean>(false);
@@ -76,7 +75,7 @@ function useInitialReports(updateState: React.Dispatch<React.SetStateAction<Repo
       void getInitialReports();
       isMounted.current = true;
     }
-  }, []);
+  }, [updateState]);
 
   return initialReports;
 }

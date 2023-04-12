@@ -191,9 +191,9 @@ export interface CombatantInfoEvent {
   pvp: PvPStats;
 }
 
-export interface SpellDamageEvent {}
+// export interface SpellDamageEvent {}
 
-export interface SwingDamageEvent {}
+// export interface SwingDamageEvent {}
 
 export type RawWowEvent =
   | CombatLogVersionEvent

@@ -131,7 +131,7 @@ export function readFile(file?: File): Promise<WoWEvent[]> {
 
             combatLog = [
               ...combatLog,
-              ...splitPartition.map((s, index): WoWEvent => {
+              ...splitPartition.map((s): WoWEvent => {
                 const e = s.split('  ');
                 const d = e[0].split(' ');
                 d[0] += `/${currentYear}`;

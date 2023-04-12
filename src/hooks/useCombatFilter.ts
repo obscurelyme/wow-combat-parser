@@ -28,7 +28,7 @@ function isCombatEvent(e: WoWEvent): boolean {
 
 export default function useCombatFilter(unfilteredEvents: readonly WoWEvent[]): CombatEventsByEncounter[] {
   const filteredByEncounter = useMemo(() => {
-    let current: Partial<CombatEventsByEncounter> = {};
+    const current: Partial<CombatEventsByEncounter> = {};
     const result: CombatEventsByEncounter[] = [];
 
     unfilteredEvents.forEach(e => {
@@ -62,7 +62,7 @@ interface EfficientCombatEventsByEncounter {
 
 export function useEfficientCombatFilter(unfilteredEvents: readonly WoWEvent[]): EfficientCombatEventsByEncounter[] {
   const filteredByEncounter = useMemo(() => {
-    let current: Partial<EfficientCombatEventsByEncounter> = {};
+    const current: Partial<EfficientCombatEventsByEncounter> = {};
     const result: EfficientCombatEventsByEncounter[] = [];
 
     unfilteredEvents.forEach(e => {
