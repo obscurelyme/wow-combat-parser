@@ -7,6 +7,10 @@
     "name": "Mackenzie Greco",
     "email": "mac.frozencoffee@gmail.com"
   },
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "dev": "vite",
     "build:vite": "tsc && vite build",
