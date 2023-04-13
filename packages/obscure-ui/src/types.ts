@@ -1,5 +1,12 @@
+export * from '@obscure/types';
+
+export interface LogFormInput {
+  reportName: string | null;
+  combatLog: File | null;
+}
+
 export interface BaseParams {
-  timestamp: number;
+  timestamp: Date;
   id: string;
   subevent: string;
   sourceGuid: string;
@@ -52,7 +59,6 @@ export interface SuffixParams {
 }
 
 export interface CombatLogVersionEvent {
-  timestamp: number;
   id: string;
   subevent: 'COMBAT_LOG_VERSION';
   version: number;
@@ -62,7 +68,6 @@ export interface CombatLogVersionEvent {
 }
 
 export interface ZoneChangeEvent {
-  timestamp: number;
   id: string;
   subevent: 'ZONE_CHANGE';
   zoneId: string;
@@ -70,7 +75,6 @@ export interface ZoneChangeEvent {
 }
 
 export interface MapChangeEvent {
-  timestamp: number;
   id: string;
   subevent: 'MAP_CHANGE';
   mapId: string;
@@ -78,7 +82,6 @@ export interface MapChangeEvent {
 }
 
 export interface EncounterStartEvent {
-  timestamp: number;
   id: string;
   subevent: 'ENCOUNTER_START';
   encounterID: number;
@@ -88,7 +91,6 @@ export interface EncounterStartEvent {
 }
 
 export interface EncounterEndEvent {
-  timestamp: number;
   id: string;
   subevent: 'ENCOUNTER_END';
   encounterID: number;
@@ -189,9 +191,9 @@ export interface CombatantInfoEvent {
   pvp: PvPStats;
 }
 
-export interface SpellDamageEvent {}
+// export interface SpellDamageEvent {}
 
-export interface SwingDamageEvent {}
+// export interface SwingDamageEvent {}
 
 export type RawWowEvent =
   | CombatLogVersionEvent
@@ -349,11 +351,4 @@ export enum SpellSubEvent {
   SPELL_CREATE = 'SPELL_CREATE',
   SPELL_SUMMON = 'SPELL_SUMMON',
   SPELL_RESSURECT = 'SPELL_RESSURECT',
-}
-
-export interface CompactWoWEvent {
-  timestamp: number;
-  id: string;
-  subevent: string;
-  params: string;
 }

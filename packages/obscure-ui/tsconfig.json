@@ -15,8 +15,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "typeRoots": ["./globalTypes"]
+    "composite": true
   },
-  "include": ["./src/**/*", "./globalTypes/**/*"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["./src/**/*", "vite.config.ts"]
 }
