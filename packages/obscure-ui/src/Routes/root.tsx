@@ -1,5 +1,5 @@
 import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
-import { Home } from '@mui/icons-material';
+import Home from '@mui/icons-material/Home';
 import { Link, Outlet, useNavigation } from 'react-router-dom';
 import BootstrappedLoader from '../BootstrappedLoader';
 

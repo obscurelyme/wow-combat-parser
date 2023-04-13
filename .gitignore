@@ -27,3 +27,6 @@ globalTypes/**/*.js.map
 *.sln
 *.sw?
 out/
+
+# Coverage
+coverage

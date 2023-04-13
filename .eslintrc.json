@@ -26,5 +26,6 @@
     "react": {
       "version": "detect"
     }
-  }
+  },
+  "ignorePatterns": ["forge.config.js", "jest.config.base.js", "babel.config.js"]
 }

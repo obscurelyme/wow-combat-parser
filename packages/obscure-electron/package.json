@@ -23,7 +23,8 @@
     "lint": "eslint ./src",
     "start": "tsc && electron .",
     "build": "tsc",
-    "rebuild": "electron-rebuild -f -w sqlite3"
+    "rebuild": "electron-rebuild -f -w sqlite3",
+    "test": "jest"
   },
   "bugs": {
     "url": "https://github.com/obscurelyme/wow-combat-parser/issues"
