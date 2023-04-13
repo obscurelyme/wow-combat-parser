@@ -20,6 +20,7 @@
     "url": "git+https://github.com/obscurelyme/wow-combat-parser.git"
   },
   "scripts": {
+    "lint": "eslint ./src",
     "start": "tsc && electron .",
     "build": "tsc",
     "rebuild": "electron-rebuild -f -w sqlite3"

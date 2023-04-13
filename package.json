@@ -18,8 +18,8 @@
     "build:electron": "yarn workspace @obscure/electron build",
     "build": "yarn build:ui && yarn build:electron && electron-builder build",
     "lint": "yarn lint:vite && yarn lint:electron",
-    "lint:ui": "eslint ./src",
-    "lint:electron": "eslint ./electron"
+    "lint:ui": "yarn workspace @obscure/ui lint",
+    "lint:electron": "yarn workspace @obscure/electron lint"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
