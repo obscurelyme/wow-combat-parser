@@ -1,4 +1,4 @@
-import { Report } from '../types';
+import { Encounter, Report } from '../types';
 
 function makeErrorMessage(functionName: string) {
   return `Window API is not defined for "${functionName}". Either the Electron server not started, you have not defined this method, or you have not exposed this method.`;
@@ -18,6 +18,12 @@ export function getAllReports(): Promise<Report[]> {
   return Promise.reject(makeErrorMessage('getAllReports'));
 }
 
+export function getAllEncountersFromReport(reportGuid: string): Promise<Encounter[]> {
+  if (window.api?.getAllEncountersFromReport) {
+    return window.api.getAllEncountersFromReport(reportGuid);
+  }
+  return Promise.reject(makeErrorMessage('getAllEncountersFromReport'));
+}
+
 // export function getReport(guid: string): Promise<Report> {}
-// export function getAllEncounters(reportGuid: string): Promise<Encounter[]> {}
 // export function getEncounter(encounterId: string): Promise<Encounter> {}

@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { join } from 'path';
 import { FileReader } from './filereader';
 import { getAllReports } from './reportfetcher';
+import { getAllEncountersFromReport } from './encounterfetcher';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -79,4 +80,9 @@ ipcMain.handle('createReport', (_, reportName, filePath) => {
 ipcMain.handle('getAllReports', async () => {
   const reports = await getAllReports();
   return reports;
+});
+
+ipcMain.handle('getAllEncountersFromReport', async (_, reportGuid) => {
+  const encounters = await getAllEncountersFromReport(reportGuid);
+  return encounters;
 });

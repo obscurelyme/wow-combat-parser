@@ -1,4 +1,4 @@
-import { Report } from './types';
+import { Encounter, Report } from './types';
 
 export {};
 
@@ -7,6 +7,7 @@ declare global {
     api: {
       createReport: (reportName: string, filePath: string) => Promise<Report>;
       getAllReports: () => Promise<Report[]>;
+      getAllEncountersFromReport: (reportGuid: string) => Promise<Encounter[]>;
     };
   }
 }

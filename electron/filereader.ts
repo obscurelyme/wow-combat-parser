@@ -26,7 +26,7 @@ export class FileReader extends EventEmitter {
     return this._currentFilePath;
   }
 
-  public read(reportName: string, filePath: string) {
+  public async read(reportName: string, filePath: string) {
     let firstLine = true;
     const report = new ReportBuilder(reportName);
     this._currentFilePath = filePath;
@@ -46,13 +46,38 @@ export class FileReader extends EventEmitter {
         firstLine = false;
       }
 
-      // NOTE: this is nonsense because it wastes so much memory. get rid of this!!!
-      this._rawCombatLog.push({
+      const rawCombatLog: RawCombatLog = {
         timestamp,
         id: uuidv4(),
         subevent: params?.shift() ?? 'UNKNOWN',
-        params: params?.join('|') ?? '',
-      });
+        params: params?.join('|').replaceAll('"', '') ?? '',
+      };
+
+      if (rawCombatLog.subevent === 'ENCOUNTER_START') {
+        report.beginEncounter(rawCombatLog);
+      }
+
+      if (rawCombatLog.subevent === 'ENCOUNTER_END') {
+        report.endEncounter(rawCombatLog);
+      }
+
+      /**
+       * if (inEncounter) {
+       *  Store the log as a CombatEvent
+       * } else {
+       *  Discard the log
+       * }
+       */
+
+      // NOTE: this is nonsense because it wastes so much memory. get rid of this!!!
+      // Check if it's the start of an encounter, if so create an encounter, store all combat events while !encounterEnd
+      // For now, all other combat logs can be discarded.
+      // this._rawCombatLog.push({
+      //   timestamp,
+      //   id: uuidv4(),
+      //   subevent: params?.shift() ?? 'UNKNOWN',
+      //   params: params?.join('|') ?? '',
+      // });
     });
 
     this._readInterface.on('close', () => {

@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
-import { Card, CardActions, CardContent, Grid } from '@mui/material';
+import { Box, Card, CardActions, CardContent, Grid } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
 
 import './App.css';
 import FileInput from './FileInput';
 import TextInput from './TextInput';
-import { LogFormInput, Report } from './types';
+import { Encounter, LogFormInput, Report } from './types';
 import { Typography } from '@mui/material';
-import { createReport, getAllReports } from './api';
+import { createReport, getAllEncountersFromReport, getAllReports } from './api';
+import EncountersTable from './Encounters';
 
 // const columns: GridColDef<CombatEvent>[] = [
 //   {
@@ -94,6 +95,7 @@ function App() {
   });
   const [reports, setReports] = useState<Report[]>([]);
   useInitialReports(setReports);
+  const [currentEncounters, setCurrentEncounters] = useState<Encounter[]>([]);
 
   const onSubmit: SubmitHandler<LogFormInput> = async data => {
     try {
@@ -161,18 +163,32 @@ function App() {
         </form>
       </div>
 
+      {currentEncounters.length && (
+        <div>
+          <EncountersTable encounterRows={currentEncounters} />
+        </div>
+      )}
+
       <div>
         {reports.map(report => (
           <Card key={`report-${report.guid}`}>
             <CardContent>
               <Typography variant="h6">{report.name}</Typography>
-              <Typography variant="body2">{`Date: ${new Date(report.timestamp).toLocaleDateString()}`}</Typography>
+              <Box>
+                <Typography variant="body2">{`Uploaded: ${new Date(
+                  report.uploadTimestamp
+                ).toLocaleDateString()}`}</Typography>
+              </Box>
+              <Box>
+                <Typography variant="body2">{`Date: ${new Date(report.timestamp).toLocaleDateString()}`}</Typography>
+              </Box>
             </CardContent>
             <CardActions>
               <LoadingButton
                 variant="outlined"
-                onClick={() => {
-                  // Get more "details" about the report
+                onClick={async () => {
+                  const encounters = await getAllEncountersFromReport(report.guid);
+                  setCurrentEncounters(encounters);
                 }}>
                 Details
               </LoadingButton>
