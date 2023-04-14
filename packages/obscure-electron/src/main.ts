@@ -23,13 +23,13 @@ async function createWindow() {
     width: 1024,
     height: 768,
     webPreferences: {
-      preload: join(__dirname, '../build/preload.js'),
+      preload: join(__dirname, '../dist/preload.js'),
       nodeIntegration: true,
     },
   });
 
   if (app.isPackaged) {
-    mainWindow.loadFile(join(__dirname, '../dist/index.html'));
+    mainWindow.loadFile(join(__dirname, '../../obscure-ui/dist/index.html'));
   } else {
     mainWindow.loadURL('http://localhost:5173');
     mainWindow.webContents.openDevTools();

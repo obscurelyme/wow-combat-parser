@@ -15,7 +15,9 @@ export default function TextInput<
   return (
     <div>
       <div>
-        <label htmlFor={props.id}>{props.label}:</label>
+        <div>
+          <label htmlFor={props.id}>{props.label}:</label>
+        </div>
         <input id={props.id} {...field} disabled={formState.isSubmitting} />
       </div>
       <div>{fieldState.error?.type === 'required' && <span>This field is required.</span>}</div>

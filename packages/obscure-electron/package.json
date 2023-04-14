@@ -1,0 +1,34 @@
+{
+  "name": "@obscure/electron",
+  "version": "0.0.0",
+  "description": "Electron backend for Obscure WoW Combat Parser",
+  "author": "obscurelyme <mac.frozencoffee@gmail.com>",
+  "homepage": "https://github.com/obscurelyme/wow-combat-parser#readme",
+  "license": "MIT",
+  "main": "dist/main.js",
+  "directories": {
+    "src": "src"
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.yarnpkg.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/obscurelyme/wow-combat-parser.git"
+  },
+  "scripts": {
+    "lint": "eslint ./src",
+    "start": "tsc && electron .",
+    "build": "tsc",
+    "rebuild": "electron-rebuild -f -w sqlite3"
+  },
+  "bugs": {
+    "url": "https://github.com/obscurelyme/wow-combat-parser/issues"
+  },
+  "dependencies": {
+    "@obscure/types": "^0.0.0"
+  }
+}

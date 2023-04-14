@@ -1,0 +1,33 @@
+{
+  "name": "@obscure/ui",
+  "version": "0.0.0",
+  "description": "Vite-power React UI Obscure WoW Combat Parser",
+  "author": "obscurelyme <mac.frozencoffee@gmail.com>",
+  "homepage": "https://github.com/obscurelyme/wow-combat-parser#readme",
+  "license": "MIT",
+  "directories": {
+    "src": "src"
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.yarnpkg.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/obscurelyme/wow-combat-parser.git"
+  },
+  "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint ./src"
+  },
+  "bugs": {
+    "url": "https://github.com/obscurelyme/wow-combat-parser/issues"
+  },
+  "dependencies": {
+    "@obscure/types": "^0.0.0"
+  }
+}
