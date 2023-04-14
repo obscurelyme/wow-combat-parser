@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 import { createReport } from '../api';
@@ -41,6 +41,9 @@ export default function UploadNewReport(): React.ReactElement {
   return (
     <Box py={3}>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <Box mb={1}>
+          <Typography variant="h5">Upload a report</Typography>
+        </Box>
         <Box mb={1}>
           <TextInput
             control={control}

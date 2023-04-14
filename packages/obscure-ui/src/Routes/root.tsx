@@ -23,7 +23,13 @@ export function Root() {
           </Toolbar>
         </AppBar>
       </Box>
-      {isLoading ? <BootstrappedLoader /> : <Outlet />}
+      {isLoading ? (
+        <BootstrappedLoader />
+      ) : (
+        <Box p={2}>
+          <Outlet />
+        </Box>
+      )}
     </>
   );
 }
