@@ -1,12 +1,14 @@
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Box, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { LoadingButton } from '@mui/lab';
 
 import { createReport } from '../api';
 import { LogFormInput } from '../types';
 import FileInput from '../FileInput';
 import TextInput from '../TextInput';
+import { toast } from '../Snackbar';
 
 export default function UploadNewReport(): React.ReactElement {
   const {
@@ -29,12 +31,19 @@ export default function UploadNewReport(): React.ReactElement {
           reportName: '',
           combatLog: null,
         });
-        // const report = await createReport(data.reportName, data.combatLog.path);
-        // success toast notification
+        const report = await createReport(data.reportName, data.combatLog.path);
+        console.log(`Report: ${report.name} uploaded`);
+        toast.fire({
+          severity: 'success',
+          message: `${report.name} uploaded`,
+        });
       }
+      throw new Error('Invalid form data');
     } catch (e) {
-      console.error(e);
-      // failed toast notification
+      toast.fire({
+        severity: 'error',
+        message: (e as Error).message ?? '',
+      });
     }
   };
 

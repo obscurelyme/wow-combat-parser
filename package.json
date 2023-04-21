@@ -40,6 +40,7 @@
     "react-hook-form": "^7.43.9",
     "react-router-dom": "^6.10.0",
     "sqlite3": "^5.1.6",
+    "subscribableevent": "^1.0.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
