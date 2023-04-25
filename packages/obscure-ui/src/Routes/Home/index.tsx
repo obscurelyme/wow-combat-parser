@@ -6,9 +6,10 @@ import { Report } from '@obscure/types';
 import UploadNewReport from '../../UploadNewReport';
 import ReportsGrid from '../../ReportsGrid';
 import { useLoaderData } from '../utils';
+import { getAllReports } from '../../api';
 
 export async function loader(): Promise<Report[]> {
-  return Promise.resolve([]);
+  return getAllReports();
 }
 
 export default function HomePage(): React.ReactElement {

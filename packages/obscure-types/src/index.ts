@@ -38,3 +38,42 @@ export interface CombatEvent {
   destFlags: number;
   destRaidFlags: number;
 }
+
+export interface IElectronError {
+  name: string;
+  message: string;
+  cause?: unknown;
+  code?: number;
+  stack?: string;
+}
+
+export class ElectronError extends Error {
+  code?: number;
+
+  public constructor(arg?: string | IElectronError) {
+    if (typeof arg === 'string') {
+      super(arg);
+      this.name = 'Electron Error';
+      return;
+    } else {
+      super(arg?.message);
+      this.name = 'Electron Error';
+    }
+    this.code = arg?.code;
+  }
+
+  public serialize(): IElectronError {
+    return {
+      name: this.name,
+      message: this.message,
+      cause: this.cause,
+      code: this.code,
+      stack: this.stack,
+    };
+  }
+}
+
+export type ElectronResult<T> = {
+  data?: T;
+  error?: IElectronError;
+};

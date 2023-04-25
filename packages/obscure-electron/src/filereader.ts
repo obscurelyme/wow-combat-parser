@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as readline from 'readline';
+import { once } from 'events';
 import path from 'path';
 import { EventEmitter } from 'node:events';
 import { v4 as uuidv4 } from 'uuid';
@@ -8,6 +9,7 @@ import { ReportBuilder } from './reportbuilder';
 
 export declare interface FileReader {
   on(event: 'done', listener: (contents: Report) => void): this;
+  on(event: 'valid', listener: (valid: boolean) => void): this;
 }
 
 export class FileReader extends EventEmitter {
@@ -26,7 +28,49 @@ export class FileReader extends EventEmitter {
     return this._currentFilePath;
   }
 
-  public async read(reportName: string, filePath: string) {
+  public async validate(filePath: string) {
+    let firstLine = true;
+    this._readInterface = readline.createInterface({
+      input: fs.createReadStream(path.join(`${filePath}`)),
+    });
+    const validationPromise = new Promise<boolean>(resolve => {
+      this._readInterface.on('line', line => {
+        try {
+          if (firstLine) {
+            firstLine = false;
+          }
+          const e = line.split('  ');
+          const d = e[0].split(' ');
+          d[0] += `/${this._currentYear}`;
+          const timestamp = new Date(d.join(' ')).getTime();
+          const params = e[1].match(/("[^"]*")|[^,]+/g);
+
+          const rawCombatLog: RawCombatLog = {
+            timestamp,
+            id: uuidv4(),
+            subevent: params?.shift() ?? 'UNKNOWN',
+            params: params?.join('|').replaceAll('"', '') ?? '',
+          };
+        } catch {
+          this._readInterface.removeAllListeners();
+          this._readInterface.close();
+          resolve(false);
+        }
+      });
+
+      this._readInterface.on('close', () => {
+        this._readInterface.removeAllListeners();
+        if (firstLine) {
+          return resolve(false);
+        }
+        resolve(true);
+      });
+    });
+
+    return validationPromise;
+  }
+
+  public async read(reportName: string, filePath: string): Promise<Report> {
     let firstLine = true;
     const report = new ReportBuilder(reportName);
     this._currentFilePath = filePath;
@@ -80,12 +124,15 @@ export class FileReader extends EventEmitter {
       // });
     });
 
-    this._readInterface.on('close', () => {
-      this.emitDone(report.getInfo());
-    });
+    await once(this._readInterface, 'close');
+    return report.getInfo();
   }
 
   private emitDone(reportInfo: Report) {
     this.emit('done', reportInfo);
+  }
+
+  private emitValid(valid: boolean) {
+    this.emit('valid', valid);
   }
 }

@@ -32,11 +32,14 @@ export default function UploadNewReport(): React.ReactElement {
           combatLog: null,
         });
         const report = await createReport(data.reportName, data.combatLog.path);
-        console.log(`Report: ${report.name} uploaded`);
+        if (report.error) {
+          throw report.error;
+        }
         toast.fire({
           severity: 'success',
-          message: `${report.name} uploaded`,
+          message: `${report.data?.name} uploaded`,
         });
+        return;
       }
       throw new Error('Invalid form data');
     } catch (e) {

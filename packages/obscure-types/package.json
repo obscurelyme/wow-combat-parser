@@ -5,7 +5,8 @@
   "author": "obscurelyme <mac.frozencoffee@gmail.com>",
   "homepage": "https://github.com/obscurelyme/wow-combat-parser#readme",
   "license": "MIT",
-  "main": "src/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "directories": {
     "src": "src"
   },
@@ -20,7 +21,7 @@
     "url": "git+https://github.com/obscurelyme/wow-combat-parser.git"
   },
   "scripts": {
-    "test": "node ./__tests__/test-me.test.js"
+    "build": "tsc"
   },
   "bugs": {
     "url": "https://github.com/obscurelyme/wow-combat-parser/issues"
