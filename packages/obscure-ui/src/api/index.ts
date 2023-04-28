@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker';
+
 import { Encounter, Report } from '../types';
 
 function makeErrorMessage(functionName: string) {
@@ -14,6 +16,16 @@ export function createReport(reportName: string, filePath: string): Promise<Repo
 export function getAllReports(): Promise<Report[]> {
   if (window.api?.getAllReports) {
     return window.api.getAllReports();
+  }
+  if (import.meta.env.MODE === 'mock') {
+    return Promise.resolve([
+      {
+        name: faker.random.words(3),
+        uploadTimestamp: faker.date.recent().getTime(),
+        timestamp: faker.date.past().getTime(),
+        guid: '',
+      },
+    ]);
   }
   return Promise.reject(makeErrorMessage('getAllReports'));
 }

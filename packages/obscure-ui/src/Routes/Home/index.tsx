@@ -6,11 +6,11 @@ import { Report } from '@obscure/types';
 import UploadNewReport from '../../UploadNewReport';
 import ReportsGrid from '../../ReportsGrid';
 import { useLoaderData } from '../utils';
-// import { wait } from '../../utils';
+import { getAllReports } from '../../api/index';
 
 export async function loader(): Promise<Report[]> {
-  // await wait(3000);
-  return Promise.resolve([]);
+  const reports = await getAllReports();
+  return reports;
 }
 
 export default function HomePage(): React.ReactElement {
