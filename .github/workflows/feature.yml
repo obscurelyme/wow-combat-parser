@@ -19,12 +19,12 @@ jobs:
       - name: Test
         run: |
           yarn test:ui
-      - name: Build
-        run: |
-          yarn build
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: wow-combat-parser
-          path: releases
+      # - name: Build
+      #   run: |
+      #     yarn build --win --x64
+      # - name: Upload Artifacts
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: wow-combat-parser
+      #     path: releases
 
