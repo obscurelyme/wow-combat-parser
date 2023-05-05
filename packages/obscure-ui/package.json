@@ -22,12 +22,15 @@
     "start": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint ./src"
+    "lint": "eslint ./src",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "bugs": {
     "url": "https://github.com/obscurelyme/wow-combat-parser/issues"
   },
   "dependencies": {
     "@obscure/types": "^0.0.0"
-  }
+  },
+  "devDependencies": {}
 }
