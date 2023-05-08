@@ -30,6 +30,13 @@ export function getAllReports(): Promise<Report[]> {
   return Promise.reject(makeErrorMessage('getAllReports'));
 }
 
+export function deleteReport(reportGuid: string): Promise<ElectronResult<unknown>> {
+  if (window.api?.deleteReport) {
+    return window.api.deleteReport(reportGuid);
+  }
+  return Promise.reject(makeErrorMessage('deleteReport'));
+}
+
 export function getAllEncountersFromReport(reportGuid: string): Promise<Encounter[]> {
   if (window.api?.getAllEncountersFromReport) {
     return window.api.getAllEncountersFromReport(reportGuid);

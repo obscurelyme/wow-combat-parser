@@ -28,6 +28,7 @@ export interface CombatEvent {
   subevent: string;
   timestamp: number;
   encounterGuid: string;
+  reportGuid: string;
   guid: string;
   sourceGuid: string;
   sourceName: string;
@@ -50,8 +51,13 @@ export interface IElectronError {
 export class ElectronError extends Error {
   code?: number;
 
-  public constructor(arg?: string | IElectronError) {
-    if (typeof arg === 'string') {
+  public constructor(arg?: string | IElectronError | ElectronError) {
+    if (arg instanceof ElectronError) {
+      super(arg.message);
+      this.name = 'Electron Error';
+      this.stack = arg.stack;
+      this.cause = arg.cause;
+    } else if (typeof arg === 'string') {
       super(arg);
       this.name = 'Electron Error';
       return;

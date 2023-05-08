@@ -6,6 +6,7 @@ import { EventEmitter } from 'node:events';
 import { v4 as uuidv4 } from 'uuid';
 import { RawCombatLog, Report } from './types';
 import { ReportBuilder } from './reportbuilder';
+import { ElectronError } from '@obscure/types';
 
 export declare interface FileReader {
   on(event: 'done', listener: (contents: Report) => void): this;
@@ -104,6 +105,10 @@ export class FileReader extends EventEmitter {
       if (rawCombatLog.subevent === 'ENCOUNTER_END') {
         report.endEncounter(rawCombatLog);
       }
+
+      // if (report.inEncounter()) {
+      //   console.log(rawCombatLog.subevent);
+      // }
 
       /**
        * if (inEncounter) {

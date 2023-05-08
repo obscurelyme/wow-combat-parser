@@ -1,26 +1,18 @@
 import { ElectronError, ElectronResult, Report } from '@obscure/types';
 import { IpcMainInvokeEvent } from 'electron';
+import { v4 as uuid } from 'uuid';
 
 import { FileReader } from '../filereader';
-
-function buildElectronResponse<T>(data?: T, error?: ElectronError): ElectronResult<T> {
-  if (data) {
-    return {
-      data,
-      error: error?.serialize(),
-    };
-  }
-  return {
-    error,
-  };
-}
+import { buildElectronResponse } from '../utils';
+import { deleteReport as deleteReportUtil } from '../reportfetcher';
 
 export async function createReport(
   event: IpcMainInvokeEvent,
   reportName: string,
   filePath: string
 ): Promise<ElectronResult<Report>> {
-  console.log(`Processing event: `, event);
+  const eventGuid = uuid();
+  console.log(`Processing event: `, eventGuid, event);
   const fileReader = new FileReader();
   try {
     const valid = await fileReader.validate(filePath);
@@ -28,15 +20,26 @@ export async function createReport(
       const contents = await fileReader.read(reportName, filePath);
       return buildElectronResponse(contents);
     } else {
+      const err = new ElectronError('Invalid File');
+      console.log(`Failed event: `, eventGuid, event, err.serialize());
       fileReader.removeAllListeners();
-      return buildElectronResponse<Report>(undefined, new ElectronError('Invalid File'));
+      return buildElectronResponse<Report>(undefined, err);
     }
   } catch (e) {
-    return buildElectronResponse<Report>(
-      undefined,
-      new ElectronError({
-        ...(e as Error),
-      })
-    );
+    const err = new ElectronError({
+      ...(e as Error),
+    });
+    console.log(`Failed event: `, eventGuid, event, err.serialize());
+    return buildElectronResponse<Report>(undefined, err);
+  }
+}
+
+export async function deleteReport(event: IpcMainInvokeEvent, reportGuid: string) {
+  try {
+    const contents = await deleteReportUtil(reportGuid);
+    return buildElectronResponse(contents);
+  } catch (e) {
+    const err = new ElectronError({ ...(e as Error) });
+    return buildElectronResponse(undefined, err);
   }
 }

@@ -24,7 +24,8 @@
     "start": "tsc && electron .",
     "build": "tsc",
     "rebuild": "electron-rebuild -f -w sqlite3",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "bugs": {
     "url": "https://github.com/obscurelyme/wow-combat-parser/issues"

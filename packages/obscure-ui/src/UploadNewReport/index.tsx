@@ -1,5 +1,6 @@
 import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { useRevalidator } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { LoadingButton } from '@mui/lab';
@@ -11,6 +12,7 @@ import TextInput from '../TextInput';
 import { toast } from '../Snackbar';
 
 export default function UploadNewReport(): React.ReactElement {
+  const revalidator = useRevalidator();
   const {
     handleSubmit,
     control,
@@ -39,6 +41,7 @@ export default function UploadNewReport(): React.ReactElement {
           severity: 'success',
           message: `${report.data?.name} uploaded`,
         });
+        revalidator.revalidate();
         return;
       }
       throw new Error('Invalid form data');

@@ -1,10 +1,9 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { join } from 'path';
-import { FileReader } from './filereader';
 import { getAllReports } from './reportfetcher';
 import { getAllEncountersFromReport } from './encounterfetcher';
 
-import { createReport } from './handlers';
+import { createReport, deleteReport } from './handlers';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -68,23 +67,7 @@ app.on('activate', () => {
 });
 
 ipcMain.handle('createReport', createReport);
-
-// ipcMain.handle('createReport', async (_, reportName, filePath) => {
-//   console.log(reportName, filePath);
-//   const fileReader = new FileReader();
-//   fileReader.on('done', contents => {
-//     console.log('Report created');
-//     return contents;
-//   });
-
-//   const valid = await fileReader.validate(filePath);
-//   if (valid) {
-//     fileReader.read(reportName, filePath);
-//   } else {
-//     fileReader.removeAllListeners();
-//     return Promise.reject(new Error('(Main.js) Invalid File'));
-//   }
-// });
+ipcMain.handle('deleteReport', deleteReport);
 
 ipcMain.handle('getAllReports', async () => {
   const reports = await getAllReports();
