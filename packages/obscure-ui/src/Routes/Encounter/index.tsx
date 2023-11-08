@@ -4,7 +4,6 @@ import { Button } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
 import { useGoBack } from '../utils';
-export { loader } from './loader';
 
 export function EncounterPage() {
   const params = useParams<{ id: string }>();

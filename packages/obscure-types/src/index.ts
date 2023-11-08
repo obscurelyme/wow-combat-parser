@@ -1,9 +1,24 @@
+export interface AuthToken {
+  token: string;
+  expireTimestamp: number;
+}
+
 export interface RawCombatLog {
   id: string;
   timestamp: number;
   subevent: string;
   params: string;
 }
+
+export interface User {
+  id: number;
+  profileToken?: string;
+  profileTokenExpireDate?: number;
+  generalToken?: string;
+  generalTokenExpireDate?: number;
+}
+
+export type AuthPayload = Omit<User, 'id'>;
 
 export interface Encounter {
   startTime: number;

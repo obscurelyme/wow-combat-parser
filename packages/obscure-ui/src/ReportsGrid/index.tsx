@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Box,
   Button,
   Card,
   CardActionArea,
@@ -82,7 +83,12 @@ export default function ReportsGrid({ reports }: ReportsGridProps): React.ReactE
                   </IconButton>
                 }
                 title={report.name}
-                subheader={`Uploaded: ${new Date(report.uploadTimestamp).toLocaleDateString()}`}
+                subheader={
+                  <>
+                    <Box>{`Uploaded: ${new Date(report.uploadTimestamp).toLocaleDateString()}`}</Box>
+                    <Box>{`Date: ${new Date(report.timestamp).toLocaleDateString()}`}</Box>
+                  </>
+                }
               />
               <CardActionArea
                 onClick={() => {

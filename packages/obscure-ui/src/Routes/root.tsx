@@ -1,14 +1,21 @@
+import { Link, Outlet, useNavigation } from 'react-router-dom';
+
+import { AuthToken } from '@obscure/types';
 import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
 import Home from '@mui/icons-material/Home';
-import { Link, Outlet, useNavigation } from 'react-router-dom';
+
 import BootstrappedLoader from '../BootstrappedLoader';
+import BNetAuthProvider from '../Auth';
+import { useLoaderData } from './utils';
 
 export function Root() {
   const navigation = useNavigation();
   const isLoading = navigation.state === 'loading';
+  const auth = useLoaderData<AuthToken>();
+  console.log(auth);
 
   return (
-    <>
+    <BNetAuthProvider>
       <Box>
         <AppBar position="static">
           <Toolbar>
@@ -20,6 +27,11 @@ export function Root() {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <Link to={`reports`}>Reports</Link>
             </Typography>
+            <Typography variant="h6" component="div">
+              <Link to="https://oauth.battle.net/authorize?region=US&response_type=code&client_id=f31378954e66440aaac9a4a7cd07e65e&redirect_uri=http://localhost:5173/&scope=wow.profile&state=etc">
+                Login
+              </Link>
+            </Typography>
           </Toolbar>
         </AppBar>
       </Box>
@@ -30,6 +42,6 @@ export function Root() {
           <Outlet />
         </Box>
       )}
-    </>
+    </BNetAuthProvider>
   );
 }

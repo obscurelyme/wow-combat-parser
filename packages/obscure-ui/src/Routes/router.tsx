@@ -1,8 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom';
 
+import { getBNetGeneralAuthToken } from '../api';
 import { Root } from './root';
 import { ReportsPage, ReportPage } from './Reports';
-import { EncounterPage, loader as encounterLoader } from './Encounter';
+import { loader as reportLoader } from './Reports/loader';
+import { EncounterPage } from './Encounter';
 import ErrorPage from './Error';
 import HomePage, { loader as homeLoader } from './Home';
 
@@ -23,14 +25,24 @@ export const router = createBrowserRouter([
           {
             path: '/reports/:id',
             element: <ReportPage />,
+            loader: reportLoader,
           },
           {
             path: '/encounter/:id',
             element: <EncounterPage />,
-            loader: encounterLoader,
+            loader: async ({ params }) => {
+              return Promise.resolve(params.id);
+            },
           },
+          // {
+          //   path: 'authorize',
+          //   element: <Authorize />,
+          // },
         ],
       },
     ],
+    loader: async () => {
+      return await getBNetGeneralAuthToken();
+    },
   },
 ]);

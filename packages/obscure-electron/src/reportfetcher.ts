@@ -2,6 +2,19 @@ import { Encounter, Report } from './types';
 import CombatDB from './database';
 import { CombatEvent } from '@obscure/types';
 
+export function getReport(guid: string): Promise<Report> {
+  const conn = CombatDB.connection();
+
+  return conn<Report>('Reports')
+    .select('*')
+    .where({
+      guid,
+    })
+    .then(rows => {
+      return Promise.resolve(rows[0]);
+    });
+}
+
 export function getAllReports(): Promise<Report[]> {
   const conn = CombatDB.connection();
 

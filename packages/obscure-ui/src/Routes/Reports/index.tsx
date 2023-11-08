@@ -1,30 +1,23 @@
-import { Button, Typography } from '@mui/material';
-import { Link, useParams } from 'react-router-dom';
+import { Button, Typography, Link } from '@mui/material';
 
 import { useGoBack } from '../utils';
+import { useReportData } from './loader';
 
 export function ReportPage() {
-  const params = useParams<{ id: string }>();
   const goBack = useGoBack();
+  const { report, encounters } = useReportData();
 
   return (
     <div>
-      <Typography variant="h2">{`Report ${params.id}`}</Typography>
+      <Typography variant="h2">{report.name}</Typography>
       <Button onClick={goBack}>Go back to Reports</Button>
 
       <ul>
-        <li>
-          <Link to={`/encounter/1`}>First Encounter</Link>
-        </li>
-        <li>
-          <Link to={`/encounter/2`}>Second Encounter</Link>
-        </li>
-        <li>
-          <Link to={`/encounter/3`}>Third Encounter</Link>
-        </li>
-        <li>
-          <Link to={`/encounter/4`}>Fourth Encounter</Link>
-        </li>
+        {encounters.map(encounter => (
+          <li key={`encounter-${encounter.guid}`}>
+            <Link>{`${encounter.name} ${encounter.wowEncounterId}`}</Link>
+          </li>
+        ))}
       </ul>
     </div>
   );
@@ -35,7 +28,7 @@ export function ReportsPage() {
     <div>
       <Typography variant="h2">Reports Page</Typography>
 
-      <ul>
+      {/* <ul>
         <li>
           <Link to={`/reports/1`}>First Report</Link>
         </li>
@@ -45,7 +38,7 @@ export function ReportsPage() {
         <li>
           <Link to={`/reports/3`}>Third Report</Link>
         </li>
-      </ul>
+      </ul> */}
     </div>
   );
 }

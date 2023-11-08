@@ -31,6 +31,10 @@
     "url": "https://github.com/obscurelyme/wow-combat-parser/issues"
   },
   "dependencies": {
-    "@obscure/types": "^0.0.0"
+    "@obscure/types": "^0.0.0",
+    "@types/passport": "^1.0.15",
+    "@types/passport-bnet": "^2.0.5",
+    "passport": "^0.6.0",
+    "passport-bnet": "^2.0.0"
   }
 }

@@ -30,3 +30,6 @@ out/
 
 # Coverage
 coverage
+
+# build info
+tsconfig.tsbuildinfo

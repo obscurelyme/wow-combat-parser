@@ -1,0 +1,24 @@
+{
+  "name": "@obscure/doc",
+  "version": "1.0.0",
+  "description": "documentation about this project",
+  "author": "obscurelyme <mac.frozencoffee@gmail.com>",
+  "homepage": "https://github.com/obscurelyme/wow-combat-parser#readme",
+  "license": "MIT",
+  "directories": {
+    "src": "src"
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.yarnpkg.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/obscurelyme/wow-combat-parser.git"
+  },
+  "bugs": {
+    "url": "https://github.com/obscurelyme/wow-combat-parser/issues"
+  }
+}
