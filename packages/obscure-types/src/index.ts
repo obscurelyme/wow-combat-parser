@@ -1,3 +1,18 @@
+export interface JournalEncounter {
+  id: number;
+  name: string;
+  description: string;
+  map0: number;
+  map1: number;
+  journalEncounterId: number;
+  journalInstanceId: number;
+  dungeonEncounterId: number;
+  uiMapId: number;
+  mapDisplayConditionId: number;
+  flags: number;
+  difficultyMask: number;
+}
+
 export interface AuthToken {
   token: string;
   expireTimestamp: number;

@@ -9,6 +9,7 @@ import { createReport, deleteReport } from './handlers';
 import { fetchGeneralAuthToken, fetchProfileAuthToken } from './vendors/blizzard';
 import { buildElectronResponse } from './utils';
 import { getAuthTokens, isAuthTokenExpired, saveTokens } from './handlers/user';
+import { connectHandlers as connectJournalEncounterHandlers } from './handlers/journalEncounter';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -138,3 +139,4 @@ ipcMain.handle('getBNetGeneralAuthToken', async () => {
     return buildElectronResponse(undefined, new ElectronError({ ...(e as Error) }));
   }
 });
+connectJournalEncounterHandlers(ipcMain);

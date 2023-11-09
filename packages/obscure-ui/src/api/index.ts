@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { AuthToken, ElectronResult, Encounter, Report } from '../types';
+import { AuthToken, ElectronResult, Encounter, Report, JournalEncounter } from '../types';
 
 function makeErrorMessage(functionName: string) {
   return `Window API is not defined for "${functionName}". Either the Electron server not started, you have not defined this method, or you have not exposed this method.`;
@@ -63,6 +63,13 @@ export function getBNetGeneralAuthToken(): Promise<AuthToken> {
     return window.api.getBNetGeneralAuthToken();
   }
   return Promise.reject(makeErrorMessage('getBNetGeneralAuthToken'));
+}
+
+export function getJournalEncounter(dungeonEncounterId: number): Promise<JournalEncounter> {
+  if (window.api?.getJournalEncounter) {
+    return window.api.getJournalEncounter(dungeonEncounterId);
+  }
+  return Promise.reject(makeErrorMessage('getJournalEncounter'));
 }
 
 // export function getEncounter(encounterId: string): Promise<Encounter> {}

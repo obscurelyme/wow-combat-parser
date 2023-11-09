@@ -8,6 +8,7 @@ const WINDOW_API = {
   getAllEncountersFromReport: (reportGuid: string) => ipcRenderer.invoke('getAllEncountersFromReport', reportGuid),
   getBNetProfileAuthToken: (authCode: string) => ipcRenderer.invoke('getBNetProfileAuthToken', authCode),
   getBNetGeneralAuthToken: () => ipcRenderer.invoke('getBNetGeneralAuthToken'),
+  getJournalEncounter: (dungeonEncounterId: number) => ipcRenderer.invoke('getJournalEncounter', dungeonEncounterId),
 };
 
 contextBridge.exposeInMainWorld('api', WINDOW_API);

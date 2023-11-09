@@ -1,4 +1,4 @@
-import { AuthToken, ElectronResult, Encounter, Report } from './types';
+import { AuthToken, ElectronResult, Encounter, JournalEncounter, Report } from './types';
 
 export {};
 
@@ -12,6 +12,7 @@ declare global {
       getAllEncountersFromReport: (reportGuid: string) => Promise<Encounter[]>;
       getBNetProfileAuthToken: (authCode: string) => Promise<AuthToken>;
       getBNetGeneralAuthToken: () => Promise<AuthToken>;
+      getJournalEncounter: (dungeonEncounterId: number) => Promise<JournalEncounter>;
     };
   }
 }
