@@ -15,6 +15,8 @@
     "node": ">=18.0.0"
   },
   "scripts": {
+    "build:dbmine": "yarn workspace @obscure/data-mine build",
+    "start:dbmine": "yarn workspace @obscure/data-mine start",
     "start:ui": "yarn workspace @obscure/ui start",
     "build:ui": "yarn workspace @obscure/ui build",
     "start:electron": "yarn workspace @obscure/electron start",

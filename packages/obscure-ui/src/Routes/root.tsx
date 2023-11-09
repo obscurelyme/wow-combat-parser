@@ -12,10 +12,9 @@ export function Root() {
   const navigation = useNavigation();
   const isLoading = navigation.state === 'loading';
   const auth = useLoaderData<AuthToken>();
-  console.log(auth);
 
   return (
-    <BNetAuthProvider>
+    <BNetAuthProvider generalToken={auth}>
       <Box>
         <AppBar position="static">
           <Toolbar>

@@ -1,0 +1,30 @@
+{
+  "name": "@obscure/data-mine",
+  "version": "1.0.0",
+  "description": "> TODO: description",
+  "author": "obscurelyme <mac.frozencoffee@gmail.com>",
+  "homepage": "https://github.com/obscurelyme/wow-combat-parser#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "directories": {
+    "src": "src",
+    "test": "__tests__"
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.yarnpkg.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/obscurelyme/wow-combat-parser.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/index.js"
+  },
+  "bugs": {
+    "url": "https://github.com/obscurelyme/wow-combat-parser/issues"
+  }
+}
