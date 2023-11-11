@@ -1,5 +1,7 @@
 appId: obscurely.ObscureWarcraftCombatParser
 asar: true
+asarUnpack: 
+  - packages/obscure-types
 directories:
   output: releases/${version}
 

@@ -15,7 +15,8 @@ export function ReportPage() {
       <ul>
         {encounters.map(encounter => (
           <li key={`encounter-${encounter.guid}`}>
-            <Link>{`${encounter.name} ${encounter.wowEncounterId}`}</Link>
+            <Link>{`${encounter.name} - ${encounter.success ? 'Defeated' : 'Failed'}`}</Link>
+            {encounter.difficultyId}
           </li>
         ))}
       </ul>

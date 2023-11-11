@@ -43,7 +43,7 @@ export function isAuthTokenExpired(expireDate?: number): boolean {
   if (!expireDate) {
     return true;
   }
-  return new Date().getMilliseconds() > expireDate;
+  return new Date().getTime() > expireDate;
 }
 
 async function getGeneralAuthToken() {

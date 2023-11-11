@@ -14,6 +14,7 @@
     "strictPropertyInitialization": false,
     "forceConsistentCasingInFileNames": true
   },
+  "references": [{ "path:": "../obscure-types" }],
   "exclude": ["./src/**/*.spec.tsx", "./src/**/*.spec.ts", "node_modules"],
   "include": ["./src/**/*"]
 }

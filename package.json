@@ -15,6 +15,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
+    "postinstall": "electron-builder install-app-deps",
     "build:dbmine": "yarn workspace @obscure/data-mine build",
     "start:dbmine": "yarn workspace @obscure/data-mine start",
     "start:ui": "yarn workspace @obscure/ui start",
@@ -22,13 +23,15 @@
     "start:electron": "yarn workspace @obscure/electron start",
     "build:electron": "yarn workspace @obscure/electron build",
     "build:types": "yarn workspace @obscure/types build",
-    "build": "lerna run build && electron-builder build",
-    "package": "electron-builder build",
+    "build": "lerna run build && yarn package",
+    "package": "electron-builder build --config ./electron-builder.config.js",
     "lint": "yarn lint:vite && yarn lint:electron",
     "lint:ui": "yarn workspace @obscure/ui lint",
     "lint:electron": "yarn workspace @obscure/electron lint",
     "test:ui": "yarn workspace @obscure/ui test",
-    "test:electron": "yarn workspace @obscure/electron test"
+    "test:electron": "yarn workspace @obscure/electron test",
+    "forge:package": "electron-forge package",
+    "forge:make": "electron-forge make"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",

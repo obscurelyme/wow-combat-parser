@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createHashRouter } from 'react-router-dom';
 
 import { getBNetGeneralAuthToken } from '../api';
 import { Root } from './root';
@@ -8,7 +8,7 @@ import { EncounterPage } from './Encounter';
 import ErrorPage from './Error';
 import HomePage, { loader as homeLoader } from './Home';
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: '/',
     element: <Root />,

@@ -14,7 +14,8 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "declaration": true
+    "declaration": true,
+    "composite": true
   },
   "exclude": ["node_modules"],
   "include": ["./src/**/*"]
