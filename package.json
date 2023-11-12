@@ -23,7 +23,7 @@
     "start:electron": "yarn workspace @obscure/electron start",
     "build:electron": "yarn workspace @obscure/electron build",
     "build:types": "yarn workspace @obscure/types build",
-    "build": "lerna run build && yarn package",
+    "build": "yarn build:types && yarn build:ui && yarn build:electron && yarn package",
     "package": "electron-builder build --config ./electron-builder.config.js",
     "lint": "yarn lint:vite && yarn lint:electron",
     "lint:ui": "yarn workspace @obscure/ui lint",
