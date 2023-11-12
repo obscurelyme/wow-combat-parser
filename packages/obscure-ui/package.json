@@ -1,6 +1,6 @@
 {
   "name": "@obscure/ui",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Vite-power React UI Obscure WoW Combat Parser",
   "author": "obscurelyme <mac.frozencoffee@gmail.com>",
   "homepage": "https://github.com/obscurelyme/wow-combat-parser#readme",
@@ -30,7 +30,6 @@
     "url": "https://github.com/obscurelyme/wow-combat-parser/issues"
   },
   "dependencies": {
-    "@obscure/types": "^0.0.0"
-  },
-  "devDependencies": {}
+    "@obscure/types": "workspace:^"
+  }
 }

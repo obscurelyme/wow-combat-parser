@@ -1,6 +1,6 @@
 {
   "name": "@obscure/types",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Common type definitions for Obscure WoW Combat Parser",
   "author": "obscurelyme <mac.frozencoffee@gmail.com>",
   "homepage": "https://github.com/obscurelyme/wow-combat-parser#readme",

@@ -1,6 +1,6 @@
 {
   "name": "@obscure/electron",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Electron backend for Obscure WoW Combat Parser",
   "author": "obscurelyme <mac.frozencoffee@gmail.com>",
   "homepage": "https://github.com/obscurelyme/wow-combat-parser#readme",
@@ -31,7 +31,7 @@
     "url": "https://github.com/obscurelyme/wow-combat-parser/issues"
   },
   "dependencies": {
-    "@obscure/types": "^0.0.0",
+    "@obscure/types": "workspace:^",
     "@types/passport": "^1.0.15",
     "@types/passport-bnet": "^2.0.5",
     "passport": "^0.6.0",
