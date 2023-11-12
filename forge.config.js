@@ -1,5 +1,9 @@
+const { cpSync } = require('fs');
+
 module.exports = {
-  packagerConfig: {},
+  packagerConfig: {
+    asar: false,
+  },
   rebuildConfig: {},
   makers: [
     {
@@ -11,6 +15,7 @@ module.exports = {
     {
       name: '@electron-forge/maker-zip',
       platforms: ['darwin'],
+      config: {},
     },
     {
       name: '@electron-forge/maker-deb',
@@ -21,4 +26,13 @@ module.exports = {
       config: {},
     },
   ],
+  hooks: {
+    packageAfterCopy: async (config, buildPath) => {
+      console.log("idk", buildPath);
+      return Promise.resolve();
+      // cpSync('./packages/obscure-types', './node_modules/@obscure/types', { recursive: true });
+    }
+  },
+  plugins: [],
+  publishers: [],
 };
