@@ -1,17 +1,19 @@
-import { Typography } from '@mui/material';
-import { Button } from '@mui/material';
-
-import { useParams } from 'react-router-dom';
+import { Button, Divider, Typography } from '@mui/material';
 
 import { useGoBack } from '../utils';
+import { useEncounterLoaderData } from './loader';
 
 export function EncounterPage() {
-  const params = useParams<{ id: string }>();
+  const { journalEncounter } = useEncounterLoaderData();
   const goBack = useGoBack();
 
   return (
     <div>
-      <Typography variant="h2">{`Encounter ${params.id}`}</Typography>
+      <Typography variant="h3">{journalEncounter?.name}</Typography>
+      <Divider />
+
+      <Typography variant="body2">{journalEncounter?.description}</Typography>
+      
       <div>
         <Button onClick={goBack}>Back to report</Button>
       </div>

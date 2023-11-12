@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Button, Typography } from '@mui/material';
 
+import { WoWDifficultyMap } from '@obscure/types';
+
 import { useGoBack } from '../utils';
 import { useReportData } from './loader';
 
@@ -19,7 +21,8 @@ export function ReportPage() {
             <Link to={`/encounter/${encounter.wowEncounterId}`}>{`${encounter.name} - ${
               encounter.success ? 'Defeated' : 'Failed'
             }`}</Link>
-            {encounter.difficultyId}
+            
+            {WoWDifficultyMap.getString(encounter.difficultyId)}
           </li>
         ))}
       </ul>

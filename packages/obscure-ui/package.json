@@ -19,7 +19,7 @@
     "url": "git+https://github.com/obscurelyme/wow-combat-parser.git"
   },
   "scripts": {
-    "start": "vite",
+    "start": "vue-tsc --noEmit && vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint ./src",

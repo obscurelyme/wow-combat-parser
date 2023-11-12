@@ -214,21 +214,4 @@ export type ElectronResult<T> = {
   error?: IElectronError;
 };
 
-export enum Difficulty {
-  partyNormal = 1,
-  partyHeroic = 2,
-  partyMythicKeystone = 8,
-  partyEvent = 19,
-  partyMythic = 23,
-  partyTimewalking = 24,
-
-  Raid10Player = 3,
-  Raid25Player = 4,
-  Raid10PlayerHeroic = 5,
-  Raid25PlayerHeroic = 6,
-  LFR = 7,
-
-  Raid40Player = 9,
-  ScenarioHeroic = 11,
-  ScenarioNormal = 12,
-}
+export * from './difficulty';

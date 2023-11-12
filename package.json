@@ -54,7 +54,8 @@
     "react-router-dom": "^6.10.0",
     "sqlite3": "^5.1.6",
     "subscribableevent": "^1.0.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "vue-tsc": "^1.8.22"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",

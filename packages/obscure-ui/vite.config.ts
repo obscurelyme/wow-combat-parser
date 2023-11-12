@@ -9,6 +9,9 @@ export default defineConfig({
     react(),
     eslintPlugin({ cache: false, include: ['./src/**/*.ts', './src/**/*.tsx'], exclude: ['node_modules'] }),
   ],
+  optimizeDeps: {
+    include: ["@obscure/types"]
+  },
   build: {
     sourcemap: true,
     rollupOptions: {
@@ -20,5 +23,8 @@ export default defineConfig({
         warn(warning);
       },
     },
-  },
+    commonjsOptions: {
+      include: [/obscure-types/, /node_modules/]
+    }
+  }
 });
