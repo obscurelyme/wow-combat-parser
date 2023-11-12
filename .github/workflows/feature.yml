@@ -7,24 +7,22 @@ on:
 jobs:
   ci-cd-build:
     timeout-minutes: 30
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
       - name: Setup
         run: |
           yarn install
-          yarn lerna bootstrap
-          yarn workspace @obscure/electron rebuild
       - name: Test
         run: |
           yarn test:ui
-      # - name: Build
-      #   run: |
-      #     yarn build --win --x64
-      # - name: Upload Artifacts
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: wow-combat-parser
-      #     path: releases
+      - name: Build
+        run: |
+          yarn build --win --x64
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: wow-combat-parser
+          path: releases
 

@@ -17,11 +17,6 @@
     "jsx": "react-jsx",
     "composite": true
   },
-  "references": [
-    {
-      "path": "../obscure-types"
-    }
-  ],
   "include": ["./src/**/*", "vite.config.ts"],
   "exclude": ["./src/**/*.spec.tsx", "./src/**/*.spec.ts", "node_modules"]
 }
