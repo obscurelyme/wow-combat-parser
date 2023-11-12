@@ -5,8 +5,20 @@ import eslintPlugin from 'vite-plugin-eslint';
 // https://vitejs.dev/config/
 export default defineConfig({
   base: './',
-  plugins: [react(), eslintPlugin({ cache: false, include: ['./src/**/*.ts', './src/**/*.tsx'], exclude: [] })],
+  plugins: [
+    react(),
+    eslintPlugin({ cache: false, include: ['./src/**/*.ts', './src/**/*.tsx'], exclude: ['node_modules'] }),
+  ],
   build: {
     sourcemap: true,
+    rollupOptions: {
+      // TODO(Fix this later): https://github.com/TanStack/query/issues/5175
+      onwarn: (warning, warn) => {
+        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+          return;
+        }
+        warn(warning);
+      },
+    },
   },
 });
