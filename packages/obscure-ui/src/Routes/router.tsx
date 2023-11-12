@@ -5,8 +5,10 @@ import { Root } from './root';
 import { ReportsPage, ReportPage } from './Reports';
 import { loader as reportLoader } from './Reports/loader';
 import { EncounterPage } from './Encounter';
+import { loader as encounterLoader } from './Encounter/loader';
 import ErrorPage from './Error';
 import HomePage, { loader as homeLoader } from './Home';
+import Authorize from './Authorize';
 
 export const router = createHashRouter([
   {
@@ -30,14 +32,12 @@ export const router = createHashRouter([
           {
             path: '/encounter/:id',
             element: <EncounterPage />,
-            loader: async ({ params }) => {
-              return Promise.resolve(params.id);
-            },
+            loader: encounterLoader,
           },
-          // {
-          //   path: 'authorize',
-          //   element: <Authorize />,
-          // },
+          {
+            path: '/authorize',
+            element: <Authorize />,
+          },
         ],
       },
     ],

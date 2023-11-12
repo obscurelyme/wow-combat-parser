@@ -21,4 +21,10 @@ module.exports = {
     },
     artifactName: '${productName}_${version}.${ext}',
   },
+  nsis: {
+    oneClick: false,
+    perMachine: false,
+    allowToChangeInstallationDirectory: true,
+    deleteAppDataOnUninstall: false,
+  }
 };
