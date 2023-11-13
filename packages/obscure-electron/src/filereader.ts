@@ -79,7 +79,6 @@ export class FileReader extends EventEmitter {
     });
 
     this._readInterface.on('line', async line => {
-      this._readInterface.pause();
       const e = line.split('  ');
       const d = e[0].split(' ');
       d[0] += `/${this._currentYear}`;
@@ -98,12 +97,31 @@ export class FileReader extends EventEmitter {
         params: params?.join('|').replaceAll('"', '') ?? '',
       };
 
-      if (rawCombatLog.subevent === 'ENCOUNTER_START') {
-        await report.beginEncounter(rawCombatLog);
-      }
-
-      if (rawCombatLog.subevent === 'ENCOUNTER_END') {
-        await report.endEncounter(rawCombatLog);
+      switch (rawCombatLog.subevent) {
+        case 'ENCOUNTER_START': {
+          await report.beginEncounter(rawCombatLog);
+          break;
+        }
+        case 'ENCOUNTER_END': {
+          await report.endEncounter(rawCombatLog);
+          break;
+        }
+        case 'ZONE_CHANGE': {
+          await report.zoneChange(rawCombatLog);
+          break;
+        }
+        case 'MAP_CHANGE': {
+          await report.mapChange(rawCombatLog);
+          break;
+        }
+        case 'COMBATANT_INFO': {
+          await report.combatantInfo(rawCombatLog);
+          break;
+        }
+        default: {
+          // NOTE: General combat log
+          await report.combatLog(rawCombatLog);
+        }
       }
 
       // if (report.inEncounter()) {
@@ -127,7 +145,6 @@ export class FileReader extends EventEmitter {
       //   subevent: params?.shift() ?? 'UNKNOWN',
       //   params: params?.join('|') ?? '',
       // });
-      this._readInterface.resume();
     });
 
     await once(this._readInterface, 'close');

@@ -43,6 +43,8 @@
 //   0
 
 export interface PlayerKill {
+  timestamp: string;
+  encounterGuid: string;
   playerGuid: string;
   playerName: string;
   arg3: number;

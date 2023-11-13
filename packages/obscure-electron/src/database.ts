@@ -97,6 +97,11 @@ export class CombatDB {
   private createZonesVisitedTable(tb: Knex.CreateTableBuilder) {
     tb.increments('id').primary();
     tb.string('reportGuid');
+    tb.integer('timestamp');
+    tb.text('guid');
+    tb.integer('instanceId');
+    tb.text('zoneName');
+    tb.integer('difficultyId');
   }
 }
 

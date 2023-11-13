@@ -1,6 +1,8 @@
 export interface MapChange {
   id: string;
   guid: string;
+  timestamp: number;
+  reportGuid: string;
   uiMapId: number;
   uiMapName: string;
   x0: number;

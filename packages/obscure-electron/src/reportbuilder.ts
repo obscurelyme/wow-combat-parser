@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import CombatDB from './database';
 import { Report, Encounter, RawCombatLog } from './types';
 import { createEncounter, updateEncounter } from './encounterfetcher';
+import { createCombatant, createZoneChange } from './handlers/events/create';
 
 export class ReportBuilder {
   private _reportGuid: string;
@@ -52,9 +53,21 @@ export class ReportBuilder {
     return await updateEncounter(line, oldEncounter);
   }
 
-  public async zoneChange(line: RawCombatLog): Promise<void> {}
+  public async zoneChange(line: RawCombatLog): Promise<number> {
+    return createZoneChange(line, this._reportGuid);
+  }
 
-  public async combatantInfo(line: RawCombatLog): Promise<void> {}
+  public async mapChange(line: RawCombatLog): Promise<void> {
+    return Promise.resolve();
+  }
+
+  public async combatantInfo(line: RawCombatLog): Promise<number> {
+    return createCombatant(line, this._currentEncounterGuid);
+  }
+
+  public async combatLog(line: RawCombatLog): Promise<void> {
+    return Promise.resolve();
+  }
 
   public inEncounter() {
     return this._currentEncounterGuid !== '';
