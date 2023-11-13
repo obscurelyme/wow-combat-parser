@@ -25,6 +25,10 @@ export class CombatDB {
     console.log(`Database connection opened`);
   }
 
+  public initialize(): Promise<void[]> {
+    return Promise.all([this.configureCombatantsTable(), this.configureZonesVisitedTable()]);
+  }
+
   public connection(): Knex {
     return this._db;
   }

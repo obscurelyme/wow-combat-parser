@@ -10,6 +10,7 @@ import { fetchGeneralAuthToken, fetchProfileAuthToken } from './vendors/blizzard
 import { buildElectronResponse } from './utils';
 import { getAuthTokens, isAuthTokenExpired, saveTokens } from './handlers/user';
 import { connectHandlers as connectJournalEncounterHandlers } from './handlers/journalEncounter';
+import CombatDB from './database';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -24,6 +25,7 @@ if (!app.requestSingleInstanceLock()) {
 let mainWindow: BrowserWindow | null = null;
 
 async function createWindow() {
+  await CombatDB.initialize();
   console.log(app.getPath('exe'));
   mainWindow = new BrowserWindow({
     title: 'WoW Combat Parser',
