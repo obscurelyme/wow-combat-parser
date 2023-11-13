@@ -3,8 +3,8 @@ import { join } from 'path';
 
 import { ElectronError } from '@obscure/types';
 
-import { getAllReports, getReport } from './reportfetcher';
-import { getAllEncountersFromReport } from './encounterfetcher';
+import { getAllReports, getReport } from './handlers/reports';
+import { getAllEncountersFromReport } from './handlers/encounters';
 import { createReport, deleteReport } from './handlers';
 import { fetchGeneralAuthToken, fetchProfileAuthToken } from './vendors/blizzard';
 import { buildElectronResponse } from './utils';
@@ -88,7 +88,6 @@ ipcMain.handle('getAllEncountersFromReport', async (_, reportGuid) => {
   const encounters = await getAllEncountersFromReport(reportGuid);
   return encounters;
 });
-
 ipcMain.handle('getBNetProfileAuthToken', async (_, authCode) => {
   try {
     const token = await getAuthTokens();

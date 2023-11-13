@@ -1,5 +1,6 @@
-import { Encounter, RawCombatLog } from './types';
-import CombatDB from './database';
+import { Encounter, RawCombatLog } from '@obscure/types';
+
+import CombatDB from '../../database';
 
 /**
  * @example `2607,"Raszageth the Storm-Eater",16,20,2522`
@@ -81,7 +82,7 @@ export function getAllEncountersFromReport(reportGuid: string): Promise<Encounte
     });
 }
 
-type EncounterIds = Pick<Encounter, 'wowEncounterId'>[]; 
+type EncounterIds = Pick<Encounter, 'wowEncounterId'>[];
 
 export function getAllEncounterIdsFromReport(reportGuid: string): Promise<EncounterIds> {
   const conn = CombatDB.connection();
@@ -91,9 +92,9 @@ export function getAllEncounterIdsFromReport(reportGuid: string): Promise<Encoun
     .where({
       reportGuid,
     })
-    .then((rows) => {
+    .then(rows => {
       if (rows.length) {
-        return rows.map(row => ({wowEncounterId: row.wowEncounterId}));
+        return rows.map(row => ({ wowEncounterId: row.wowEncounterId }));
       }
       return [];
     });

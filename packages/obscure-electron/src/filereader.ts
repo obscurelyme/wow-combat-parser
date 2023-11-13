@@ -3,8 +3,7 @@ import * as readline from 'readline';
 import { once } from 'events';
 import path from 'path';
 import { EventEmitter } from 'node:events';
-import { v4 as uuidv4 } from 'uuid';
-import { RawCombatLog, Report } from './types';
+import { Report } from './types';
 import { ReportBuilder } from './reportbuilder';
 import { parseRawCombatLog } from './parsers/rawcombatlog';
 
@@ -16,57 +15,48 @@ export declare interface FileReader {
 export class FileReader extends EventEmitter {
   private _currentFilePath: string;
   private _readInterface: readline.Interface;
-  private _rawCombatLog: RawCombatLog[];
-  private _currentYear: number;
+  private _lineCount: number;
+  private _currentLineIndex: number;
 
   public constructor() {
     super();
-    this._currentYear = new Date().getFullYear();
-    this._rawCombatLog = [];
   }
 
   public getCurrentFile(): string {
     return this._currentFilePath;
   }
 
-  public async validate(filePath: string) {
-    let firstLine = true;
+  public async validate(filePath: string): Promise<boolean> {
+    this._lineCount = 0;
+    let valid = true;
     this._readInterface = readline.createInterface({
       input: fs.createReadStream(path.join(`${filePath}`)),
     });
-    const validationPromise = new Promise<boolean>(resolve => {
-      this._readInterface.on('line', line => {
+
+    this._readInterface.on('line', line => {
+      this._lineCount++;
+      try {
         try {
-          if (firstLine) {
-            firstLine = false;
-          }
-
-          try {
-            const rawCombatLog = parseRawCombatLog(line);
-          } catch (e) {
-            console.log(`Disgarding line ${line}`);
-          }
-        } catch(e) {
-          console.log(e);
-          this._readInterface.removeAllListeners();
-          this._readInterface.close();
-          resolve(false);
+          parseRawCombatLog(line);
+        } catch (e) {
+          console.log(`Disgarding line ${line}`);
         }
-      });
-
-      this._readInterface.on('close', () => {
+      } catch (e) {
+        console.log(e);
         this._readInterface.removeAllListeners();
-        if (firstLine) {
-          return resolve(false);
-        }
-        resolve(true);
-      });
+        this._readInterface.close();
+        valid = false;
+      }
     });
 
-    return validationPromise;
+    await once(this._readInterface, 'close');
+    this._readInterface.removeAllListeners();
+
+    return valid;
   }
 
   public async read(reportName: string, filePath: string): Promise<Report> {
+    this._currentLineIndex = 0;
     let firstLine = true;
     const report = new ReportBuilder(reportName);
     this._currentFilePath = filePath;
@@ -75,6 +65,8 @@ export class FileReader extends EventEmitter {
     });
 
     this._readInterface.on('line', async line => {
+      this._currentLineIndex++;
+      report.updateProgress(this.getProgress());
       try {
         const rawCombatLog = parseRawCombatLog(line);
 
@@ -120,6 +112,14 @@ export class FileReader extends EventEmitter {
 
     await once(this._readInterface, 'close');
     return report.getInfo();
+  }
+
+  /**
+   * Returns the progress of the file read.
+   * once the
+   */
+  public getProgress(): number {
+    return this._currentLineIndex / this._lineCount;
   }
 
   private emitDone(reportInfo: Report) {

@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import CombatDB from './database';
 import { Report, Encounter, RawCombatLog } from './types';
-import { createEncounter, updateEncounter } from './encounterfetcher';
+import { createEncounter, updateEncounter } from './handlers/encounters';
 import { createCombatant, createZoneChange } from './handlers/events/create';
 
 export class ReportBuilder {
@@ -11,10 +11,24 @@ export class ReportBuilder {
   private _timestamp: number;
   private _uploadTimestamp: number;
   private _currentEncounterGuid: string;
+  private _currentProgress: number;
+
+  private static _builderCache: Map<string, ReportBuilder> = new Map();
+
+  public static getReportUploadProgress(reportGuid: string): number {
+    const report = ReportBuilder._builderCache.get(reportGuid);
+    if (!report) {
+      return 0;
+    }
+    return report.getProgress();
+  }
 
   public constructor(reportName: string) {
     this._reportGuid = uuidv4();
     this._reportName = reportName;
+    this._currentProgress = 0;
+
+    ReportBuilder._builderCache.set(this._reportGuid, this);
   }
 
   public getInfo(): Report {
@@ -24,6 +38,14 @@ export class ReportBuilder {
       name: this._reportName,
       guid: this._reportGuid,
     };
+  }
+
+  public updateProgress(newProgress: number): void {
+    this._currentProgress = newProgress;
+  }
+
+  public getProgress(): number {
+    return this._currentProgress;
   }
 
   public beginReport(timestamp: number): Promise<void> {

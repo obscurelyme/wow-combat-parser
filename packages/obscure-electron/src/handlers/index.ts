@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 
 import { FileReader } from '../filereader';
 import { buildElectronResponse } from '../utils';
-import { deleteReport as deleteReportUtil } from '../reportfetcher';
+import { deleteReport as deleteReportUtil } from './reports';
 
 export async function createReport(
   event: IpcMainInvokeEvent,
