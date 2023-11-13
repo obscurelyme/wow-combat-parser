@@ -52,6 +52,10 @@ export class ReportBuilder {
     return await updateEncounter(line, oldEncounter);
   }
 
+  public async zoneChange(line: RawCombatLog): Promise<void> {}
+
+  public async combatantInfo(line: RawCombatLog): Promise<void> {}
+
   public inEncounter() {
     return this._currentEncounterGuid !== '';
   }

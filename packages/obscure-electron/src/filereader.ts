@@ -6,7 +6,6 @@ import { EventEmitter } from 'node:events';
 import { v4 as uuidv4 } from 'uuid';
 import { RawCombatLog, Report } from './types';
 import { ReportBuilder } from './reportbuilder';
-import { ElectronError } from '@obscure/types';
 
 export declare interface FileReader {
   on(event: 'done', listener: (contents: Report) => void): this;
@@ -79,7 +78,8 @@ export class FileReader extends EventEmitter {
       input: fs.createReadStream(path.join(`${filePath}`)),
     });
 
-    this._readInterface.on('line', line => {
+    this._readInterface.on('line', async line => {
+      this._readInterface.pause();
       const e = line.split('  ');
       const d = e[0].split(' ');
       d[0] += `/${this._currentYear}`;
@@ -99,11 +99,11 @@ export class FileReader extends EventEmitter {
       };
 
       if (rawCombatLog.subevent === 'ENCOUNTER_START') {
-        report.beginEncounter(rawCombatLog);
+        await report.beginEncounter(rawCombatLog);
       }
 
       if (rawCombatLog.subevent === 'ENCOUNTER_END') {
-        report.endEncounter(rawCombatLog);
+        await report.endEncounter(rawCombatLog);
       }
 
       // if (report.inEncounter()) {
@@ -127,6 +127,7 @@ export class FileReader extends EventEmitter {
       //   subevent: params?.shift() ?? 'UNKNOWN',
       //   params: params?.join('|') ?? '',
       // });
+      this._readInterface.resume();
     });
 
     await once(this._readInterface, 'close');

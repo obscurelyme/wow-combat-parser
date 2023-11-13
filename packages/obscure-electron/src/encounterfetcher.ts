@@ -73,7 +73,7 @@ export function getAllEncountersFromReport(reportGuid: string): Promise<Encounte
     .where({
       reportGuid,
     })
-    .then(rows => {
+    .then((rows: Encounter[]) => {
       if (rows) {
         return Promise.resolve(rows);
       }
@@ -87,7 +87,7 @@ export function getEncounter(encounterId: string): Promise<Encounter | null> {
   return conn<Encounter>('Encounters')
     .select('*')
     .where('id', encounterId)
-    .then(rows => {
+    .then((rows: Encounter[]) => {
       if (rows) {
         return Promise.resolve(rows[0]);
       }

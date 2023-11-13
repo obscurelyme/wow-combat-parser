@@ -83,7 +83,7 @@ function determineClassFromSpecId(spec: number | WarcraftClassSpecialization): W
   }
 }
 
-export function parseCombatantInfoEvent(rawEvent: RawCombatLog): Combatant {
+export function parseCombatantInfoEvent(rawEvent: RawCombatLog, encounterGuid: string): Combatant {
   const arrayArgs = rawEvent.params.match(/\[([^]*?)]/g);
   const args = rawEvent.params.split('|');
   const spec = parseInt(args[23], 10);
@@ -95,12 +95,13 @@ export function parseCombatantInfoEvent(rawEvent: RawCombatLog): Combatant {
   return {
     timestamp: rawEvent.timestamp,
     id: rawEvent.id,
+    encounterGuid,
     playerGuid: args[0],
     faction: parseInt(args[1], 10),
     strength: parseInt(args[2], 10),
     agility: parseInt(args[3], 10),
     stamina: parseInt(args[4], 10),
-    intelligence: parseInt(args[5], 10),
+    intellect: parseInt(args[5], 10),
     dodge: parseInt(args[6], 10),
     parry: parseInt(args[7], 10),
     block: parseInt(args[8], 10),
