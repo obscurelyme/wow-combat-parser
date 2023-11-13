@@ -62,14 +62,14 @@ export class ReportBuilder {
   }
 
   public async combatantInfo(line: RawCombatLog): Promise<number> {
-    return createCombatant(line, this._currentEncounterGuid);
+    return createCombatant(line, this._reportGuid, this._currentEncounterGuid);
   }
 
   public async combatLog(line: RawCombatLog): Promise<void> {
     return Promise.resolve();
   }
 
-  public inEncounter() {
-    return this._currentEncounterGuid !== '';
+  public inEncounter(): boolean {
+    return !!this._currentEncounterGuid;
   }
 }

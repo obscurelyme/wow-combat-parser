@@ -24,6 +24,7 @@
     "start": "tsc && electron .",
     "build": "tsc",
     "rebuild": "electron-rebuild -f -w sqlite3",
+    "debug": "tsc && electron --inspect=5858 .",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },

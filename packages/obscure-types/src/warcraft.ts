@@ -25,6 +25,7 @@ export enum WarcraftClassSpecialization {
   FeralDruid = 103,
   GuardianDruid = 104,
   RestorationDruid = 105,
+  AugmentationEvoker = 1473,
   DevastationEvoker = 1467,
   PreservationEvoker = 1468,
   BeastMasteryHunter = 253,

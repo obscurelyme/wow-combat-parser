@@ -1,7 +1,8 @@
 import { WarcraftClass, WarcraftFaction, WarcraftClassSpecialization } from './warcraft';
 
 export interface Combatant {
-  id: string;
+  guid: string;
+  reportGuid: string;
   encounterGuid: string;
   timestamp: number;
   playerGuid: string;

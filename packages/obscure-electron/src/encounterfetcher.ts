@@ -81,6 +81,24 @@ export function getAllEncountersFromReport(reportGuid: string): Promise<Encounte
     });
 }
 
+type EncounterIds = Pick<Encounter, 'wowEncounterId'>[]; 
+
+export function getAllEncounterIdsFromReport(reportGuid: string): Promise<EncounterIds> {
+  const conn = CombatDB.connection();
+
+  return conn<Encounter>('Encounters')
+    .select('wowEncounterId')
+    .where({
+      reportGuid,
+    })
+    .then((rows) => {
+      if (rows.length) {
+        return rows.map(row => ({wowEncounterId: row.wowEncounterId}));
+      }
+      return [];
+    });
+}
+
 export function getEncounter(encounterId: string): Promise<Encounter | null> {
   const conn = CombatDB.connection();
 

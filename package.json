@@ -21,6 +21,7 @@
     "start:ui": "yarn workspace @obscure/ui start",
     "build:ui": "yarn workspace @obscure/ui build",
     "start:electron": "yarn workspace @obscure/electron start",
+    "debug:electron": "yarn workspace @obscure/electron debug",
     "build:electron": "yarn workspace @obscure/electron build",
     "build:types": "yarn workspace @obscure/types build",
     "build": "yarn build:types && yarn build:ui && yarn build:electron && yarn package",

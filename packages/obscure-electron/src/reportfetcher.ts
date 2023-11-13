@@ -1,6 +1,7 @@
 import { Encounter, Report } from './types';
 import CombatDB from './database';
-import { CombatEvent } from '@obscure/types';
+import { Combatant, CombatEvent, ZoneChange } from '@obscure/types';
+import { getAllEncounterIdsFromReport } from './encounterfetcher';
 
 export function getReport(guid: string): Promise<Report> {
   const conn = CombatDB.connection();
@@ -33,6 +34,8 @@ export async function deleteReport(guid: string): Promise<{
   reportsDeleted: number;
   encountersDeleted: number;
   combatEventsDeleted: number;
+  zonesVisitedDeleted: number;
+  combatantsDeleted: number;
 }> {
   const conn = CombatDB.connection();
 
@@ -49,11 +52,21 @@ export async function deleteReport(guid: string): Promise<{
       .where({ reportGuid: guid })
       .del()
       .then(rows => Promise.resolve(rows)),
+    conn<ZoneChange>('ZonesVisited')
+      .where({ reportGuid: guid })
+      .del()
+      .then(rows => Promise.resolve(rows)),
+    conn<Combatant>('Combatants')
+      .where({ reportGuid: guid })
+      .del()
+      .then(rows => Promise.resolve(rows))
   ]);
 
   return {
     reportsDeleted: rowsDeleted[0],
     encountersDeleted: rowsDeleted[1],
     combatEventsDeleted: rowsDeleted[2],
+    zonesVisitedDeleted: rowsDeleted[3],
+    combatantsDeleted: rowsDeleted[4]
   };
 }

@@ -20,6 +20,7 @@ export class CombatDB {
       connection: {
         filename: this._databaseFilePath,
       },
+      useNullAsDefault: true
     });
 
     console.log(`Database connection opened`);
@@ -61,29 +62,32 @@ export class CombatDB {
    */
   private createCombatantsTable(tb: Knex.CreateTableBuilder) {
     tb.increments('id').primary();
-    tb.string('encounterGuid');
-    tb.integer('timestamp');
-    tb.text('playerGuid');
-    tb.integer('faction');
-    tb.integer('strength');
-    tb.integer('agility');
-    tb.integer('intellect');
-    tb.integer('dodge');
-    tb.integer('parry');
-    tb.integer('block');
-    tb.integer('critMelee');
-    tb.integer('critRanged');
-    tb.integer('critSpell');
-    tb.integer('speed');
-    tb.integer('lifesteal');
-    tb.integer('hasteMelee');
-    tb.integer('hasteRanged');
-    tb.integer('hasteSpell');
-    tb.integer('avoidance');
-    tb.integer('mastery');
-    tb.integer('versatilityDamageDone');
-    tb.integer('versatilityHealingDone');
-    tb.integer('versatilityDamageTaken');
+    tb.string('guid').notNullable();
+    tb.string('reportGuid').notNullable();
+    tb.string('encounterGuid').notNullable();
+    tb.integer('timestamp').notNullable();
+    tb.text('playerGuid').notNullable();
+    tb.integer('faction').notNullable();
+    tb.integer('strength').nullable();
+    tb.integer('agility').nullable();
+    tb.integer('stamina').nullable();
+    tb.integer('intellect').nullable();
+    tb.integer('dodge').nullable();
+    tb.integer('parry').nullable();
+    tb.integer('block').nullable();
+    tb.integer('critMelee').nullable();
+    tb.integer('critRanged').nullable();
+    tb.integer('critSpell').nullable();
+    tb.integer('speed').nullable();
+    tb.integer('lifesteal').nullable();
+    tb.integer('hasteMelee').nullable();
+    tb.integer('hasteRanged').nullable();
+    tb.integer('hasteSpell').nullable();
+    tb.integer('avoidance').nullable();
+    tb.integer('mastery').nullable();
+    tb.integer('versatilityDamageDone').nullable();
+    tb.integer('versatilityHealingDone').nullable();
+    tb.integer('versatilityDamageTaken').nullable();
     tb.integer('armor');
     tb.integer('spec');
     tb.text('talents');

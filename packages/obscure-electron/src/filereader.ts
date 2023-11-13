@@ -6,6 +6,7 @@ import { EventEmitter } from 'node:events';
 import { v4 as uuidv4 } from 'uuid';
 import { RawCombatLog, Report } from './types';
 import { ReportBuilder } from './reportbuilder';
+import { parseRawCombatLog } from './parsers/rawcombatlog';
 
 export declare interface FileReader {
   on(event: 'done', listener: (contents: Report) => void): this;
@@ -39,19 +40,14 @@ export class FileReader extends EventEmitter {
           if (firstLine) {
             firstLine = false;
           }
-          const e = line.split('  ');
-          const d = e[0].split(' ');
-          d[0] += `/${this._currentYear}`;
-          const timestamp = new Date(d.join(' ')).getTime();
-          const params = e[1].match(/("[^"]*")|[^,]+/g);
 
-          const rawCombatLog: RawCombatLog = {
-            timestamp,
-            id: uuidv4(),
-            subevent: params?.shift() ?? 'UNKNOWN',
-            params: params?.join('|').replaceAll('"', '') ?? '',
-          };
-        } catch {
+          try {
+            const rawCombatLog = parseRawCombatLog(line);
+          } catch (e) {
+            console.log(`Disgarding line ${line}`);
+          }
+        } catch(e) {
+          console.log(e);
           this._readInterface.removeAllListeners();
           this._readInterface.close();
           resolve(false);
@@ -79,72 +75,47 @@ export class FileReader extends EventEmitter {
     });
 
     this._readInterface.on('line', async line => {
-      const e = line.split('  ');
-      const d = e[0].split(' ');
-      d[0] += `/${this._currentYear}`;
-      const timestamp = new Date(d.join(' ')).getTime();
-      const params = e[1].match(/("[^"]*")|[^,]+/g);
+      try {
+        const rawCombatLog = parseRawCombatLog(line);
 
-      if (firstLine) {
-        report.beginReport(timestamp);
-        firstLine = false;
+        if (firstLine) {
+          report.beginReport(rawCombatLog.timestamp);
+          firstLine = false;
+        }
+
+        switch (rawCombatLog.subevent) {
+          case 'ENCOUNTER_START': {
+            await report.beginEncounter(rawCombatLog);
+            break;
+          }
+          case 'ENCOUNTER_END': {
+            await report.endEncounter(rawCombatLog);
+            break;
+          }
+          case 'ZONE_CHANGE': {
+            await report.zoneChange(rawCombatLog);
+            break;
+          }
+          case 'MAP_CHANGE': {
+            await report.mapChange(rawCombatLog);
+            break;
+          }
+          case 'COMBATANT_INFO': {
+            // NOTE: ignore events outside of an encounter, for now
+            if (report.inEncounter()) {
+              await report.combatantInfo(rawCombatLog);
+            }
+            break;
+          }
+          default: {
+            // NOTE: General combat log
+            await report.combatLog(rawCombatLog);
+          }
+        }
+      } catch (e) {
+        console.log(`Disgarding line ${line}`);
+        return;
       }
-
-      const rawCombatLog: RawCombatLog = {
-        timestamp,
-        id: uuidv4(),
-        subevent: params?.shift() ?? 'UNKNOWN',
-        params: params?.join('|').replaceAll('"', '') ?? '',
-      };
-
-      switch (rawCombatLog.subevent) {
-        case 'ENCOUNTER_START': {
-          await report.beginEncounter(rawCombatLog);
-          break;
-        }
-        case 'ENCOUNTER_END': {
-          await report.endEncounter(rawCombatLog);
-          break;
-        }
-        case 'ZONE_CHANGE': {
-          await report.zoneChange(rawCombatLog);
-          break;
-        }
-        case 'MAP_CHANGE': {
-          await report.mapChange(rawCombatLog);
-          break;
-        }
-        case 'COMBATANT_INFO': {
-          await report.combatantInfo(rawCombatLog);
-          break;
-        }
-        default: {
-          // NOTE: General combat log
-          await report.combatLog(rawCombatLog);
-        }
-      }
-
-      // if (report.inEncounter()) {
-      //   console.log(rawCombatLog.subevent);
-      // }
-
-      /**
-       * if (inEncounter) {
-       *  Store the log as a CombatEvent
-       * } else {
-       *  Discard the log
-       * }
-       */
-
-      // NOTE: this is nonsense because it wastes so much memory. get rid of this!!!
-      // Check if it's the start of an encounter, if so create an encounter, store all combat events while !encounterEnd
-      // For now, all other combat logs can be discarded.
-      // this._rawCombatLog.push({
-      //   timestamp,
-      //   id: uuidv4(),
-      //   subevent: params?.shift() ?? 'UNKNOWN',
-      //   params: params?.join('|') ?? '',
-      // });
     });
 
     await once(this._readInterface, 'close');

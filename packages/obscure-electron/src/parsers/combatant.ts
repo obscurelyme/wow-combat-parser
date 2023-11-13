@@ -1,79 +1,82 @@
 import { Combatant, RawCombatLog, WarcraftClass, WarcraftClassSpecialization } from '@obscure/types';
 
-function determineClassFromSpecId(spec: number | WarcraftClassSpecialization): WarcraftClass {
+export function determineClassFromSpecId(spec: number | WarcraftClassSpecialization): WarcraftClass {
   switch (spec) {
-    case (WarcraftClassSpecialization.BloodDeathKnight,
-    WarcraftClassSpecialization.FrostDeathKnight,
-    WarcraftClassSpecialization.UnholyDeathKnight): {
+    case WarcraftClassSpecialization.BloodDeathKnight:
+    case WarcraftClassSpecialization.FrostDeathKnight:
+    case WarcraftClassSpecialization.UnholyDeathKnight: {
       return WarcraftClass.DeathKnight;
     }
 
-    case (WarcraftClassSpecialization.HavocDemonHunter, WarcraftClassSpecialization.VegeanceDemonHunter): {
+    case WarcraftClassSpecialization.HavocDemonHunter: 
+    case WarcraftClassSpecialization.VegeanceDemonHunter: {
       return WarcraftClass.DemonHunter;
     }
 
-    case (WarcraftClassSpecialization.BalanceDruid,
-    WarcraftClassSpecialization.RestorationDruid,
-    WarcraftClassSpecialization.GuardianDruid,
-    WarcraftClassSpecialization.FeralDruid): {
+    case WarcraftClassSpecialization.BalanceDruid:
+    case WarcraftClassSpecialization.RestorationDruid:
+    case WarcraftClassSpecialization.GuardianDruid:
+    case WarcraftClassSpecialization.FeralDruid: {
       return WarcraftClass.Druid;
     }
-
-    case (WarcraftClassSpecialization.DevastationEvoker, WarcraftClassSpecialization.PreservationEvoker): {
+    
+    case WarcraftClassSpecialization.AugmentationEvoker:
+    case WarcraftClassSpecialization.DevastationEvoker:
+    case WarcraftClassSpecialization.PreservationEvoker: {
       return WarcraftClass.Evoker;
     }
 
-    case (WarcraftClassSpecialization.BeastMasteryHunter,
-    WarcraftClassSpecialization.MarksmanshipHunter,
-    WarcraftClassSpecialization.SurvivalHunter): {
+    case WarcraftClassSpecialization.BeastMasteryHunter:
+    case WarcraftClassSpecialization.MarksmanshipHunter:
+    case WarcraftClassSpecialization.SurvivalHunter: {
       return WarcraftClass.Hunter;
     }
 
-    case (WarcraftClassSpecialization.ArcaneMage,
-    WarcraftClassSpecialization.FrostMage,
-    WarcraftClassSpecialization.FireMage): {
+    case WarcraftClassSpecialization.ArcaneMage:
+    case WarcraftClassSpecialization.FrostMage:
+    case WarcraftClassSpecialization.FireMage: {
       return WarcraftClass.Mage;
     }
 
-    case (WarcraftClassSpecialization.BrewmasterMonk,
-    WarcraftClassSpecialization.MistweaverMonk,
-    WarcraftClassSpecialization.WindwalkerMonk): {
+    case WarcraftClassSpecialization.BrewmasterMonk:
+    case WarcraftClassSpecialization.MistweaverMonk:
+    case WarcraftClassSpecialization.WindwalkerMonk: {
       return WarcraftClass.Monk;
     }
 
-    case (WarcraftClassSpecialization.HolyPaladin,
-    WarcraftClassSpecialization.RetributionPaladin,
-    WarcraftClassSpecialization.ProtectionPaladin): {
+    case WarcraftClassSpecialization.HolyPaladin:
+    case WarcraftClassSpecialization.RetributionPaladin:
+    case WarcraftClassSpecialization.ProtectionPaladin: {
       return WarcraftClass.Paladin;
     }
 
-    case (WarcraftClassSpecialization.DisciplinePriest,
-    WarcraftClassSpecialization.HolyPriest,
-    WarcraftClassSpecialization.ShadowPriest): {
+    case WarcraftClassSpecialization.DisciplinePriest:
+    case WarcraftClassSpecialization.HolyPriest:
+    case WarcraftClassSpecialization.ShadowPriest: {
       return WarcraftClass.Priest;
     }
 
-    case (WarcraftClassSpecialization.AssassinationRogue,
-    WarcraftClassSpecialization.SubtletyRogue,
-    WarcraftClassSpecialization.OutlawRogue): {
+    case WarcraftClassSpecialization.AssassinationRogue:
+    case WarcraftClassSpecialization.SubtletyRogue:
+    case WarcraftClassSpecialization.OutlawRogue: {
       return WarcraftClass.Rogue;
     }
 
-    case (WarcraftClassSpecialization.ElementalShaman,
-    WarcraftClassSpecialization.EnhancementShaman,
-    WarcraftClassSpecialization.RestorationShaman): {
+    case WarcraftClassSpecialization.ElementalShaman:
+    case WarcraftClassSpecialization.EnhancementShaman:
+    case WarcraftClassSpecialization.RestorationShaman: {
       return WarcraftClass.Shaman;
     }
 
-    case (WarcraftClassSpecialization.AfflictionWarlock,
-    WarcraftClassSpecialization.DestructionWarlock,
-    WarcraftClassSpecialization.DemonologyWarlock): {
+    case WarcraftClassSpecialization.AfflictionWarlock:
+    case WarcraftClassSpecialization.DestructionWarlock:
+    case WarcraftClassSpecialization.DemonologyWarlock: {
       return WarcraftClass.Warlock;
     }
 
-    case (WarcraftClassSpecialization.ArmsWarrior,
-    WarcraftClassSpecialization.FuryWarrior,
-    WarcraftClassSpecialization.ProtectionWarrior): {
+    case WarcraftClassSpecialization.ArmsWarrior:
+    case WarcraftClassSpecialization.FuryWarrior:
+    case WarcraftClassSpecialization.ProtectionWarrior: {
       return WarcraftClass.Warrior;
     }
 
@@ -83,7 +86,7 @@ function determineClassFromSpecId(spec: number | WarcraftClassSpecialization): W
   }
 }
 
-export function parseCombatantInfoEvent(rawEvent: RawCombatLog, encounterGuid: string): Combatant {
+export function parseCombatantInfoEvent(rawEvent: RawCombatLog, reportGuid: string, encounterGuid: string): Omit<Combatant, 'id'> {
   const arrayArgs = rawEvent.params.match(/\[([^]*?)]/g);
   const args = rawEvent.params.split('|');
   const spec = parseInt(args[23], 10);
@@ -93,8 +96,9 @@ export function parseCombatantInfoEvent(rawEvent: RawCombatLog, encounterGuid: s
   }
 
   return {
+    guid: rawEvent.id,
     timestamp: rawEvent.timestamp,
-    id: rawEvent.id,
+    reportGuid,
     encounterGuid,
     playerGuid: args[0],
     faction: parseInt(args[1], 10),

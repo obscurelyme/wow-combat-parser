@@ -12,4 +12,10 @@ describe('parseRawCombatLog', () => {
       'Player-76-0B8BF957|Lushii-Sargeras|0x514|0x0|Player-76-0B8BF957|Lushii-Sargeras|0x514|0x0|394462|Inspired by Frost and Earth|0x1|BUFF'
     );
   });
+
+  it('should not parse a combat log, and throw an error', () => {
+    const line = 'Consumes all players within 10 yards.';
+
+    expect(() => parseRawCombatLog(line)).toThrow();
+  });
 });
