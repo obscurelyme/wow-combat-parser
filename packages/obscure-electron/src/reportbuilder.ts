@@ -23,8 +23,8 @@ export class ReportBuilder {
     return report.getProgress();
   }
 
-  public constructor(reportName: string) {
-    this._reportGuid = uuidv4();
+  public constructor(reportName: string, reportGuid: string) {
+    this._reportGuid = reportGuid;
     this._reportName = reportName;
     this._currentProgress = 0;
 
@@ -93,5 +93,9 @@ export class ReportBuilder {
 
   public inEncounter(): boolean {
     return !!this._currentEncounterGuid;
+  }
+
+  public completeReport(): void {
+    ReportBuilder._builderCache.delete(this._reportGuid);
   }
 }

@@ -6,9 +6,13 @@ function makeErrorMessage(functionName: string) {
   return `Window API is not defined for "${functionName}". Either the Electron server not started, you have not defined this method, or you have not exposed this method.`;
 }
 
-export function createReport(reportName: string, filePath: string): Promise<ElectronResult<Report>> {
+export function createReport(
+  reportName: string,
+  filePath: string,
+  reportGuid: string
+): Promise<ElectronResult<Report>> {
   if (window.api?.createReport) {
-    return window.api.createReport(reportName, filePath);
+    return window.api.createReport(reportName, filePath, reportGuid);
   }
   return Promise.reject(makeErrorMessage('createReport'));
 }
@@ -72,4 +76,9 @@ export function getJournalEncounter(dungeonEncounterId: number): Promise<Journal
   return Promise.reject(makeErrorMessage('getJournalEncounter'));
 }
 
-// export function getEncounter(encounterId: string): Promise<Encounter> {}
+export function getReportUploadProgress(reportGuid: string): Promise<number> {
+  if (window.api?.getReportUploadProgress) {
+    return window.api.getReportUploadProgress(reportGuid);
+  }
+  return Promise.reject(makeErrorMessage('getReportUploadProgress'));
+}

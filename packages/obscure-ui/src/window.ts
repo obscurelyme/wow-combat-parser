@@ -5,7 +5,7 @@ export {};
 declare global {
   interface Window {
     api: {
-      createReport: (reportName: string, filePath: string) => Promise<ElectronResult<Report>>;
+      createReport: (reportName: string, filePath: string, reportGuid: string) => Promise<ElectronResult<Report>>;
       deleteReport: (reportGuid: string) => Promise<ElectronResult<unknown>>;
       getAllReports: () => Promise<Report[]>;
       getReport: (reportGuid: string) => Promise<Report>;
@@ -13,6 +13,7 @@ declare global {
       getBNetProfileAuthToken: (authCode: string) => Promise<AuthToken>;
       getBNetGeneralAuthToken: () => Promise<AuthToken>;
       getJournalEncounter: (dungeonEncounterId: number) => Promise<JournalEncounter>;
+      getReportUploadProgress: (reportGuid: string) => Promise<number>;
     };
   }
 }

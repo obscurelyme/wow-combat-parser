@@ -55,10 +55,10 @@ export class FileReader extends EventEmitter {
     return valid;
   }
 
-  public async read(reportName: string, filePath: string): Promise<Report> {
+  public async read(reportName: string, filePath: string, reportGuid: string): Promise<Report> {
     this._currentLineIndex = 0;
     let firstLine = true;
-    const report = new ReportBuilder(reportName);
+    const report = new ReportBuilder(reportName, reportGuid);
     this._currentFilePath = filePath;
     this._readInterface = readline.createInterface({
       input: fs.createReadStream(path.join(`${filePath}`)),

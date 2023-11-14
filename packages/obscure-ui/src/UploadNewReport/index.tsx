@@ -1,19 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, SubmitHandler, useFormState } from 'react-hook-form';
 import { useRevalidator } from 'react-router-dom';
 import { Box, Dialog, DialogTitle, DialogContent, Typography, CircularProgress } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { v4 as uuid } from 'uuid';
+import { useQuery } from '@tanstack/react-query';
 
-import { createReport } from '../api';
+import { createReport, getReportUploadProgress } from '../api';
 import { LogFormInput } from '../types';
 import FileInput from '../FileInput';
 import TextInput from '../TextInput';
 import { toast } from '../Snackbar';
 
-function UploadProgress({ isSubmitting }: { isSubmitting: boolean }): React.ReactElement {
+interface UploadProgressProps {
+  reportGuid: string;
+  isOpen: boolean;
+}
+
+function UploadProgress({ reportGuid, isOpen }: UploadProgressProps): React.ReactElement {
+  const progress = useQuery({
+    queryKey: ['uploadProgress', reportGuid],
+    queryFn: () => getReportUploadProgress(reportGuid),
+    refetchInterval: 1000,
+  });
+
+  const currentValue = progress.data ? Math.floor(progress.data * 100) : 0;
+
   return (
     <Dialog
-      open={isSubmitting}
+      open={isOpen}
       disableEscapeKeyDown
       onClose={() => {
         // NOTE: Block all closing events, we close this when isSubmitting is false
@@ -21,7 +36,10 @@ function UploadProgress({ isSubmitting }: { isSubmitting: boolean }): React.Reac
       <DialogTitle>Uploading your report...</DialogTitle>
       <DialogContent>
         <Box width="100% " justifyContent="center" alignItems="center">
-          <CircularProgress />
+          <CircularProgress variant="determinate" value={currentValue} />
+          <Box>
+            <Typography variant="caption" component="div" color="text.secondary">{`${currentValue}%`}</Typography>
+          </Box>
         </Box>
       </DialogContent>
     </Dialog>
@@ -38,11 +56,14 @@ export default function UploadNewReport(): React.ReactElement {
     mode: 'onChange',
   });
   const { isSubmitting } = useFormState({ control });
+  const [reportGuid, setReportGuid] = useState<string>('');
 
   const onSubmit: SubmitHandler<LogFormInput> = async data => {
     try {
       if (data.reportName && data.combatLog?.path) {
-        const report = await createReport(data.reportName, data.combatLog.path);
+        const newReportGuid = uuid();
+        setReportGuid(newReportGuid);
+        const report = await createReport(data.reportName, data.combatLog.path, newReportGuid);
         if (report.error) {
           throw report.error;
         }
@@ -59,6 +80,7 @@ export default function UploadNewReport(): React.ReactElement {
       }
       throw new Error('Invalid form data');
     } catch (e) {
+      setReportGuid('');
       toast.fire({
         severity: 'error',
         message: (e as Error).message ?? '',
@@ -131,7 +153,7 @@ export default function UploadNewReport(): React.ReactElement {
           </Box>
         </form>
       </Box>
-      <UploadProgress isSubmitting={isSubmitting} />
+      <UploadProgress reportGuid={reportGuid} isOpen={isSubmitting} />
     </>
   );
 }

@@ -5,7 +5,7 @@ import { ElectronError } from '@obscure/types';
 
 import { getAllReports, getReport } from './handlers/reports';
 import { getAllEncountersFromReport } from './handlers/encounters';
-import { createReport, deleteReport } from './handlers';
+import { connectReportHandlers } from './handlers';
 import { fetchGeneralAuthToken, fetchProfileAuthToken } from './vendors/blizzard';
 import { buildElectronResponse } from './utils';
 import { getAuthTokens, isAuthTokenExpired, saveTokens } from './handlers/user';
@@ -74,8 +74,6 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.handle('createReport', createReport);
-ipcMain.handle('deleteReport', deleteReport);
 ipcMain.handle('getAllReports', async () => {
   const reports = await getAllReports();
   return reports;
@@ -141,3 +139,4 @@ ipcMain.handle('getBNetGeneralAuthToken', async () => {
   }
 });
 connectJournalEncounterHandlers(ipcMain);
+connectReportHandlers(ipcMain);
