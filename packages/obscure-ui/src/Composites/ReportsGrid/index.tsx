@@ -20,8 +20,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useNavigate, useRevalidator } from 'react-router-dom';
 
 import { Report } from '@obscure/types';
-import { deleteReport } from '../api';
-import { toast } from '../Snackbar';
+import { deleteReport } from '../../api';
+import { toast } from '../../Snackbar';
 
 interface ReportsGridProps {
   reports: Report[];

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm, SubmitHandler, useFormState } from 'react-hook-form';
 import { useRevalidator } from 'react-router-dom';
-import { Box, Dialog, DialogTitle, DialogContent, Typography, CircularProgress } from '@mui/material';
+import { Box, Dialog, DialogTitle, DialogContent, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { v4 as uuid } from 'uuid';
 import { useQuery } from '@tanstack/react-query';
@@ -11,6 +11,7 @@ import { LogFormInput } from '../types';
 import FileInput from '../FileInput';
 import TextInput from '../TextInput';
 import { toast } from '../Snackbar';
+import CircularProgressIndicator from '../Composites/CircularProgressIndicator';
 
 interface UploadProgressProps {
   reportGuid: string;
@@ -35,12 +36,7 @@ function UploadProgress({ reportGuid, isOpen }: UploadProgressProps): React.Reac
       }}>
       <DialogTitle>Uploading your report...</DialogTitle>
       <DialogContent>
-        <Box width="100% " justifyContent="center" alignItems="center">
-          <CircularProgress variant="determinate" value={currentValue} />
-          <Box>
-            <Typography variant="caption" component="div" color="text.secondary">{`${currentValue}%`}</Typography>
-          </Box>
-        </Box>
+        <CircularProgressIndicator currentValue={currentValue} />
       </DialogContent>
     </Dialog>
   );

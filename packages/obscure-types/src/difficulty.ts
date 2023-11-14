@@ -48,8 +48,8 @@ export enum Difficulty {
   PVP = 34,
 }
 
-type DifficultyString = 
-  | '5 Player, Normal' 
+type DifficultyString =
+  | '5 Player, Normal'
   | '5 Player, Heroic'
   | '5 Player, Mythic'
   | 'Mythic Keystone'
@@ -67,7 +67,7 @@ type DifficultyString =
   | 'Heroic Raid'
   | 'Mythic Raid'
   | 'LFR'
-  | 'Event'
+  | 'Raid Event'
   | 'Timewalking Raid'
   | 'Timewalking LFR'
   | 'Misc Event';
@@ -78,14 +78,28 @@ const WOW_GAME_DIFFICULTIES: Map<Difficulty, DifficultyString> = new Map([
   [Difficulty.PartyMythic, '5 Player, Mythic'],
   [Difficulty.PartyMythicKeystone, 'Mythic Keystone'],
   [Difficulty.PartyEvent, '5 Player, Event'],
-  [Difficulty.PartyTimewalking, '5 Player, Timewalking']
+  [Difficulty.PartyTimewalking, '5 Player, Timewalking'],
+  [Difficulty.Raid10Player, '10 Player, Normal Raid'],
+  [Difficulty.Raid25Player, '25 Player, Normal Raid'],
+  [Difficulty.Raid10PlayerHeroic, '10 Player, Heroic Raid'],
+  [Difficulty.Raid25PlayerHeroic, '25 Player, Heroic Raid'],
+  [Difficulty.LegacyLFR, 'Legacy LFR'],
+  [Difficulty.Raid40Player, '40 Player, Raid'],
+  [Difficulty.RaidNormal, 'Normal Raid'],
+  [Difficulty.RaidHeroic, 'Heroic Raid'],
+  [Difficulty.RaidMythic, 'Mythic Raid'],
+  [Difficulty.LFR, 'LFR'],
+  [Difficulty.RaidEvent, 'Raid Event'],
+  [Difficulty.RaidTimewalking, 'Timewalking Raid'],
 ]);
 
 export class WoWDifficultyMap {
   public static getString(id: Difficulty): DifficultyString {
     const returnString = WOW_GAME_DIFFICULTIES.get(id);
     if (!returnString) {
-      throw new Error(`Invalid DifficultyId, "${id}", used in call to getString. No string could be returned because of this.`);
+      throw new Error(
+        `Invalid DifficultyId, "${id}", used in call to getString. No string could be returned because of this.`
+      );
     }
     return returnString;
   }

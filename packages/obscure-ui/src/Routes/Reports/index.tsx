@@ -21,7 +21,7 @@ export function ReportPage() {
             <Link to={`/encounter/${encounter.wowEncounterId}`}>{`${encounter.name} - ${
               encounter.success ? 'Defeated' : 'Failed'
             }`}</Link>
-            
+
             {WoWDifficultyMap.getString(encounter.difficultyId)}
           </li>
         ))}
@@ -34,18 +34,6 @@ export function ReportsPage() {
   return (
     <div>
       <Typography variant="h2">Reports Page</Typography>
-
-      {/* <ul>
-        <li>
-          <Link to={`/reports/1`}>First Report</Link>
-        </li>
-        <li>
-          <Link to={`/reports/2`}>Second Report</Link>
-        </li>
-        <li>
-          <Link to={`/reports/3`}>Third Report</Link>
-        </li>
-      </ul> */}
     </div>
   );
 }

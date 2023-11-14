@@ -4,7 +4,7 @@ import { Box, Divider } from '@mui/material';
 import { Report } from '@obscure/types';
 
 import UploadNewReport from '../../UploadNewReport';
-import ReportsGrid from '../../ReportsGrid';
+import ReportsGrid from '../../Composites/ReportsGrid';
 import { useLoaderData } from '../utils';
 import { getAllReports } from '../../api';
 

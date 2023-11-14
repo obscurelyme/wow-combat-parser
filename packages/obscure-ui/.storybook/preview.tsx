@@ -1,4 +1,5 @@
 import React from 'react';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 
 import { Preview } from '@storybook/react';
 
@@ -15,11 +16,26 @@ const preview: Preview = {
     },
   },
   decorators: [
-    Story => (
-      <ObscureThemeProvider>
-        <Story />
-      </ObscureThemeProvider>
-    ),
+    Story => {
+      const routes = createMemoryRouter(
+        [
+          {
+            path: '*',
+            element: <Story />,
+          },
+        ],
+        {
+          initialEntries: ['/'],
+          initialIndex: 0,
+        }
+      );
+
+      return (
+        <ObscureThemeProvider>
+          <RouterProvider router={routes} />
+        </ObscureThemeProvider>
+      );
+    },
   ],
 };
 
