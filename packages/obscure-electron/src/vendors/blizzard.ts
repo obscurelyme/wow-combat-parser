@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const BNET_CLIENT_ID = 'f31378954e66440aaac9a4a7cd07e65e';
-const BNET_CLIENT_SECRET = 'IMdrkC5WKu3FlZntrjL7fP7PTJd4QJhC';
+const BNET_CLIENT_ID = process.env.BNET_CLIENT_ID;
+const BNET_CLIENT_SECRET = process.env.BNET_SECRET;
 
 /**
  * Auth Token payload, exactly as Blizzard sends back
