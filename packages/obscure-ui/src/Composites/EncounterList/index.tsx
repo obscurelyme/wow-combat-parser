@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom';
-
-import { List, ListItem } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 
 import type { Encounter } from '@obscure/types';
 import { WoWDifficultyMap } from '@obscure/types';
@@ -10,17 +9,26 @@ interface EncounterListProps {
 }
 
 export default function EncounterList({ encounters }: EncounterListProps): React.ReactElement {
+  const navigate = useNavigate();
+
   return (
     <List>
-      {encounters.map(encounter => (
-        <ListItem key={`encounter-${encounter.guid}`}>
-          <Link to={`/encounter/${encounter.wowEncounterId}`}>{`${encounter.name} - ${
-            encounter.success ? 'Defeated' : 'Failed'
-          }`}</Link>
+      {encounters.map(encounter => {
+        const primary = `${encounter.name} - ${encounter.success ? 'Defeated' : 'Failed'}`;
+        const secondary = WoWDifficultyMap.getString(encounter.difficultyId);
 
-          {WoWDifficultyMap.getString(encounter.difficultyId)}
-        </ListItem>
-      ))}
+        return (
+          <ListItem disablePadding key={`encounter-${encounter.guid}`}>
+            <ListItemButton
+              divider
+              onClick={() => {
+                navigate(`/encounter/${encounter.wowEncounterId}`);
+              }}>
+              <ListItemText primary={primary} secondary={secondary} />
+            </ListItemButton>
+          </ListItem>
+        );
+      })}
     </List>
   );
 }

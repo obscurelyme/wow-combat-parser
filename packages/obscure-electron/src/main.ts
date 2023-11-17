@@ -11,6 +11,11 @@ import { buildElectronResponse } from './utils';
 import { getAuthTokens, isAuthTokenExpired, saveTokens } from './handlers/user';
 import { connectHandlers as connectJournalEncounterHandlers } from './handlers/journalEncounter';
 import CombatDB from './database';
+import { config } from 'dotenv';
+
+config({
+  path: join(__dirname, '../../../.env'),
+});
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
