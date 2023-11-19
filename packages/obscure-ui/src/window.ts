@@ -1,4 +1,12 @@
-import { AuthToken, ElectronResult, Encounter, JournalEncounter, Report } from './types';
+import {
+  AuthToken,
+  BnetCreatureData,
+  BnetJournalData,
+  ElectronResult,
+  Encounter,
+  JournalEncounter,
+  Report,
+} from './types';
 
 export {};
 
@@ -14,6 +22,9 @@ declare global {
       getBNetGeneralAuthToken: () => Promise<AuthToken>;
       getJournalEncounter: (dungeonEncounterId: number) => Promise<JournalEncounter>;
       getReportUploadProgress: (reportGuid: string) => Promise<number>;
+      getBnetJournalInstanceData: (journalInstanceId: string) => Promise<BnetJournalData.JournalInstance>;
+      getBnetJournalEncounterData: (JournalEncounterId: string) => Promise<BnetJournalData.JournalEncounter>;
+      getBnetCreatureMediaData: (creatureDisplayId: string) => Promise<BnetCreatureData.CreatureDisplayMedia>;
     };
   }
 }

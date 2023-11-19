@@ -1,6 +1,14 @@
 import { faker } from '@faker-js/faker';
 
-import { AuthToken, ElectronResult, Encounter, Report, JournalEncounter } from '../types';
+import {
+  AuthToken,
+  ElectronResult,
+  Encounter,
+  Report,
+  JournalEncounter,
+  BnetJournalData,
+  BnetCreatureData,
+} from '../types';
 
 function makeErrorMessage(functionName: string) {
   return `Window API is not defined for "${functionName}". Either the Electron server not started, you have not defined this method, or you have not exposed this method.`;
@@ -81,4 +89,25 @@ export function getReportUploadProgress(reportGuid: string): Promise<number> {
     return window.api.getReportUploadProgress(reportGuid);
   }
   return Promise.reject(makeErrorMessage('getReportUploadProgress'));
+}
+
+export function getBnetJournalInstanceData(journalInstanceId: string): Promise<BnetJournalData.JournalInstance> {
+  if (window.api?.getBnetJournalInstanceData) {
+    return window.api.getBnetJournalInstanceData(journalInstanceId);
+  }
+  return Promise.reject(makeErrorMessage('getBnetJournalInstanceData'));
+}
+
+export function getBnetJournalEncounterData(JournalEncounterId: string): Promise<BnetJournalData.JournalEncounter> {
+  if (window.api?.getBnetJournalEncounterData) {
+    return window.api.getBnetJournalEncounterData(JournalEncounterId);
+  }
+  return Promise.reject(makeErrorMessage('getBnetJournalEncounterData'));
+}
+
+export function getBnetCreatureMediaData(creatureDisplayId: string): Promise<BnetCreatureData.CreatureDisplayMedia> {
+  if (window.api?.getBnetCreatureMediaData) {
+    return window.api.getBnetCreatureMediaData(creatureDisplayId);
+  }
+  return Promise.reject(makeErrorMessage('getBnetCreatureMediaData'));
 }

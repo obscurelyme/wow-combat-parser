@@ -10,8 +10,15 @@ import { fetchGeneralAuthToken, fetchProfileAuthToken } from './vendors/blizzard
 import { buildElectronResponse } from './utils';
 import { getAuthTokens, isAuthTokenExpired, saveTokens } from './handlers/user';
 import { connectHandlers as connectJournalEncounterHandlers } from './handlers/journalEncounter';
+import { connectBattleNetCreatureDataHandlers } from './handlers/battlenet/gamedata/creature';
+import { connectBattleNetJournalDataHandlers } from './handlers/battlenet/gamedata/journal';
+
 import CombatDB from './database';
 import { config } from 'dotenv';
+
+import electronReload from 'electron-reload';
+
+electronReload(__dirname, {});
 
 config({
   path: join(__dirname, '../../../.env'),
@@ -145,3 +152,5 @@ ipcMain.handle('getBNetGeneralAuthToken', async () => {
 });
 connectJournalEncounterHandlers(ipcMain);
 connectReportHandlers(ipcMain);
+connectBattleNetJournalDataHandlers(ipcMain);
+connectBattleNetCreatureDataHandlers(ipcMain);

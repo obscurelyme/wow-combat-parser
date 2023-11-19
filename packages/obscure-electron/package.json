@@ -21,7 +21,7 @@
   },
   "scripts": {
     "lint": "eslint ./src",
-    "start": "tsc && electron .",
+    "start": "cross-env OBSCURE_DEBUG=true concurrently \"tsc -w\" \"electron .\"",
     "build": "tsc",
     "rebuild": "electron-rebuild -f -w sqlite3",
     "debug": "tsc && electron --inspect=5858 .",

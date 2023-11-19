@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-const BNET_CLIENT_ID = process.env.BNET_CLIENT_ID;
-const BNET_CLIENT_SECRET = process.env.BNET_SECRET;
+import { BnetJournalData, BnetCreatureData } from '@obscure/types';
+
+import { getAuthTokens } from '../handlers/user';
 
 /**
  * Auth Token payload, exactly as Blizzard sends back
@@ -19,6 +20,9 @@ interface BlizzardAuthPayload {
  * @param authCode
  */
 export async function fetchProfileAuthToken(authCode: string): Promise<BlizzardAuthPayload> {
+  const BNET_CLIENT_ID = process.env.BNET_CLIENT_ID;
+  const BNET_CLIENT_SECRET = process.env.BNET_CLIENT_SECRET;
+
   const { data } = await axios.post<BlizzardAuthPayload>(
     `https://oauth.battle.net/oauth/token?grant_type=authorization_code&code=${authCode}&redirect_uri=http://localhost:5173/`,
     undefined,
@@ -39,6 +43,9 @@ export async function fetchProfileAuthToken(authCode: string): Promise<BlizzardA
  * @param authCode
  */
 export async function fetchGeneralAuthToken(): Promise<BlizzardAuthPayload> {
+  const BNET_CLIENT_ID = process.env.BNET_CLIENT_ID;
+  const BNET_CLIENT_SECRET = process.env.BNET_CLIENT_SECRET;
+
   const { data } = await axios.post<BlizzardAuthPayload>(
     `https://oauth.battle.net/oauth/token`,
     {
@@ -48,6 +55,62 @@ export async function fetchGeneralAuthToken(): Promise<BlizzardAuthPayload> {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: `Basic ${Buffer.from(`${BNET_CLIENT_ID}:${BNET_CLIENT_SECRET}`).toString('base64')}`,
+      },
+    }
+  );
+
+  return data;
+}
+
+export async function fetchJournalInstance(jounalInstanceId: string): Promise<BnetJournalData.JournalInstance> {
+  const { generalToken } = await getAuthTokens();
+
+  const { data } = await axios.get<BnetJournalData.JournalInstance>(
+    `https://us.api.blizzard.com/data/wow/journal-instance/${jounalInstanceId}`,
+    {
+      params: {
+        region: 'us',
+        namespace: 'static-us',
+        locale: 'en_US',
+        access_token: generalToken,
+      },
+    }
+  );
+
+  return data;
+}
+
+export async function fetchJournalEncounter(jounalEncounterId: string): Promise<BnetJournalData.JournalEncounter> {
+  const { generalToken } = await getAuthTokens();
+
+  const { data } = await axios.get<BnetJournalData.JournalEncounter>(
+    `https://us.api.blizzard.com/data/wow/journal-encounter/${jounalEncounterId}`,
+    {
+      params: {
+        region: 'us',
+        namespace: 'static-us',
+        locale: 'en_US',
+        access_token: generalToken,
+      },
+    }
+  );
+
+  return data;
+}
+
+export async function fetchCreatureMediaData(
+  creatureDisplayId: string
+): Promise<BnetCreatureData.CreatureDisplayMedia> {
+  const { generalToken } = await getAuthTokens();
+
+  const { data } = await axios.get<BnetCreatureData.CreatureDisplayMedia>(
+    `https://us.api.blizzard.com/data/wow/media/creature-display/${creatureDisplayId}`,
+    {
+      params: {
+        region: 'us',
+        namespace: 'static-us',
+        locale: 'en_US',
+        access_token: generalToken,
       },
     }
   );

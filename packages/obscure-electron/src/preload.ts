@@ -11,6 +11,12 @@ const WINDOW_API = {
   getBNetGeneralAuthToken: () => ipcRenderer.invoke('getBNetGeneralAuthToken'),
   getJournalEncounter: (dungeonEncounterId: number) => ipcRenderer.invoke('getJournalEncounter', dungeonEncounterId),
   getReportUploadProgress: (reportGuid: string) => ipcRenderer.invoke('getReportUploadProgress', reportGuid),
+  getBnetJournalInstanceData: (journalInstanceId: string) =>
+    ipcRenderer.invoke('fetchJournalInstance', journalInstanceId),
+  getBnetJournalEncounterData: (JournalEncounterId: string) =>
+    ipcRenderer.invoke('fetchJournalEncounter', JournalEncounterId),
+  getBnetCreatureMediaData: (creatureDisplayId: string) =>
+    ipcRenderer.invoke('fetchCreatureMediaData', creatureDisplayId),
 };
 
 contextBridge.exposeInMainWorld('api', WINDOW_API);
