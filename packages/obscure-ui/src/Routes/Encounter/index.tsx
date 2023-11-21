@@ -11,7 +11,7 @@ export function EncounterPage() {
 
   return (
     <Box>
-      <PageHeader title={journalEncounter?.name ?? ''} tooltip="Go back to encounter" />
+      <PageHeader title={journalEncounter?.name ?? ''} tooltip="Go back to encounters" />
 
       <Divider />
 
