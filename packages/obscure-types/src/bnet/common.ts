@@ -19,7 +19,7 @@ export interface Category {
   type: string;
 }
 
-export interface Expansion {
+export interface ExpansionStub {
   key: Self;
   name: string;
   id: number;
@@ -30,13 +30,13 @@ export interface Media {
   id: number;
 }
 
-export interface ModeElement {
-  mode: Mode;
+export interface InstanceMode {
+  mode: EncounterMode;
   players: number;
   is_tracked: boolean;
 }
 
-export interface Mode {
+export interface EncounterMode {
   type: string;
   name: string;
 }
@@ -44,13 +44,13 @@ export interface Mode {
 export interface Creature {
   id: number;
   name: string;
-  creature_display: CreatureDisplay;
+  creature_display: Media;
 }
 
-export interface CreatureDisplay {
-  key: Self;
-  id: number;
-}
+// export interface CreatureDisplay {
+//   key: Self;
+//   id: number;
+// }
 
 export interface Instance {
   key: Self;
@@ -58,24 +58,29 @@ export interface Instance {
   id: number;
 }
 
-export interface Item {
+export type Item = Instance;
+
+export interface Drop {
+  /**
+   * The item's drop id, NOT to be confused with the actual item id
+   */
   id: number;
-  item: Instance;
+  item: Item;
 }
 
 export interface Phase {
   id: number;
   title: string;
-  sections: Section[];
+  sections: PhaseSection[];
   body_text?: string;
 }
 
-export interface Section {
+export interface PhaseSection {
   id: number;
   title: string;
   body_text: string;
-  sections?: Section[];
-  creature_display?: CreatureDisplay;
+  sections?: PhaseSection[];
+  creature_display?: Media;
 }
 
 export interface Asset {
@@ -84,4 +89,19 @@ export interface Asset {
    */
   key: string;
   value: string;
+}
+
+export interface EncounterStub {
+  /**
+   * The encounter id
+   */
+  id: number;
+  /**
+   * Link to fetch more details about this encounter
+   */
+  key: Self;
+  /**
+   * Name of the encounter
+   */
+  name: string;
 }

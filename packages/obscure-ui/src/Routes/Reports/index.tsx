@@ -1,17 +1,15 @@
-import { Button, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
-import { useGoBack } from '../utils';
 import { useReportData } from './loader';
+import PageHeader from '../../Composites/PageHeader';
 import EncounterList from '../../Composites/EncounterList';
 
 export function ReportPage() {
-  const goBack = useGoBack();
   const { report, encounters } = useReportData();
 
   return (
     <div>
-      <Typography variant="h2">{report.name}</Typography>
-      <Button onClick={goBack}>Go back to Reports</Button>
+      <PageHeader title={report.name} tooltip="Go back to reports" />
       <EncounterList encounters={encounters} />
     </div>
   );

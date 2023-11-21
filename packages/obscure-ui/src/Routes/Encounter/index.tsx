@@ -1,22 +1,25 @@
-import { Button, Divider, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 
-import { useGoBack } from '../utils';
 import { useEncounterLoaderData } from './loader';
+import JournalEncounterLootTable from '../../Composites/JournalEncounterLootTable';
+import PageHeader from '../../Composites/PageHeader';
 
 export function EncounterPage() {
-  const { journalEncounter } = useEncounterLoaderData();
-  const goBack = useGoBack();
+  const { journalEncounter, bnet } = useEncounterLoaderData();
+
+  console.log(bnet);
 
   return (
-    <div>
-      <Typography variant="h3">{journalEncounter?.name}</Typography>
+    <Box>
+      <PageHeader title={journalEncounter?.name ?? ''} tooltip="Go back to encounter" />
+
       <Divider />
 
       <Typography variant="body2">{journalEncounter?.description}</Typography>
-      
-      <div>
-        <Button onClick={goBack}>Back to report</Button>
-      </div>
-    </div>
+
+      <Divider />
+
+      {bnet && <JournalEncounterLootTable drops={bnet?.encounterData.items} />}
+    </Box>
   );
 }

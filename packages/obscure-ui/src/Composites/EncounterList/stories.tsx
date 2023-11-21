@@ -16,8 +16,8 @@ export default meta;
 
 function generateEncounters(count: number): Encounter[] {
   return Array.from({ length: count }, () => ({
-    startTime: faker.date.recent(3).getTime(),
-    endTime: faker.date.recent(3).getTime(),
+    startTime: faker.date.recent({ days: 10, refDate: new Date() }).getTime(),
+    endTime: faker.date.recent({ days: 10, refDate: new Date() }).getTime(),
     guid: faker.string.uuid(),
     reportGuid: faker.string.uuid(),
     wowEncounterId: faker.number.int({ min: 1, max: 999999999 }),

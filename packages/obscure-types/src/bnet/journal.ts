@@ -1,13 +1,14 @@
 import {
   Area,
   Asset,
-  Expansion,
-  ModeElement,
-  Mode,
+  ExpansionStub,
+  InstanceMode,
+  EncounterMode,
+  EncounterStub,
   Category,
   Media,
   Creature,
-  Item,
+  Drop,
   Phase,
   Instance,
   Link,
@@ -20,10 +21,10 @@ export interface JournalInstance {
   map: Area;
   area: Area;
   description: string;
-  encounters: Expansion[];
-  expansion: Expansion;
+  encounters: EncounterStub[];
+  expansion: ExpansionStub;
   location: Area;
-  modes: ModeElement[];
+  modes: InstanceMode[];
   media: Media;
   minimum_level: number;
   category: Category;
@@ -35,11 +36,11 @@ export interface JournalEncounter {
   name: string;
   description: string;
   creatures: Creature[];
-  items: Item[];
+  items: Drop[];
   sections: Phase[];
   instance: Instance;
   category: Category;
-  modes: Mode[];
+  modes: EncounterMode[];
 }
 
 export interface JournalInstanceMedia {

@@ -119,5 +119,6 @@ export * from './warcraft';
 export * from './combatant';
 export * from './zonechange';
 export * from './mapchange';
+export * as BnetCommon from './bnet/common';
 export * as BnetJournalData from './bnet/journal';
 export * as BnetCreatureData from './bnet/creature';
