@@ -14,7 +14,7 @@ export async function createReport(
   reportGuid: string
 ): Promise<ElectronResult<Report>> {
   const eventGuid = uuid();
-  console.log(`Processing event: `, eventGuid, event);
+  console.log(`Processing file upload...`);
   const fileReader = new FileReader();
   try {
     const valid = await fileReader.validate(filePath);
@@ -23,7 +23,7 @@ export async function createReport(
       return buildElectronResponse(contents);
     } else {
       const err = new ElectronError('Invalid File');
-      console.log(`Failed event: `, eventGuid, event, err.serialize());
+      console.log(`Failed event: `, err.serialize());
       fileReader.removeAllListeners();
       return buildElectronResponse<Report>(undefined, err);
     }
@@ -31,7 +31,7 @@ export async function createReport(
     const err = new ElectronError({
       ...(e as Error),
     });
-    console.log(`Failed event: `, eventGuid, event, err.serialize());
+    console.log(`Failed event: `, err.serialize());
     return buildElectronResponse<Report>(undefined, err);
   }
 }

@@ -6,6 +6,7 @@ import { EventEmitter } from 'node:events';
 import { Report } from './types';
 import { ReportBuilder } from './reportbuilder';
 import { parseRawCombatLog } from './parsers/rawcombatlog';
+import { parseCombatLogVersionEvent } from './parsers/combatlogversion';
 
 export declare interface FileReader {
   on(event: 'done', listener: (contents: Report) => void): this;
@@ -37,7 +38,17 @@ export class FileReader extends EventEmitter {
       this._lineCount++;
       try {
         try {
-          parseRawCombatLog(line);
+          const log = parseRawCombatLog(line);
+          if (log.subevent === 'COMBAT_LOG_VERSION') {
+            const isAdvanced = parseCombatLogVersionEvent(log);
+            if (!isAdvanced) {
+              // NOTE: we only support advanced combat logs
+              valid = false;
+              console.log(
+                `The log at ${filePath} is not an advanced combat log. This application only supports advanced combat logging.`
+              );
+            }
+          }
         } catch (e) {
           console.log(`Disgarding line ${line}`);
         }
@@ -93,7 +104,6 @@ export class FileReader extends EventEmitter {
             break;
           }
           case 'COMBATANT_INFO': {
-            // NOTE: ignore events outside of an encounter, for now
             if (report.inEncounter()) {
               await report.combatantInfo(rawCombatLog);
             }
