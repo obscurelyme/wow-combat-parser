@@ -12,8 +12,6 @@ import './index.css';
 
 const queryClient = new QueryClient();
 
-console.log(import.meta.env);
-
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ObscureThemeProvider>

@@ -123,3 +123,4 @@ export * from './combatlogversion';
 export * as BnetCommon from './bnet/common';
 export * as BnetJournalData from './bnet/journal';
 export * as BnetCreatureData from './bnet/creature';
+export * as BNetUserProfile from './bnet/profile';

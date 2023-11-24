@@ -128,3 +128,7 @@ export function logoutUser(): Promise<void> {
   }
   return Promise.reject(makeErrorMessage('logoutUser'));
 }
+
+export function getUserProfile(): Promise<any> {
+  return window.api.getUserProfile();
+}

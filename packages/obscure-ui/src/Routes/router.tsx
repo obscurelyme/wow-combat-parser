@@ -9,7 +9,8 @@ import { loader as encounterLoader } from './Encounter/loader';
 import ErrorPage from './Error';
 import HomePage, { loader as homeLoader } from './Home';
 import Authorize from './Authorize';
-import Profile from './Profile';
+import Profile, { loader as profileLoader } from './Profile';
+import RequiredAuth from '../Composites/RequiredAuth';
 
 export const router = createBrowserRouter([
   {
@@ -41,7 +42,12 @@ export const router = createBrowserRouter([
           },
           {
             path: '/profile',
-            element: <Profile />,
+            element: (
+              <RequiredAuth redirectTo="/">
+                <Profile />
+              </RequiredAuth>
+            ),
+            loader: profileLoader,
           },
         ],
       },

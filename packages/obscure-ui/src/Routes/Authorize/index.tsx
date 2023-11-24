@@ -10,6 +10,7 @@ import { useBNetAuth } from '../../Auth';
 
 export default function Authorize(): React.ReactElement {
   const { state, dispatch } = useBNetAuth();
+  const isUserLoggedIn = !!state.profileToken;
   const [searchParams] = useSearchParams();
   const authCode = searchParams.get('code');
   const { data, isFetching, isError, error } = useQuery({
@@ -26,7 +27,7 @@ export default function Authorize(): React.ReactElement {
     }
   }, [data, dispatch]);
 
-  if (state.profileToken) {
+  if (isUserLoggedIn) {
     return <Navigate to="/" />;
   }
 

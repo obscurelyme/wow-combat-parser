@@ -24,6 +24,10 @@ export function useBNetAuth(): BNetAuth {
   return useContext(BNetAuthContext);
 }
 
+export function useIsUserLoggedIn(): boolean {
+  return !!useContext(BNetAuthContext).state.profileToken;
+}
+
 interface BNetAuthProviderProps {
   profileToken?: AuthToken;
   generalToken: AuthToken;

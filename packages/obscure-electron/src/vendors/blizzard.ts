@@ -120,3 +120,21 @@ export async function fetchCreatureMediaData(
 
   return data;
 }
+
+export async function fetchUserProfileData(): Promise<any> {
+  const { profileToken } = await getAuthTokens();
+
+  const basePath = 'https://us.api.blizzard.com';
+  const endPoint = '/profile/user/wow';
+
+  const { data } = await axios.get(`${basePath}${endPoint}`, {
+    params: {
+      region: 'us',
+      locale: 'en_US',
+      namespace: 'profile-us',
+      access_token: profileToken,
+    },
+  });
+
+  return data;
+}

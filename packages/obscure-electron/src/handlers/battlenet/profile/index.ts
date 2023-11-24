@@ -3,7 +3,7 @@ import { IpcMain } from 'electron';
 import { AuthToken } from '@obscure/types';
 
 import { getAuthTokens, isAuthTokenExpired, saveTokens } from '../../../handlers/user';
-import { fetchProfileAuthToken } from '../../../vendors/blizzard';
+import { fetchProfileAuthToken, fetchUserProfileData } from '../../../vendors/blizzard';
 
 async function userAuthenticate(authCode: string): Promise<AuthToken> {
   const payload = await fetchProfileAuthToken(authCode);
@@ -41,11 +41,18 @@ async function getBNetProfileAuthToken(): Promise<AuthToken | undefined> {
   }
 }
 
+async function getUserProfile(): Promise<any> {
+  return fetchUserProfileData();
+}
+
 export function connectBNetProfileHandlers(ipcMain: IpcMain): void {
   ipcMain.handle('userAuthenticate', async (_, authCode: string) => {
     return await userAuthenticate(authCode);
   });
   ipcMain.handle('getBNetProfileAuthToken', async () => {
     return await getBNetProfileAuthToken();
+  });
+  ipcMain.handle('getUserProfile', async () => {
+    return await getUserProfile();
   });
 }

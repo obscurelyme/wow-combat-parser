@@ -28,6 +28,7 @@ declare global {
       getBNetProfileAuthToken: () => Promise<AuthToken | undefined>;
       userAuthenticate: (authCode: string) => Promise<AuthToken>;
       logoutUser: () => Promise<void>;
+      getUserProfile: () => Promise<any>;
       // ---------------------------------------------------------------------------------------------------------------
     };
   }

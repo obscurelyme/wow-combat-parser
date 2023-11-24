@@ -105,3 +105,32 @@ export interface EncounterStub {
    */
   name: string;
 }
+
+export interface Faction {
+  type: string;
+  name: string;
+}
+
+export interface Gender {
+  name: string;
+  type: string;
+}
+
+export interface PlayableClass {
+  key: Self;
+  id: number;
+  name: string;
+}
+
+export interface PlayableRace {
+  key: Self;
+  id: number;
+  name: string;
+}
+
+export interface Realm {
+  id: number;
+  key: Self;
+  name: string;
+  slug: string;
+}
