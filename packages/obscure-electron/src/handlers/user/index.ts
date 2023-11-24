@@ -1,6 +1,7 @@
 import { User } from '@obscure/types';
 
 import CombatDB from '../../database';
+import { IpcMain } from 'electron';
 
 // NOTE: just a single user within the database, we use this single record for all auth purposes
 const GLOBAL_USER_ID = 1;
@@ -46,6 +47,20 @@ export function isAuthTokenExpired(expireDate?: number): boolean {
   return new Date().getTime() > expireDate;
 }
 
+export async function logoutUser(): Promise<void> {
+  const conn = CombatDB.connection();
+
+  return conn('User')
+    .update({ profileToken: null, profileTokenExpireDate: null })
+    .where({ id: GLOBAL_USER_ID })
+    .then(_ => {
+      return;
+    })
+    .catch(_ => {
+      return;
+    });
+}
+
 async function getGeneralAuthToken() {
   return await Promise.resolve();
 }
@@ -64,4 +79,10 @@ async function renewProfileAuthToken() {
 
 async function renewGeneralAuthToken() {
   return await Promise.resolve();
+}
+
+export function connectUserHandles(ipcMain: IpcMain): void {
+  ipcMain.handle('logoutUser', async () => {
+    return await logoutUser();
+  });
 }

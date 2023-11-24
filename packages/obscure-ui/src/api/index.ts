@@ -121,3 +121,10 @@ export function getBnetCreatureMediaData(creatureDisplayId: string): Promise<Bne
   }
   return Promise.reject(makeErrorMessage('getBnetCreatureMediaData'));
 }
+
+export function logoutUser(): Promise<void> {
+  if (window.api.logoutUser) {
+    return window.api.logoutUser();
+  }
+  return Promise.reject(makeErrorMessage('logoutUser'));
+}

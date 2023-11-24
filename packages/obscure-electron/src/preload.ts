@@ -19,6 +19,7 @@ const WINDOW_API = {
   // BNET PROFILE HANDLERS ---------------------------------------------------------------------------------------------
   getBNetProfileAuthToken: () => ipcRenderer.invoke('getBNetProfileAuthToken'),
   userAuthenticate: (authCode: string) => ipcRenderer.invoke('userAuthenticate', authCode),
+  logoutUser: () => ipcRenderer.invoke('logoutUser'),
   // -------------------------------------------------------------------------------------------------------------------
 };
 

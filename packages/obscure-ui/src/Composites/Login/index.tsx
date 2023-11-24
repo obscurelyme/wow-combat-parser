@@ -1,12 +1,13 @@
 import { ReactElement } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useMatch, useNavigate } from 'react-router-dom';
 
-import { Avatar, Box, Stack, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Box, IconButton, Tooltip } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 import { useBNetAuth } from '../../Auth';
+import { logoutUser } from '../../api';
 
 const BASE_BATTLE_NET_URL = 'https://oauth.battle.net';
 const CLIENT_ID = import.meta.env.VITE_BNET_CLIENT_ID;
@@ -20,26 +21,32 @@ const authUrl = new URL(
 );
 
 export default function Login(): ReactElement {
+  const match = useMatch('profile');
   const navigate = useNavigate();
-  const auth = useBNetAuth();
-  const isLoggedin = auth.profileToken;
+  const { state, dispatch } = useBNetAuth();
+  const isLoggedin = state.profileToken;
 
   function handleLogin() {
     window.location.href = authUrl.href;
   }
 
-  function handleLogout() {
-    console.log('you have logged out');
+  async function handleLogout() {
+    await logoutUser();
+    dispatch?.({ type: 'logout' });
+    if (match) {
+      // NOTE: If we are on the profile page, redirect to the home page.
+      // we dont run into many issues here because this component doesn't unmount on navigate.
+      navigate('/');
+    }
   }
 
   function handleProfileClick() {
-    // TODO: navigate to the profile page
     navigate('/profile');
   }
 
   return (
     <>
-      {!isLoggedin && (
+      {isLoggedin && (
         <Box display="flex" justifyContent="center" alignItems="center">
           <Tooltip title="View profile">
             <IconButton onClick={handleProfileClick}>
@@ -54,7 +61,7 @@ export default function Login(): ReactElement {
           </Tooltip>
         </Box>
       )}
-      {isLoggedin && (
+      {!isLoggedin && (
         <Tooltip title="Login">
           <IconButton aria-label="Login" onClick={handleLogin}>
             <LoginIcon />
