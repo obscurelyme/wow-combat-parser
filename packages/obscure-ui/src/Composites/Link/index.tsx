@@ -7,7 +7,7 @@ type LinkProps = MuiLinkProps & ReactRouterLinkProps;
 
 export default function Link({ children, ...props }: React.PropsWithChildren<LinkProps>): React.ReactElement {
   return (
-    <MuiLink component={ReactRouterLink} {...props}>
+    <MuiLink variant="body2" underline="none" component={ReactRouterLink} {...props}>
       {children}
     </MuiLink>
   );

@@ -17,11 +17,16 @@ export function useBNetAuth(): BNetAuthData {
 }
 
 interface BNetAuthProviderProps {
+  profileToken?: AuthToken;
   generalToken: AuthToken;
 }
 
-export default function BNetAuthProvider({ children, generalToken }: React.PropsWithChildren<BNetAuthProviderProps>) {
-  const [authState] = useState<BNetAuthData>({ profileToken: undefined, generalToken });
+export default function BNetAuthProvider({
+  children,
+  profileToken,
+  generalToken,
+}: React.PropsWithChildren<BNetAuthProviderProps>) {
+  const [authState] = useState<BNetAuthData>({ profileToken, generalToken });
 
   return <BNetAuthContext.Provider value={authState}>{children}</BNetAuthContext.Provider>;
 }

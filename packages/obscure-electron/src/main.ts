@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, session } from 'electron';
 import { join } from 'path';
 
 import { ElectronError } from '@obscure/types';
@@ -12,6 +12,7 @@ import { getAuthTokens, isAuthTokenExpired, saveTokens } from './handlers/user';
 import { connectHandlers as connectJournalEncounterHandlers } from './handlers/journalEncounter';
 import { connectBattleNetCreatureDataHandlers } from './handlers/battlenet/gamedata/creature';
 import { connectBattleNetJournalDataHandlers } from './handlers/battlenet/gamedata/journal';
+import { connectBNetProfileHandlers } from './handlers/battlenet/profile';
 
 import CombatDB from './database';
 import { config } from 'dotenv';
@@ -58,6 +59,9 @@ async function createWindow() {
 }
 
 app.on('ready', () => {
+  session.defaultSession.clearStorageData({ storages: ['cookies'] }).then(e => {
+    console.log('storage data cleared');
+  });
   createWindow();
 });
 
@@ -98,32 +102,6 @@ ipcMain.handle('getAllEncountersFromReport', async (_, reportGuid) => {
   const encounters = await getAllEncountersFromReport(reportGuid);
   return encounters;
 });
-ipcMain.handle('getBNetProfileAuthToken', async (_, authCode) => {
-  try {
-    const token = await getAuthTokens();
-    if (!token.profileToken || isAuthTokenExpired(token.profileTokenExpireDate)) {
-      const payload = await fetchProfileAuthToken(authCode);
-      const newToken = {
-        profileToken: payload.access_token,
-        profileTokenExpireDate: new Date().getTime() + payload.expires_in,
-      };
-      await saveTokens(newToken);
-      console.log('[IPC EVENT]=>getBNetProfileAuthToken returning new valid tokens from fetch');
-      return {
-        token: newToken.profileToken,
-        expireTimestamp: newToken.profileTokenExpireDate,
-      };
-    }
-    console.log('[IPC EVENT]=>getBNetProfileAuthToken returning valid tokens from database');
-    return {
-      token: token.profileToken,
-      expireTimestamp: token.profileTokenExpireDate,
-    };
-  } catch (e) {
-    console.error(e);
-    return buildElectronResponse(undefined, new ElectronError({ ...(e as Error) }));
-  }
-});
 ipcMain.handle('getBNetGeneralAuthToken', async () => {
   try {
     const token = await getAuthTokens();
@@ -131,7 +109,7 @@ ipcMain.handle('getBNetGeneralAuthToken', async () => {
       const payload = await fetchGeneralAuthToken();
       const newToken = {
         generalToken: payload.access_token,
-        generalTokenExpireDate: new Date().getTime() + payload.expires_in,
+        generalTokenExpireDate: new Date().getTime() + payload.expires_in * 1000,
       };
       await saveTokens(newToken);
       console.log('[IPC EVENT]=>getBNetGeneralAuthToken returning new valid tokens from fetch');
@@ -150,6 +128,7 @@ ipcMain.handle('getBNetGeneralAuthToken', async () => {
     return buildElectronResponse(undefined, new ElectronError({ ...(e as Error) }));
   }
 });
+connectBNetProfileHandlers(ipcMain);
 connectJournalEncounterHandlers(ipcMain);
 connectReportHandlers(ipcMain);
 connectBattleNetJournalDataHandlers(ipcMain);

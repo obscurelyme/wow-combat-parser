@@ -1,6 +1,6 @@
-import { createHashRouter } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 
-import { getBNetGeneralAuthToken } from '../api';
+import { getBNetGeneralAuthToken, getBNetProfileAuthToken } from '../api';
 import { Root } from './root';
 import { ReportsPage, ReportPage } from './Reports';
 import { loader as reportLoader } from './Reports/loader';
@@ -9,8 +9,9 @@ import { loader as encounterLoader } from './Encounter/loader';
 import ErrorPage from './Error';
 import HomePage, { loader as homeLoader } from './Home';
 import Authorize from './Authorize';
+import Profile from './Profile';
 
-export const router = createHashRouter([
+export const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
@@ -38,11 +39,20 @@ export const router = createHashRouter([
             path: '/authorize',
             element: <Authorize />,
           },
+          {
+            path: '/profile',
+            element: <Profile />,
+          },
         ],
       },
     ],
     loader: async () => {
-      return await getBNetGeneralAuthToken();
+      const [generalToken, profileToken] = await Promise.all([getBNetGeneralAuthToken(), getBNetProfileAuthToken()]);
+
+      return {
+        generalToken,
+        profileToken,
+      };
     },
   },
 ]);

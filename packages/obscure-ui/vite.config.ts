@@ -7,10 +7,10 @@ export default defineConfig({
   base: './',
   plugins: [
     react(),
-    eslintPlugin({ cache: false, include: ['./src/**/*.ts', './src/**/*.tsx'], exclude: ['node_modules'] }),
+    // eslintPlugin({ cache: false, include: ['./src/**/*.ts', './src/**/*.tsx'], exclude: ['node_modules'] }),
   ],
   optimizeDeps: {
-    include: ["@obscure/types"]
+    include: ['@obscure/types'],
   },
   build: {
     sourcemap: true,
@@ -24,7 +24,7 @@ export default defineConfig({
       },
     },
     commonjsOptions: {
-      include: [/obscure-types/, /node_modules/]
-    }
-  }
+      include: [/obscure-types/, /node_modules/],
+    },
+  },
 });

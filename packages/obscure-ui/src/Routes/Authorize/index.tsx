@@ -1,25 +1,37 @@
 import React from 'react';
 
-// const [searchParams] = useSearchParams();
-// const authCode = searchParams.get('code');
-// const { data, isFetched } = useQuery({
-//   queryKey: ['authenticate', authCode],
-//   queryFn: () => getAuthToken(authCode),
-//   staleTime: 1000 * 60 * 60,
-//   retry: 3,
-//   enabled: !!authCode,
-// });
+import { Navigate, useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { Typography } from '@mui/material';
 
-// TODO: Use another way that isn't useEffect
-// useEffect(() => {
-//   if (data) {
-//     setAuthState({
-//       generalToken: authState.generalToken,
-//       profileToken: data,
-//     });
-//   }
-// }, [data, setAuthState, authState.generalToken, isFetched]);
+import { userAuthenticate } from '../../api';
+import PageHeader from '../../Composites/PageHeader';
 
 export default function Authorize(): React.ReactElement {
-  return <></>;
+  const [searchParams] = useSearchParams();
+  const authCode = searchParams.get('code');
+  const { data, isFetching, isError, error } = useQuery({
+    queryKey: ['authenticate', authCode],
+    queryFn: () => userAuthenticate(authCode),
+    staleTime: 1000 * 60 * 60,
+    retry: 3,
+    enabled: !!authCode,
+  });
+
+  if (data) {
+    return <Navigate to="/" />;
+  }
+
+  return (
+    <>
+      <PageHeader title="Logging in..." />
+      {isFetching && <Typography>Authenticating, please wait...</Typography>}
+      {isError && (
+        <>
+          <Typography>Error occured while authenticating!</Typography>
+          <Typography>{error.message}</Typography>
+        </>
+      )}
+    </>
+  );
 }

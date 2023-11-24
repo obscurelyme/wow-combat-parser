@@ -18,13 +18,17 @@ declare global {
       getAllReports: () => Promise<Report[]>;
       getReport: (reportGuid: string) => Promise<Report>;
       getAllEncountersFromReport: (reportGuid: string) => Promise<Encounter[]>;
-      getBNetProfileAuthToken: (authCode: string) => Promise<AuthToken>;
       getBNetGeneralAuthToken: () => Promise<AuthToken>;
       getJournalEncounter: (dungeonEncounterId: number) => Promise<JournalEncounter>;
       getReportUploadProgress: (reportGuid: string) => Promise<number>;
       getBnetJournalInstanceData: (journalInstanceId: string) => Promise<BnetJournalData.JournalInstance>;
       getBnetJournalEncounterData: (JournalEncounterId: string) => Promise<BnetJournalData.JournalEncounter>;
       getBnetCreatureMediaData: (creatureDisplayId: string) => Promise<BnetCreatureData.CreatureDisplayMedia>;
+      // BNet Profile --------------------------------------------------------------------------------------------------
+      getBNetProfileAuthToken: () => Promise<AuthToken | undefined>;
+      userAuthenticate: (authCode: string) => Promise<AuthToken>;
+      userLogout: () => Promise<void>;
+      // ---------------------------------------------------------------------------------------------------------------
     };
   }
 }

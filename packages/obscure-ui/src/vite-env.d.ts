@@ -2,6 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_APP_TITLE: string;
+  readonly VITE_BNET_CLIENT_ID: string;
   // more env variables...
 }
 

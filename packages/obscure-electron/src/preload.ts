@@ -7,7 +7,6 @@ const WINDOW_API = {
   deleteReport: (reportGuid: string) => ipcRenderer.invoke('deleteReport', reportGuid),
   getAllReports: () => ipcRenderer.invoke('getAllReports'),
   getAllEncountersFromReport: (reportGuid: string) => ipcRenderer.invoke('getAllEncountersFromReport', reportGuid),
-  getBNetProfileAuthToken: (authCode: string) => ipcRenderer.invoke('getBNetProfileAuthToken', authCode),
   getBNetGeneralAuthToken: () => ipcRenderer.invoke('getBNetGeneralAuthToken'),
   getJournalEncounter: (dungeonEncounterId: number) => ipcRenderer.invoke('getJournalEncounter', dungeonEncounterId),
   getReportUploadProgress: (reportGuid: string) => ipcRenderer.invoke('getReportUploadProgress', reportGuid),
@@ -17,6 +16,10 @@ const WINDOW_API = {
     ipcRenderer.invoke('fetchJournalEncounter', JournalEncounterId),
   getBnetCreatureMediaData: (creatureDisplayId: string) =>
     ipcRenderer.invoke('fetchCreatureMediaData', creatureDisplayId),
+  // BNET PROFILE HANDLERS ---------------------------------------------------------------------------------------------
+  getBNetProfileAuthToken: () => ipcRenderer.invoke('getBNetProfileAuthToken'),
+  userAuthenticate: (authCode: string) => ipcRenderer.invoke('userAuthenticate', authCode),
+  // -------------------------------------------------------------------------------------------------------------------
 };
 
 contextBridge.exposeInMainWorld('api', WINDOW_API);

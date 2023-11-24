@@ -7,7 +7,7 @@ import { useGoBack } from '../../Routes/utils';
 
 interface PageHeaderProps {
   title: string;
-  tooltip: string;
+  tooltip?: string;
 }
 
 export default function PageHeader({ title, tooltip }: PageHeaderProps): ReactElement {
@@ -15,11 +15,14 @@ export default function PageHeader({ title, tooltip }: PageHeaderProps): ReactEl
 
   return (
     <Box display="flex" justifyContent="flexStart" alignItems="center">
-      <Tooltip title={tooltip}>
-        <IconButton onClick={goBack}>
-          <ChevronLeft />
-        </IconButton>
-      </Tooltip>
+      {tooltip && (
+        <Tooltip title={tooltip}>
+          <IconButton onClick={goBack}>
+            <ChevronLeft />
+          </IconButton>
+        </Tooltip>
+      )}
+
       <Box ml={2}>
         <Typography variant="h3">{title}</Typography>
       </Box>

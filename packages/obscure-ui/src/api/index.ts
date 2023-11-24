@@ -63,11 +63,21 @@ export function getAllEncountersFromReport(reportGuid: string): Promise<Encounte
   return Promise.reject(makeErrorMessage('getAllEncountersFromReport'));
 }
 
-export function getBNetProfileAuthToken(authCode: string | null): Promise<AuthToken> {
-  if (authCode) {
-    return window.api.getBNetProfileAuthToken(authCode);
+export function getBNetProfileAuthToken(): Promise<AuthToken | undefined> {
+  if (window.api?.getBNetProfileAuthToken) {
+    return window.api.getBNetProfileAuthToken();
   }
-  return Promise.reject('No auth code provided');
+  return Promise.reject(makeErrorMessage('getBNetProfileAuthToken'));
+}
+
+export function userAuthenticate(authCode: string | null): Promise<AuthToken | undefined> {
+  if (window.api?.userAuthenticate) {
+    if (authCode) {
+      return window.api.userAuthenticate(authCode);
+    }
+    return Promise.reject('No auth code provided to authentication path.');
+  }
+  return Promise.reject(makeErrorMessage('userAuthenticate'));
 }
 
 export function getBNetGeneralAuthToken(): Promise<AuthToken> {

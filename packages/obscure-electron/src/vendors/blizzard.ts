@@ -7,9 +7,12 @@ import { getAuthTokens } from '../handlers/user';
 /**
  * Auth Token payload, exactly as Blizzard sends back
  */
-interface BlizzardAuthPayload {
+export interface BlizzardAuthPayload {
   access_token: string;
   tokenType: string;
+  /**
+   * Total number of SECONDS until this token is no longer valid
+   */
   expires_in: number;
   scope: string;
 }
@@ -24,7 +27,7 @@ export async function fetchProfileAuthToken(authCode: string): Promise<BlizzardA
   const BNET_CLIENT_SECRET = process.env.BNET_CLIENT_SECRET;
 
   const { data } = await axios.post<BlizzardAuthPayload>(
-    `https://oauth.battle.net/oauth/token?grant_type=authorization_code&code=${authCode}&redirect_uri=http://localhost:5173/`,
+    `https://oauth.battle.net/oauth/token?grant_type=authorization_code&code=${authCode}&redirect_uri=http://localhost:5173/authorize`,
     undefined,
     {
       headers: {
