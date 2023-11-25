@@ -1,6 +1,23 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-import { Box, Divider, Typography, List, ListItem, ListItemButton, ListItemText, Collapse } from '@mui/material';
+import {
+  Box,
+  Divider,
+  Typography,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Collapse,
+  Tab,
+  ListItemAvatar,
+} from '@mui/material';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import ShieldIcon from '@mui/icons-material/Shield';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import BoltIcon from '@mui/icons-material/Bolt';
 
 import { useEncounterLoaderData } from './loader';
 import JournalEncounterLootTable from '../../Composites/JournalEncounterLootTable';
@@ -9,9 +26,10 @@ import { BnetCommon } from '@obscure/types/dist';
 
 interface EncounterPhaseProps {
   phase: BnetCommon.Phase;
+  noTitle?: boolean;
 }
 
-function EncounterPhase({ phase }: EncounterPhaseProps): React.ReactElement {
+function EncounterPhase({ phase, noTitle }: EncounterPhaseProps): React.ReactElement {
   const [open, setOpen] = useState<boolean>(false);
 
   function handleClick() {
@@ -20,35 +38,12 @@ function EncounterPhase({ phase }: EncounterPhaseProps): React.ReactElement {
 
   return (
     <>
-      <ListItemButton key={`phase-${phase.id}`} divider onClick={handleClick}>
+      <ListItemButton divider onClick={handleClick}>
         <ListItemText primary={phase.title} secondary={phase.body_text}></ListItemText>
       </ListItemButton>
       <Collapse in={open} unmountOnExit timeout="auto">
         <List sx={{ pl: 4 }}>
           {phase.sections?.map(phaseSection => {
-            if (phase.title === 'Overview') {
-              const overviewSections = phaseSection.body_text.split('$bullet;');
-              overviewSections.shift();
-
-              return (
-                <ListItem key={`phase-section-${phaseSection.id}`}>
-                  <ListItemText
-                    primary={phaseSection.title}
-                    secondary={
-                      <>
-                        {overviewSections.map(s => {
-                          return (
-                            <Box>
-                              <Typography key={`s-${s}`}>{s}</Typography>
-                            </Box>
-                          );
-                        })}
-                      </>
-                    }
-                  />
-                </ListItem>
-              );
-            }
             return (
               <ListItem key={`phase-section-${phaseSection.id}`}>
                 <ListItemText primary={phaseSection.title} secondary={phaseSection.body_text} />
@@ -61,10 +56,84 @@ function EncounterPhase({ phase }: EncounterPhaseProps): React.ReactElement {
   );
 }
 
+interface EncounterOverviewProps {
+  overview: BnetCommon.Phase;
+}
+
+interface EncounterOverviewSubsectionProps {
+  subSection: BnetCommon.PhaseSection;
+}
+
+function AvatarContent({ title }: { title: string }) {
+  switch (title) {
+    case 'Tank':
+    case 'Tanks': {
+      return <ShieldIcon />;
+    }
+    case 'Healer':
+    case 'Healers': {
+      return <LocalHospitalIcon />;
+    }
+    default: {
+      return <BoltIcon />;
+    }
+  }
+}
+
+function EncounterOverviewSubsection({ subSection }: EncounterOverviewSubsectionProps) {
+  const overviewSections = subSection.body_text.split('$bullet;');
+  overviewSections.shift();
+
+  return (
+    <>
+      <ListItem divider>
+        <ListItemAvatar>
+          <AvatarContent title={subSection.title} />
+        </ListItemAvatar>
+        <ListItemText primary={subSection.title} />
+      </ListItem>
+      <List sx={{ pl: 4 }}>
+        {overviewSections.map((s, index) => {
+          return (
+            <ListItem key={`${s}-${index}`}>
+              <Typography key={`s-${s}`}>{s}</Typography>
+            </ListItem>
+          );
+        })}
+      </List>
+    </>
+  );
+}
+
+function EncounterOverview({ overview }: EncounterOverviewProps): React.ReactElement {
+  return (
+    <>
+      <Box display="flex" justifyContent="center">
+        <Box maxWidth="700px">
+          <Typography variant="subtitle1">{overview.body_text}</Typography>
+        </Box>
+      </Box>
+
+      <List sx={{ pl: 4 }}>
+        {overview.sections?.map((phaseSection, index) => {
+          return (
+            <EncounterOverviewSubsection key={`encounter-overview-subsection-${index}`} subSection={phaseSection} />
+          );
+        })}
+      </List>
+    </>
+  );
+}
+
 export function EncounterPage() {
   const { journalEncounter, bnet } = useEncounterLoaderData();
+  const [value, setValue] = useState<string>('1');
+  const overview = bnet?.encounterData.sections[0];
+  const abilities = bnet?.encounterData.sections.slice(1);
 
-  console.log(bnet);
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
 
   return (
     <Box>
@@ -72,19 +141,31 @@ export function EncounterPage() {
 
       <Divider />
 
-      <Typography maxWidth="700px" variant="body2">
-        {journalEncounter?.description}
-      </Typography>
+      <Box display="flex" justifyContent="center" py={4}>
+        <Typography maxWidth="700px" variant="subtitle1">
+          {journalEncounter?.description}
+        </Typography>
+      </Box>
 
       <Divider />
 
-      <List disablePadding>
-        {bnet?.encounterData.sections?.map(phase => {
-          return <EncounterPhase key={`phase-${phase.id}`} phase={phase} />;
-        })}
-      </List>
-
-      {bnet && <JournalEncounterLootTable drops={bnet?.encounterData.items} />}
+      <TabContext value={value}>
+        <Box display="flex" justifyContent="center" sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <TabList onChange={handleChange}>
+            <Tab label="Overview" value="1" />
+            <Tab label="Abilities" value="2" />
+            <Tab label="Loot" value="3" />
+          </TabList>
+        </Box>
+        <TabPanel value="1">{overview && <EncounterOverview overview={overview} />}</TabPanel>
+        <TabPanel value="2">
+          {abilities?.map((ability, index) => {
+            return <EncounterPhase key={`encounter-ability-${index}`} phase={ability} />;
+          })}
+        </TabPanel>
+        <TabPanel value="3">{bnet && <JournalEncounterLootTable drops={bnet?.encounterData.items} />}</TabPanel>
+      </TabContext>
     </Box>
   );
 }
+5;
