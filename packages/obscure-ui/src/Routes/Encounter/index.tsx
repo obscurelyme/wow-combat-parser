@@ -93,10 +93,10 @@ function EncounterOverviewSubsection({ subSection }: EncounterOverviewSubsection
         <ListItemText primary={subSection.title} />
       </ListItem>
       <List sx={{ pl: 4 }}>
-        {overviewSections.map((s, index) => {
+        {overviewSections.map((overviewSection, index) => {
           return (
-            <ListItem key={`${s}-${index}`}>
-              <Typography key={`s-${s}`}>{s}</Typography>
+            <ListItem key={`${overviewSection}-${index}`}>
+              <Typography>{overviewSection}</Typography>
             </ListItem>
           );
         })}
@@ -131,7 +131,7 @@ export function EncounterPage() {
   const overview = bnet?.encounterData.sections[0];
   const abilities = bnet?.encounterData.sections.slice(1);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
@@ -155,6 +155,7 @@ export function EncounterPage() {
             <Tab label="Overview" value="1" />
             <Tab label="Abilities" value="2" />
             <Tab label="Loot" value="3" />
+            <Tab label="Team" value="4" />
           </TabList>
         </Box>
         <TabPanel value="1">{overview && <EncounterOverview overview={overview} />}</TabPanel>
@@ -164,6 +165,9 @@ export function EncounterPage() {
           })}
         </TabPanel>
         <TabPanel value="3">{bnet && <JournalEncounterLootTable drops={bnet?.encounterData.items} />}</TabPanel>
+        <TabPanel value="4">
+          <Typography>Team</Typography>
+        </TabPanel>
       </TabContext>
     </Box>
   );

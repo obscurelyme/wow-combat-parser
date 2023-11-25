@@ -110,6 +110,11 @@ export class FileReader extends EventEmitter {
             break;
           }
           default: {
+            if (report.inEncounter()) {
+              // read the next few events to gather up the player names of all
+              // combatants in the encounter, then update the names within
+              // the database.
+            }
             // NOTE: General combat log
             await report.combatLog(rawCombatLog);
           }
