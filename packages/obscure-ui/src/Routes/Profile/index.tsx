@@ -10,6 +10,8 @@ import { getUserProfile } from '../../api';
 import PageHeader from '../../Composites/PageHeader';
 import { useLoaderData } from '../utils';
 
+import raiderIoLogo from '../../assets/raider-io-logo.png';
+
 export async function loader(): Promise<BNetUserProfile.UserProfile> {
   const userProfile = await getUserProfile();
 
@@ -53,6 +55,7 @@ function ListItemCharacter({ character }: ListItemCharacterProps) {
 
   return (
     <ListItem>
+      <img height="50px" width="auto" src={raiderIoLogo} />
       <ListItemText primary={primaryText} secondary={secondaryText} />
     </ListItem>
   );
@@ -96,8 +99,10 @@ export default function Profile(): React.ReactElement {
     <>
       <PageHeader title="Profile" tooltip="Go back" />
       <List>
-        {realms.map(realm => {
-          return <ListItemRealm realmName={realm} characters={groupedCharacters.get(realm) ?? []} />;
+        {realms.map((realm, index) => {
+          return (
+            <ListItemRealm key={`realm-${index}`} realmName={realm} characters={groupedCharacters.get(realm) ?? []} />
+          );
         })}
       </List>
     </>
