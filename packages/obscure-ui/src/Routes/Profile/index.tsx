@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import { Collapse, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { Grid, Collapse, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
@@ -8,9 +8,12 @@ import { BNetUserProfile } from '@obscure/types';
 
 import { getUserProfile } from '../../api';
 import PageHeader from '../../Composites/PageHeader';
+import Link from '../../Composites/Link';
 import { useLoaderData } from '../utils';
 
 import raiderIoLogo from '../../assets/raider-io-logo.png';
+import warcraftLogo from '../../assets/wow-square-logo.png';
+import warcraftLogsLogo from '../../assets/warcraft-logs-logo.png';
 
 export async function loader(): Promise<BNetUserProfile.UserProfile> {
   const userProfile = await getUserProfile();
@@ -54,9 +57,36 @@ function ListItemCharacter({ character }: ListItemCharacterProps) {
   const secondaryText = `Level ${character.level} | ${character.playable_race.name}, ${character.playable_class.name}`;
 
   return (
-    <ListItem>
-      <img height="50px" width="auto" src={raiderIoLogo} />
-      <ListItemText primary={primaryText} secondary={secondaryText} />
+    <ListItem divider>
+      <ListItemText
+        primary={
+          <Grid container spacing={2}>
+            <Grid item>
+              <Typography variant="h6">{primaryText}</Typography>
+            </Grid>
+            <Grid item>
+              <Link
+                target="_blank"
+                to={`https://worldofwarcraft.com/en_us/character/us/${character.realm.slug}/${character.name}`}>
+                <img height="25px" width="auto" src={warcraftLogo} />
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link target="_blank" to={`https://raider.io/characters/us/${character.realm.slug}/${character.name}`}>
+                <img height="25px" width="auto" src={raiderIoLogo} />
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link
+                target="_blank"
+                to={`https://www.warcraftlogs.com/character/us/${character.realm.slug}/${character.name}`}>
+                <img height="25px" width="auto" src={warcraftLogsLogo} />
+              </Link>
+            </Grid>
+          </Grid>
+        }
+        secondary={secondaryText}
+      />
     </ListItem>
   );
 }
@@ -74,8 +104,8 @@ function ListItemRealm({ realmName, characters }: ListItemRealmProps) {
   }
 
   return (
-    <List>
-      <ListItemButton onClick={handleClick}>
+    <List disablePadding>
+      <ListItemButton divider onClick={handleClick}>
         <ListItemText>{realmName}</ListItemText>
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
