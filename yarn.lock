@@ -3382,6 +3382,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/line-reader@^0.0.37":
+  version "0.0.37"
+  resolved "https://registry.yarnpkg.com/@types/line-reader/-/line-reader-0.0.37.tgz#f4f736476dc49ee8af3e1b117832d66cf191cc70"
+  integrity sha512-iTk4Vgy4GvWNP2tfMAti3oCoVK3FtD+EYgbLxW7RCW8TLzsTLhphWFmCPynmRMBLM5m+h4Mt+Yng7ARsivErcg==
+  dependencies:
+    "@types/node" "*"
+
 "@types/lodash@^4.14.167":
   version "4.14.201"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.201.tgz#76f47cb63124e806824b6c18463daf3e1d480239"
@@ -7939,6 +7946,11 @@ levn@^0.4.1:
   dependencies:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
+
+line-reader@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/line-reader/-/line-reader-0.4.0.tgz#17e44818da0ac335675ba300954f94ef670e66fd"
+  integrity sha512-AYJ8g+eE7v+Ba4s/cuYqzuNulH/WbjdKQ55fvx8fNVn8WQzTpioY6vI1MoxTuMgcHYX3VlmZWbVvnkIqkyJbCA==
 
 lines-and-columns@^1.1.6:
   version "1.2.4"

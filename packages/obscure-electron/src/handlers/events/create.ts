@@ -13,11 +13,15 @@ export function createZoneChange(rawCombatLog: RawCombatLog, reportGuid: string)
     .then(rows => rows.length);
 }
 
-export function createCombatant(rawCombatLog: RawCombatLog, reportGuid: string, encounterGuid: string): Promise<number> {
+export function createCombatant(
+  rawCombatLog: RawCombatLog,
+  reportGuid: string,
+  encounterGuid: string
+): Promise<Omit<Combatant, 'id' | 'playerName'>> {
   const conn = CombatDB.connection();
   const eventToInsert = parseCombatantInfoEvent(rawCombatLog, reportGuid, encounterGuid);
 
   return conn<Combatant>('Combatants')
     .insert(eventToInsert)
-    .then(rows => rows.length);
+    .then(_ => Promise.resolve(eventToInsert));
 }

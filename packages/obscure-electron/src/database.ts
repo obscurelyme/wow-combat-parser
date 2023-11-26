@@ -20,7 +20,7 @@ export class CombatDB {
       connection: {
         filename: this._databaseFilePath,
       },
-      useNullAsDefault: true
+      useNullAsDefault: true,
     });
 
     console.log(`Database connection opened`);
@@ -66,6 +66,7 @@ export class CombatDB {
     tb.string('reportGuid').notNullable();
     tb.string('encounterGuid').notNullable();
     tb.integer('timestamp').notNullable();
+    tb.text('playerName').nullable();
     tb.text('playerGuid').notNullable();
     tb.integer('faction').notNullable();
     tb.integer('strength').nullable();

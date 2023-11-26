@@ -5,6 +5,7 @@ export interface Combatant {
   reportGuid: string;
   encounterGuid: string;
   timestamp: number;
+  playerName: string;
   playerGuid: string;
   faction: WarcraftFaction;
   strength: number;

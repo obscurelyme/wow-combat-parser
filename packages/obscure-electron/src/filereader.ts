@@ -7,6 +7,10 @@ import { Report } from './types';
 import { ReportBuilder } from './reportbuilder';
 import { parseRawCombatLog } from './parsers/rawcombatlog';
 import { parseCombatLogVersionEvent } from './parsers/combatlogversion';
+import { parsePlayerInfo } from './parsers/parsePlayerName';
+import { updateCombatant } from './handlers/events/update';
+
+import lineReader from 'line-reader';
 
 export declare interface FileReader {
   on(event: 'done', listener: (contents: Report) => void): this;
@@ -66,6 +70,13 @@ export class FileReader extends EventEmitter {
     return valid;
   }
 
+  /**
+   * @deprecated use read2 instead
+   * @param reportName
+   * @param filePath
+   * @param reportGuid
+   * @returns
+   */
   public async read(reportName: string, filePath: string, reportGuid: string): Promise<Report> {
     this._currentLineIndex = 0;
     let firstLine = true;
@@ -89,10 +100,12 @@ export class FileReader extends EventEmitter {
         switch (rawCombatLog.subevent) {
           case 'ENCOUNTER_START': {
             await report.beginEncounter(rawCombatLog);
+            console.log('encounter start');
             break;
           }
           case 'ENCOUNTER_END': {
             await report.endEncounter(rawCombatLog);
+            console.log('encounter end');
             break;
           }
           case 'ZONE_CHANGE': {
@@ -105,18 +118,51 @@ export class FileReader extends EventEmitter {
           }
           case 'COMBATANT_INFO': {
             if (report.inEncounter()) {
-              await report.combatantInfo(rawCombatLog);
+              const s = await report.combatantInfo(rawCombatLog);
+              console.log('[IPC EVENT]=>combatant set', report.combatants().size);
             }
             break;
           }
-          default: {
+          case 'SPELL_CAST_SUCCESS': {
             if (report.inEncounter()) {
-              // read the next few events to gather up the player names of all
-              // combatants in the encounter, then update the names within
-              // the database.
+              const { playerName, playerGuid } = parsePlayerInfo(rawCombatLog);
+              if (playerGuid) {
+                const combatant = report.combatants()?.get(playerGuid);
+                console.log(
+                  '[IPC EVENT]=>updateCombatant | found combatant, updating...',
+                  playerName,
+                  playerGuid,
+                  report.currentEncounterId()
+                );
+                report.combatants().delete(playerGuid);
+              }
             }
-            // NOTE: General combat log
-            await report.combatLog(rawCombatLog);
+          }
+          default: {
+            if (report.inEncounter() && report.combatants().size > 0) {
+              // console.log('[IPC EVENT]=>updateCombatant', report.combatants().size, rawCombatLog.subevent);
+              // try {
+              //   const { playerName, playerGuid } = parsePlayerInfo(rawCombatLog);
+              //   if (playerGuid) {
+              //     const combatant = report.combatants()?.get(playerGuid);
+              //     if (combatant) {
+              //       console.log(
+              //         '[IPC EVENT]=>updateCombatant | found combatant, updating...',
+              //         playerName,
+              //         playerGuid,
+              //         report.currentEncounterId()
+              //       );
+              //       // player is in the list of combatants, update their name in the database
+              //       // and then remove them from the map
+              //       // await updateCombatant(playerName, playerGuid, report.currentEncounterId());
+              //       // report.combatants().delete(playerGuid);
+              //     }
+              //     // NOTE: player is not in the combatant map, we've already delt with this combatant
+              //   }
+              // } catch (e) {
+              //   console.log(e);
+              // }
+            }
           }
         }
       } catch (e) {
@@ -129,9 +175,18 @@ export class FileReader extends EventEmitter {
     return report.getInfo();
   }
 
+  public async read2(reportName: string, filePath: string, reportGuid: string): Promise<Report> {
+    this._currentLineIndex = 0;
+    this._currentFilePath = filePath;
+    const report = new ReportBuilder(reportName, reportGuid);
+
+    await this.readEachLine(report);
+
+    return report.getInfo();
+  }
+
   /**
    * Returns the progress of the file read.
-   * once the
    */
   public getProgress(): number {
     return this._currentLineIndex / this._lineCount;
@@ -143,5 +198,82 @@ export class FileReader extends EventEmitter {
 
   private emitValid(valid: boolean) {
     this.emit('valid', valid);
+  }
+
+  private readEachLine(report: ReportBuilder): Promise<void> {
+    let firstLine = true;
+
+    return new Promise(resolve => {
+      lineReader.eachLine(this._currentFilePath, async (line, last, cb) => {
+        this._currentLineIndex++;
+        report.updateProgress(this.getProgress());
+
+        try {
+          const rawCombatLog = parseRawCombatLog(line);
+
+          if (firstLine) {
+            report.beginReport(rawCombatLog.timestamp);
+            firstLine = false;
+          }
+
+          switch (rawCombatLog.subevent) {
+            case 'ENCOUNTER_START': {
+              await report.beginEncounter(rawCombatLog);
+              console.log('encounter start');
+              break;
+            }
+            case 'ENCOUNTER_END': {
+              await report.endEncounter(rawCombatLog);
+              console.log('encounter end');
+              break;
+            }
+            case 'ZONE_CHANGE': {
+              await report.zoneChange(rawCombatLog);
+              break;
+            }
+            case 'MAP_CHANGE': {
+              await report.mapChange(rawCombatLog);
+              break;
+            }
+            case 'COMBATANT_INFO': {
+              if (report.inEncounter()) {
+                const s = await report.combatantInfo(rawCombatLog);
+                console.log('[IPC EVENT]=>combatant set', report.combatants().size);
+              }
+              break;
+            }
+            default: {
+              if (report.inEncounter() && report.combatants().size > 0) {
+                try {
+                  const { playerName, playerGuid } = parsePlayerInfo(rawCombatLog);
+                  if (playerGuid) {
+                    const combatant = report.combatants()?.get(playerGuid);
+                    if (combatant) {
+                      // player is in the list of combatants, update their name in the database
+                      // and then remove them from the map
+                      await updateCombatant(playerName, playerGuid, report.currentEncounterId());
+                      report.combatants().delete(playerGuid);
+                    }
+                    // NOTE: player is not in the combatant map, we've already delt with this combatant
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            }
+          }
+        } catch (e) {
+          console.log(`Disgarding line ${line}`);
+          return;
+        }
+
+        if (!last) {
+          cb?.();
+        } else {
+          cb?.(false);
+          resolve();
+        }
+      });
+    });
   }
 }

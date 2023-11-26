@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { Combatant } from '@obscure/types';
 
 import CombatDB from './database';
 import { Report, Encounter, RawCombatLog } from './types';
@@ -12,6 +12,8 @@ export class ReportBuilder {
   private _uploadTimestamp: number;
   private _currentEncounterGuid: string;
   private _currentProgress: number;
+  private _numCombatants: number;
+  private _combatantMap: Map<string, Omit<Combatant, 'id' | 'playerName'>>;
 
   private static _builderCache: Map<string, ReportBuilder> = new Map();
 
@@ -27,6 +29,8 @@ export class ReportBuilder {
     this._reportGuid = reportGuid;
     this._reportName = reportName;
     this._currentProgress = 0;
+    this._numCombatants = 0;
+    this._combatantMap = new Map();
 
     ReportBuilder._builderCache.set(this._reportGuid, this);
   }
@@ -65,14 +69,23 @@ export class ReportBuilder {
   }
 
   public async beginEncounter(line: RawCombatLog): Promise<Encounter | null> {
+    const en = await createEncounter(line, this._reportGuid);
     this._currentEncounterGuid = line.id;
-    return await createEncounter(line, this._reportGuid);
+    this._combatantMap = new Map();
+    return en;
   }
 
   public async endEncounter(line: RawCombatLog): Promise<boolean> {
     const oldEncounter = this._currentEncounterGuid;
+    await updateEncounter(line, oldEncounter);
     this._currentEncounterGuid = '';
-    return await updateEncounter(line, oldEncounter);
+    console.log('========================================');
+    this._combatantMap.forEach(co => {
+      console.log(co.playerGuid);
+    });
+    console.log('========================================');
+    this._combatantMap.clear();
+    return true;
   }
 
   public async zoneChange(line: RawCombatLog): Promise<number> {
@@ -83,8 +96,12 @@ export class ReportBuilder {
     return Promise.resolve();
   }
 
-  public async combatantInfo(line: RawCombatLog): Promise<number> {
-    return createCombatant(line, this._reportGuid, this._currentEncounterGuid);
+  public async combatantInfo(line: RawCombatLog): Promise<Omit<Combatant, 'id' | 'playerName'>> {
+    const combatant = await createCombatant(line, this._reportGuid, this._currentEncounterGuid);
+    this._numCombatants++;
+    this._combatantMap.set(combatant.playerGuid, combatant);
+
+    return combatant;
   }
 
   public async combatLog(line: RawCombatLog): Promise<void> {
@@ -97,5 +114,13 @@ export class ReportBuilder {
 
   public completeReport(): void {
     ReportBuilder._builderCache.delete(this._reportGuid);
+  }
+
+  public combatants(): Map<string, Omit<Combatant, 'id' | 'playerName'>> {
+    return this._combatantMap;
+  }
+
+  public currentEncounterId(): string {
+    return this._currentEncounterGuid;
   }
 }

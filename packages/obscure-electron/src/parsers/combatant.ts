@@ -8,7 +8,7 @@ export function determineClassFromSpecId(spec: number | WarcraftClassSpecializat
       return WarcraftClass.DeathKnight;
     }
 
-    case WarcraftClassSpecialization.HavocDemonHunter: 
+    case WarcraftClassSpecialization.HavocDemonHunter:
     case WarcraftClassSpecialization.VegeanceDemonHunter: {
       return WarcraftClass.DemonHunter;
     }
@@ -19,7 +19,7 @@ export function determineClassFromSpecId(spec: number | WarcraftClassSpecializat
     case WarcraftClassSpecialization.FeralDruid: {
       return WarcraftClass.Druid;
     }
-    
+
     case WarcraftClassSpecialization.AugmentationEvoker:
     case WarcraftClassSpecialization.DevastationEvoker:
     case WarcraftClassSpecialization.PreservationEvoker: {
@@ -86,7 +86,11 @@ export function determineClassFromSpecId(spec: number | WarcraftClassSpecializat
   }
 }
 
-export function parseCombatantInfoEvent(rawEvent: RawCombatLog, reportGuid: string, encounterGuid: string): Omit<Combatant, 'id'> {
+export function parseCombatantInfoEvent(
+  rawEvent: RawCombatLog,
+  reportGuid: string,
+  encounterGuid: string
+): Omit<Combatant, 'id' | 'playerName'> {
   const arrayArgs = rawEvent.params.match(/\[([^]*?)]/g);
   const args = rawEvent.params.split('|');
   const spec = parseInt(args[23], 10);

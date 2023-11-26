@@ -19,7 +19,7 @@ export async function createReport(
   try {
     const valid = await fileReader.validate(filePath);
     if (valid) {
-      const contents = await fileReader.read(reportName, filePath, reportGuid);
+      const contents = await fileReader.read2(reportName, filePath, reportGuid);
       return buildElectronResponse(contents);
     } else {
       const err = new ElectronError('Invalid File');
