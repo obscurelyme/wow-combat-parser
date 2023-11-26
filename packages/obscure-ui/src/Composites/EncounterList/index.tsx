@@ -22,6 +22,7 @@ export default function EncounterList({ encounters }: EncounterListProps): React
             <ListItemButton
               divider
               onClick={() => {
+                // TODO: route to /encounter/encounterGuid
                 navigate(`/encounter/${encounter.wowEncounterId}`);
               }}>
               <ListItemText primary={primary} secondary={secondary} />

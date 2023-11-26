@@ -1,4 +1,6 @@
-import { Encounter, RawCombatLog } from '@obscure/types';
+import { IpcMain } from 'electron';
+
+import { Combatant, Encounter, RawCombatLog } from '@obscure/types';
 
 import CombatDB from '../../database';
 
@@ -100,16 +102,34 @@ export function getAllEncounterIdsFromReport(reportGuid: string): Promise<Encoun
     });
 }
 
-export function getEncounter(encounterId: string): Promise<Encounter | null> {
+export function getEncounter(encounterGuid: string): Promise<Encounter | null> {
   const conn = CombatDB.connection();
 
   return conn<Encounter>('Encounters')
     .select('*')
-    .where('id', encounterId)
+    .where({ guid: encounterGuid })
     .then((rows: Encounter[]) => {
       if (rows) {
         return Promise.resolve(rows[0]);
       }
       return Promise.resolve(null);
     });
+}
+
+export function getCombatantsFromEncounter(encounterGuid: string): Promise<Combatant[]> {
+  const conn = CombatDB.connection();
+
+  return conn<Combatant>('Combatants')
+    .select('*')
+    .where({ encounterGuid })
+    .then(rows => rows);
+}
+
+export function connectEncounterHandlers(ipcMain: IpcMain): void {
+  ipcMain.handle('getEncounter', async (_, encounterGuid: string) => {
+    return await getEncounter(encounterGuid);
+  });
+  ipcMain.handle('getCombatantsFromEncounter', async (_, encounterGuid: string) => {
+    return await getCombatantsFromEncounter(encounterGuid);
+  });
 }

@@ -20,6 +20,7 @@ export function useEncounterLoaderData(): EncounterLoaderData {
 export async function loader({ params }: LoaderFunctionArgs): Promise<EncounterLoaderData | undefined> {
   if (params.id) {
     const journalEncounter = await getJournalEncounter(parseInt(params.id, 10));
+    // const combatants = await getCombatantsFromEncounter(params.id);
     const [encounterData, instanceData] = await Promise.all([
       getBnetJournalEncounterData(journalEncounter.journalEncounterId + ''),
       getBnetJournalInstanceData(journalEncounter.journalInstanceId + ''),
