@@ -23,13 +23,14 @@ import { useEncounterLoaderData } from './loader';
 import JournalEncounterLootTable from '../../Composites/JournalEncounterLootTable';
 import PageHeader from '../../Composites/PageHeader';
 import { BnetCommon } from '@obscure/types/dist';
+import Team from '../../Composites/Team';
 
 interface EncounterPhaseProps {
   phase: BnetCommon.Phase;
   noTitle?: boolean;
 }
 
-function EncounterPhase({ phase, noTitle }: EncounterPhaseProps): React.ReactElement {
+function EncounterPhase({ phase }: EncounterPhaseProps): React.ReactElement {
   const [open, setOpen] = useState<boolean>(false);
 
   function handleClick() {
@@ -126,7 +127,7 @@ function EncounterOverview({ overview }: EncounterOverviewProps): React.ReactEle
 }
 
 export function EncounterPage() {
-  const { journalEncounter, bnet } = useEncounterLoaderData();
+  const { combatants, journalEncounter, bnet } = useEncounterLoaderData();
   const [value, setValue] = useState<string>('1');
   const overview = bnet?.encounterData.sections[0];
   const abilities = bnet?.encounterData.sections.slice(1);
@@ -165,9 +166,7 @@ export function EncounterPage() {
           })}
         </TabPanel>
         <TabPanel value="3">{bnet && <JournalEncounterLootTable drops={bnet?.encounterData.items} />}</TabPanel>
-        <TabPanel value="4">
-          <Typography>Team</Typography>
-        </TabPanel>
+        <TabPanel value="4">{combatants && <Team combatants={combatants} />}</TabPanel>
       </TabContext>
     </Box>
   );

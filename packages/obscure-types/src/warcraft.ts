@@ -20,7 +20,7 @@ export enum WarcraftClassSpecialization {
   FrostDeathKnight = 251,
   UnholyDeathKnight = 252,
   HavocDemonHunter = 577,
-  VegeanceDemonHunter = 581,
+  VengeanceDemonHunter = 581,
   BalanceDruid = 102,
   FeralDruid = 103,
   GuardianDruid = 104,

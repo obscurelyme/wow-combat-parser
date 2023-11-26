@@ -7,7 +7,12 @@ export default defineConfig({
   base: './',
   plugins: [
     react(),
-    // eslintPlugin({ cache: false, include: ['./src/**/*.ts', './src/**/*.tsx'], exclude: ['node_modules'] }),
+    eslintPlugin({
+      cache: false,
+      include: ['./src/**/*.ts', './src/**/*.tsx'],
+      exclude: ['node_modules'],
+      failOnWarning: true,
+    }),
   ],
   optimizeDeps: {
     include: ['@obscure/types'],

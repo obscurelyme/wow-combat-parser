@@ -1,12 +1,20 @@
 import { LoaderFunctionArgs } from 'react-router-dom';
 
-import { BnetJournalData, JournalEncounter } from '@obscure/types';
+import { BnetJournalData, Combatant, Encounter, JournalEncounter } from '@obscure/types';
 
-import { getBnetJournalEncounterData, getBnetJournalInstanceData, getJournalEncounter } from '../../api';
+import {
+  getBnetJournalEncounterData,
+  getBnetJournalInstanceData,
+  getJournalEncounter,
+  getCombatantsFromEncounter,
+  getEncounter,
+} from '../../api';
 import { useLoaderData } from '../utils';
 
 export type EncounterLoaderData = {
+  encounter?: Encounter;
   journalEncounter?: JournalEncounter;
+  combatants?: Combatant[];
   bnet?: {
     encounterData: BnetJournalData.JournalEncounter;
     instanceData: BnetJournalData.JournalInstance;
@@ -19,15 +27,20 @@ export function useEncounterLoaderData(): EncounterLoaderData {
 
 export async function loader({ params }: LoaderFunctionArgs): Promise<EncounterLoaderData | undefined> {
   if (params.id) {
-    const journalEncounter = await getJournalEncounter(parseInt(params.id, 10));
-    // const combatants = await getCombatantsFromEncounter(params.id);
+    const encounter = await getEncounter(params.id);
+    const [journalEncounter, combatants] = await Promise.all([
+      getJournalEncounter(encounter.wowEncounterId),
+      getCombatantsFromEncounter(params.id),
+    ]);
     const [encounterData, instanceData] = await Promise.all([
       getBnetJournalEncounterData(journalEncounter.journalEncounterId + ''),
       getBnetJournalInstanceData(journalEncounter.journalInstanceId + ''),
     ]);
 
     return {
+      encounter,
       journalEncounter,
+      combatants,
       bnet: {
         encounterData,
         instanceData,

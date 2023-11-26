@@ -8,7 +8,9 @@ import {
   JournalEncounter,
   BnetJournalData,
   BnetCreatureData,
-} from '../types';
+  Combatant,
+  BNetUserProfile,
+} from '@obscure/types';
 
 function makeErrorMessage(functionName: string) {
   return `Window API is not defined for "${functionName}". Either the Electron server not started, you have not defined this method, or you have not exposed this method.`;
@@ -129,6 +131,14 @@ export function logoutUser(): Promise<void> {
   return Promise.reject(makeErrorMessage('logoutUser'));
 }
 
-export function getUserProfile(): Promise<any> {
+export function getUserProfile(): Promise<BNetUserProfile.UserProfile> {
   return window.api.getUserProfile();
+}
+
+export function getEncounter(encounterGuid: string): Promise<Encounter> {
+  return window.api.getEncounter(encounterGuid);
+}
+
+export function getCombatantsFromEncounter(encounterGuid: string): Promise<Combatant[]> {
+  return window.api.getCombatantsFromEncounter(encounterGuid);
 }

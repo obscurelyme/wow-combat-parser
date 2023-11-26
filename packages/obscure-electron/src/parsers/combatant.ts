@@ -9,7 +9,7 @@ export function determineClassFromSpecId(spec: number | WarcraftClassSpecializat
     }
 
     case WarcraftClassSpecialization.HavocDemonHunter:
-    case WarcraftClassSpecialization.VegeanceDemonHunter: {
+    case WarcraftClassSpecialization.VengeanceDemonHunter: {
       return WarcraftClass.DemonHunter;
     }
 
