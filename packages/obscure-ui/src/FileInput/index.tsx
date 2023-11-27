@@ -1,5 +1,9 @@
 import { Controller, FieldValues, FieldPath, UseControllerProps } from 'react-hook-form';
 
+import { Box, Button, Typography, IconButton } from '@mui/material';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
 interface FileInputProps<TForm extends FieldValues = FieldValues, TName extends FieldPath<TForm> = FieldPath<TForm>>
   extends UseControllerProps<TForm, TName> {
   id: string;
@@ -16,27 +20,58 @@ export default function FileInput<
       control={props.control}
       rules={props.rules}
       render={({ field: { value, onChange, ...field }, fieldState: { error }, formState: { isSubmitting } }) => {
+        const hasError = !!error?.type;
+
         return (
           <div>
-            <div>
-              <input
-                {...field}
-                disabled={isSubmitting}
-                value={value?.fileName}
-                type="file"
-                accept={props.accept}
-                placeholder={props.name}
-                id={props.id}
-                onChange={event => {
-                  onChange(event.target.files?.[0]);
-                }}
-              />
-            </div>
-            <div>
-              {error?.type === 'required' && <span>This field is required.</span>}
-              {error?.type === 'maxFileSize' && <span>The file you uploaded is too large.</span>}
-              {error?.type === 'fileType' && <span>This file you uploaded is not a text file.</span>}
-            </div>
+            <Box>
+              <Button variant="contained" component="label" startIcon={<AttachFileIcon />}>
+                Upload file
+                <input
+                  {...field}
+                  disabled={isSubmitting}
+                  value={value?.fileName}
+                  type="file"
+                  accept={props.accept}
+                  placeholder={props.name}
+                  id={props.id}
+                  hidden
+                  onChange={event => {
+                    onChange(event.target.files?.[0]);
+                  }}
+                />
+              </Button>
+            </Box>
+            {value && (
+              <Box mt={1}>
+                <Typography variant="caption">{value?.name}</Typography>
+                <IconButton
+                  onClick={() => {
+                    onChange(null);
+                  }}>
+                  <DeleteOutlineIcon />
+                </IconButton>
+              </Box>
+            )}
+            {hasError && (
+              <Box>
+                {error?.type === 'required' && (
+                  <Typography variant="caption" color="error">
+                    This field is required.
+                  </Typography>
+                )}
+                {error?.type === 'maxFileSize' && (
+                  <Typography variant="caption" color="error">
+                    The file you uploaded is too large.
+                  </Typography>
+                )}
+                {error?.type === 'fileType' && (
+                  <Typography variant="caption" color="error">
+                    This file you uploaded is not a text file.
+                  </Typography>
+                )}
+              </Box>
+            )}
           </div>
         );
       }}

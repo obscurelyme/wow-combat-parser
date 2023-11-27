@@ -140,28 +140,7 @@ export class FileReader extends EventEmitter {
           }
           default: {
             if (report.inEncounter() && report.combatants().size > 0) {
-              // console.log('[IPC EVENT]=>updateCombatant', report.combatants().size, rawCombatLog.subevent);
-              // try {
-              //   const { playerName, playerGuid } = parsePlayerInfo(rawCombatLog);
-              //   if (playerGuid) {
-              //     const combatant = report.combatants()?.get(playerGuid);
-              //     if (combatant) {
-              //       console.log(
-              //         '[IPC EVENT]=>updateCombatant | found combatant, updating...',
-              //         playerName,
-              //         playerGuid,
-              //         report.currentEncounterId()
-              //       );
-              //       // player is in the list of combatants, update their name in the database
-              //       // and then remove them from the map
-              //       // await updateCombatant(playerName, playerGuid, report.currentEncounterId());
-              //       // report.combatants().delete(playerGuid);
-              //     }
-              //     // NOTE: player is not in the combatant map, we've already delt with this combatant
-              //   }
-              // } catch (e) {
-              //   console.log(e);
-              // }
+              // NOTE: do nothing, this code never worked. Don't bother, delete eventually
             }
           }
         }
@@ -242,6 +221,13 @@ export class FileReader extends EventEmitter {
               }
               break;
             }
+            case 'CHALLENGE_MODE_START': {
+              // NOTE: if in challenge mode and you start a new one, the old mark should be marked as completed and failed.
+              console.log('Started challenge mode');
+            }
+            case 'CHALLENGE_MODE_END': {
+              console.log('Ending challenge mode');
+            }
             default: {
               if (report.inEncounter() && report.combatants().size > 0) {
                 try {
@@ -264,13 +250,14 @@ export class FileReader extends EventEmitter {
           }
         } catch (e) {
           console.log(`Disgarding line ${line}`);
-          return;
         }
 
         if (!last) {
           cb?.();
         } else {
+          console.log('Last line');
           cb?.(false);
+          console.log('resolving');
           resolve();
         }
       });

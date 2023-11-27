@@ -1,4 +1,4 @@
-import { Link, Outlet, useNavigation } from 'react-router-dom';
+import { Outlet, useNavigation, useNavigate } from 'react-router-dom';
 
 import { AuthToken } from '@obscure/types';
 import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
@@ -15,6 +15,8 @@ type AuthLoader = {
 };
 
 export function Root() {
+  const navigate = useNavigate();
+
   const navigation = useNavigation();
   const isLoading = navigation.state === 'loading';
   const { generalToken, profileToken } = useLoaderData<AuthLoader>();
@@ -24,13 +26,19 @@ export function Root() {
       <Box>
         <AppBar position="static">
           <Toolbar>
-            <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-              <Link to={`/`}>
-                <Home />
-              </Link>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={() => {
+                navigate('/');
+              }}>
+              <Home />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              <Link to={`reports`}>Reports</Link>
+              Obscure Logs
             </Typography>
             <Box>
               <Login />
