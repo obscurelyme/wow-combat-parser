@@ -3,7 +3,7 @@ import { Avatar, Card, CardHeader, Box, Grid, Divider } from '@mui/material';
 import { Combatant } from '@obscure/types';
 
 import Link from '../Link';
-import { useClassIcon } from '../Icons';
+import { useClassSpecIcon } from '../Icons';
 import { useWarcraftClass, useWarcraftClassSpec } from '../WarcraftClassUtils';
 
 import warcraftLogo from '../../assets/wow-square-logo.png';
@@ -48,7 +48,7 @@ function TeamMemberLinks({ combatantName }: TeamMemberLinksProps): React.ReactEl
 }
 
 function TeamMember({ combatant }: TeamMemberProps): React.ReactElement {
-  const classIcon = useClassIcon(combatant.class);
+  const classSpecIcon = useClassSpecIcon(combatant.spec);
   const className = useWarcraftClass(combatant.class);
   const specName = useWarcraftClassSpec(combatant.spec);
 
@@ -58,7 +58,7 @@ function TeamMember({ combatant }: TeamMemberProps): React.ReactElement {
         <CardHeader
           avatar={
             <Avatar>
-              <img src={classIcon} />
+              <img src={classSpecIcon} />
             </Avatar>
           }
           title={<Box>{combatant.playerName}</Box>}
