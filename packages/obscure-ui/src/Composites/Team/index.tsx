@@ -56,11 +56,7 @@ function TeamMember({ combatant }: TeamMemberProps): React.ReactElement {
     <Grid item key={`combatant-${combatant.guid}`} xs={4}>
       <Card>
         <CardHeader
-          avatar={
-            <Avatar>
-              <img src={classSpecIcon} />
-            </Avatar>
-          }
+          avatar={<Avatar src={classSpecIcon} />}
           title={<Box>{combatant.playerName}</Box>}
           subheader={
             <>

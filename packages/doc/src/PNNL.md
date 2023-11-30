@@ -72,7 +72,7 @@ List of feature requirements by AMEX
 - Cooking
 - Traveling
 - Game Programming
-  <li class="fragment">I play World of Warcraft.</li>
+- I play World of Warcraft. {.fragment}
 
 ---
 
@@ -82,8 +82,18 @@ List of feature requirements by AMEX
 
 ## Obscure Logs
 
-<li class="fragment">A *work in progress* passion project</li>
-<li class="fragment">Allow for a simple dive into the events a player partakes in during their adventures within the World of Warcraft universe</li>
+--
+
+- A _work in progress_ passion project
+- Allow for a simple dive into the events a player partakes in during their adventures within the World of Warcraft universe {.fragment}
+
+---
+
+## Inspiration
+
+- Passion for the game
+- Curiosity
+- [Warcraft Logs](https://warcraftlogs.com)
 
 ---
 
@@ -113,6 +123,8 @@ List of feature requirements by AMEX
 11/27 20:57:10.512  SPELL_AURA_APPLIED,Player-61-0E2B8041,"Ilmarion-Zul'jin",0x512,0x0,Player-61-0F381A81,"Dntpncplz-Zul'jin",0x512,0x0,207386,"Spring Blossoms",0x8,BUFF
 ```
 
+--
+
 ```ts
 interface CombatEvent {
   guid: string;
@@ -126,26 +138,23 @@ interface CombatEvent {
 
 ---
 
-## Inspiration
-
-- [Warcraft Logs](https://warcraftlogs.com)
-- Curiosity
-- Passion for the game
-
----
-
 ## The Design
-
-- Electron Application
-- Frontend
-  - React/Typescript w/ Vite
-- Backend
-  - NodeJS
-- Monorepo
 
 ---
 
 ![Design Document](uml-design-doc.png)
+
+---
+
+## Monorepo
+
+--
+
+Contains all source code in a single location
+
+--
+
+Loosely coupled dependencies
 
 ---
 
@@ -157,18 +166,44 @@ NodeJS Command Line Application
 node ./parse-logs.js ./log.txt
 ```
 
-| Pros                      | Cons     |
-| :------------------------ | :------- |
-| Super fast iteration time | No UI 😔 |
+| Pros                      | Cons                         |
+| :------------------------ | :--------------------------- |
+| Super fast iteration time | No UI 😔                     |
+|                           | Loads of missing information |
 
 ---
 
-## 3rd time's a charm
+##
 
-- Electron Application
-  - Cross platform
-  - NodeJS backend
-  - Browser-based Frontend
+```text
+ENCOUNTER_START,1146,"Randolph Moloch",1,5,34
+...
+ENCOUNTER_END,1146,"Randolph Moloch",1,5,1,31231
+```
+
+--
+
+```ts
+interface Encounter {
+  startTime: number;
+  endTime: number;
+  wowEncounterId: number; // NOTE: Houston, we have a problem
+  reportGuid: string;
+  guid: string;
+  name: string;
+  success: number;
+  difficultyId: number;
+  numPlayers: number;
+}
+```
+
+--
+
+![bnet journal endpoint](bnet-api.png)
+
+--
+
+[Wago Tools](https://wago.tools/db2/JournalEncounter)
 
 ---
 

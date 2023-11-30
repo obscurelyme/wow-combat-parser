@@ -30,41 +30,41 @@ import evokerPreservationIcon from '../../assets/icons/classes/specs/evoker_pres
 import evokerAugmentationIcon from '../../assets/icons/classes/specs/evoker_augmentation.jpg';
 import evokerDevastationIcon from '../../assets/icons/classes/specs/evoker_devastation.jpg';
 ///
-import hunterBeastMasteryIcon from '../../assets/icons/classes/spec/hunter_beastmastery.jpg';
-import hunterMarksmanshipIcon from '../../assets/icons/classes/spec/hunter_marksmanship.jpg';
-import hunterSurvivalIcon from '../../assets/icons/classes/spec/hunter_survival.jpg';
+import hunterBeastMasteryIcon from '../../assets/icons/classes/specs/hunter_beastmastery.jpg';
+import hunterMarksmanshipIcon from '../../assets/icons/classes/specs/hunter_marksmanship.jpg';
+import hunterSurvivalIcon from '../../assets/icons/classes/specs/hunter_survival.jpg';
 ///
-import mageFireIcon from '../../assets/icons/classes/spec/mage_fire.jpg';
-import mageFrostIcon from '../../assets/icons/classes/spec/mage_frost.jpg';
-import mageArcaneIcon from '../../assets/icons/classes/spec/mage_arcane.jpg';
+import mageFireIcon from '../../assets/icons/classes/specs/mage_fire.jpg';
+import mageFrostIcon from '../../assets/icons/classes/specs/mage_frost.jpg';
+import mageArcaneIcon from '../../assets/icons/classes/specs/mage_arcane.jpg';
 ///
-import monkBrewmasterIcon from '../../assets/icons/classes/spec/monk_brewmaster.jpg';
-import monkMistweaverIcon from '../../assets/icons/classes/spec/monk_mistweaver.jpg';
-import monkWindwalkerIcon from '../../assets/icons/classes/spec/monk_windwalker.jpg';
+import monkBrewmasterIcon from '../../assets/icons/classes/specs/monk_brewmaster.jpg';
+import monkMistweaverIcon from '../../assets/icons/classes/specs/monk_mistweaver.jpg';
+import monkWindwalkerIcon from '../../assets/icons/classes/specs/monk_windwalker.jpg';
 ///
-import paladinProtectionIcon from '../../assets/icons/classes/spec/paladin_protection.jpg';
-import paladinRetributionIcon from '../../assets/icons/classes/spec/paladin_retribution.jpg';
-import paladinHolyIcon from '../../assets/icons/classes/spec/paladin_holy.jpg';
+import paladinProtectionIcon from '../../assets/icons/classes/specs/paladin_protection.jpg';
+import paladinRetributionIcon from '../../assets/icons/classes/specs/paladin_retribution.jpg';
+import paladinHolyIcon from '../../assets/icons/classes/specs/paladin_holy.jpg';
 ///
-import priestShadowIcon from '../../assets/icons/classes/spec/priest_shadow.jpg';
-import priestHolyIcon from '../../assets/icons/classes/spec/priest_holy.jpg';
-import priestDisciplineIcon from '../../assets/icons/classes/spec/priest_discipline.jpg';
+import priestShadowIcon from '../../assets/icons/classes/specs/priest_shadow.jpg';
+import priestHolyIcon from '../../assets/icons/classes/specs/priest_holy.jpg';
+import priestDisciplineIcon from '../../assets/icons/classes/specs/priest_discipline.jpg';
 ///
-import shamanRestorationIcon from '../../assets/icons/classes/spec/shaman_restoration.jpg';
-import shamanElementalIcon from '../../assets/icons/classes/spec/shaman_elemental.jpg';
-import shamanEnhancementIcon from '../../assets/icons/classes/spec/shaman_enhancement.jpg';
+import shamanRestorationIcon from '../../assets/icons/classes/specs/shaman_restoration.jpg';
+import shamanElementalIcon from '../../assets/icons/classes/specs/shaman_elemental.jpg';
+import shamanEnhancementIcon from '../../assets/icons/classes/specs/shaman_enhancement.jpg';
 ///
-import warriorFuryIcon from '../../assets/icons/classes/spec/warrior_fury.jpg';
-import warriorProtectionIcon from '../../assets/icons/classes/spec/warrior_protection.jpg';
-import warriorArmsIcon from '../../assets/icons/classes/spec/warrior_arms.jpg';
+import warriorFuryIcon from '../../assets/icons/classes/specs/warrior_fury.jpg';
+import warriorProtectionIcon from '../../assets/icons/classes/specs/warrior_protection.jpg';
+import warriorArmsIcon from '../../assets/icons/classes/specs/warrior_arms.jpg';
 ///
-import warlockAfflictionIcon from '../../assets/icons/classes/spec/warlock_affliction.jpg';
-import warlockDestructionIcon from '../../assets/icons/classes/spec/warlock_destruction.jpg';
-import warlockDemonologyIcon from '../../assets/icons/classes/spec/warlock_demonology.jpg';
+import warlockAfflictionIcon from '../../assets/icons/classes/specs/warlock_affliction.jpg';
+import warlockDestructionIcon from '../../assets/icons/classes/specs/warlock_destruction.jpg';
+import warlockDemonologyIcon from '../../assets/icons/classes/specs/warlock_demonology.jpg';
 ///
-import rogueAssassinationIcon from '../../assets/icons/classes/spec/rogue_assassination.jpg';
-import rogueSubletyIcon from '../../assets/icons/classes/spec/rogue_sublety.jpg';
-import rogueOutlawIcon from '../../assets/icons/classes/spec/rogue_outlaw.jpg';
+import rogueAssassinationIcon from '../../assets/icons/classes/specs/rogue_assassination.jpg';
+import rogueSubletyIcon from '../../assets/icons/classes/specs/rogue_sublety.jpg';
+import rogueOutlawIcon from '../../assets/icons/classes/specs/rogue_outlaw.jpg';
 
 const WARCRAFT_CLASS_SPEC_ICONS = new Map<WarcraftClassSpecialization, string>([
   [WarcraftClassSpecialization.AfflictionWarlock, warlockAfflictionIcon],
@@ -171,3 +171,19 @@ export function useClassIcon(classId: WarcraftClass) {
 export function useClassSpecIcon(specId: WarcraftClassSpecialization) {
   return WARCRAFT_CLASS_SPEC_ICONS.get(specId) ?? 'Unknown';
 }
+
+export const WarcraftClassIcons = {
+  warriorClassIcon,
+  hunterClassIcon,
+  warlockClassIcon,
+  monkClassIcon,
+  mageClassIcon,
+  paladinClassIcon,
+  evokerClassIcon,
+  rogueClassIcon,
+  druidClassIcon,
+  shamanClassIcon,
+  priestClassIcon,
+  demonHunterClassIcon,
+  deathKnightClassIcon,
+};

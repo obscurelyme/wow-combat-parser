@@ -70,6 +70,22 @@ export const WARCRAFT_CLASS = new Map<WarcraftClass, WarcraftClassString>([
   [WarcraftClass.Warrior, 'Warrior'],
 ]);
 
+export const WARCRAFT_CLASS_NAME = new Map<WarcraftClassString, WarcraftClass>([
+  ['Death Knight', WarcraftClass.DeathKnight],
+  ['Demon Hunter', WarcraftClass.DemonHunter],
+  ['Druid', WarcraftClass.Druid],
+  ['Evoker', WarcraftClass.Evoker],
+  ['Hunter', WarcraftClass.Hunter],
+  ['Mage', WarcraftClass.Mage],
+  ['Monk', WarcraftClass.Monk],
+  ['Paladin', WarcraftClass.Paladin],
+  ['Priest', WarcraftClass.Priest],
+  ['Rogue', WarcraftClass.Rogue],
+  ['Shaman', WarcraftClass.Shaman],
+  ['Warlock', WarcraftClass.Warlock],
+  ['Warrior', WarcraftClass.Warrior],
+]);
+
 export const WARCRAFT_CLASS_SPECS = new Map<WarcraftClassSpecialization, WarcraftClassSpecializationString>([
   [WarcraftClassSpecialization.AfflictionWarlock, 'Affliction'],
   [WarcraftClassSpecialization.ArcaneMage, 'Arcane'],
@@ -111,6 +127,10 @@ export const WARCRAFT_CLASS_SPECS = new Map<WarcraftClassSpecialization, Warcraf
 
 export function useWarcraftClass(classId: WarcraftClass): WarcraftClassString {
   return WARCRAFT_CLASS.get(classId) ?? 'Unknown';
+}
+
+export function useWarcraftClassId(name: string): WarcraftClass {
+  return WARCRAFT_CLASS_NAME.get(name as WarcraftClassString) ?? WarcraftClass.Unknown;
 }
 
 export function useWarcraftClassSpec(specId: WarcraftClassSpecialization): WarcraftClassSpecializationString {

@@ -9,6 +9,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useBNetAuth } from '../../Auth';
 import { logoutUser } from '../../api';
 
+import { WarcraftClassIcons } from '../../Composites/Icons';
+
 const BASE_BATTLE_NET_URL = 'https://oauth.battle.net';
 const CLIENT_ID = import.meta.env.VITE_BNET_CLIENT_ID;
 const STATE = 'etc';
@@ -50,7 +52,7 @@ export default function Login(): ReactElement {
         <Box display="flex" justifyContent="center" alignItems="center">
           <Tooltip title="View profile">
             <IconButton onClick={handleProfileClick}>
-              <Avatar alt="profile name" src="https://placehold.it/50x50" />
+              <Avatar alt="profile name" src={WarcraftClassIcons.monkClassIcon} />
             </IconButton>
           </Tooltip>
 

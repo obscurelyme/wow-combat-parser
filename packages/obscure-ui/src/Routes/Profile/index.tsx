@@ -1,6 +1,16 @@
 import { useMemo, useState } from 'react';
 
-import { Grid, Collapse, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
+import {
+  Avatar,
+  Grid,
+  Collapse,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+  Typography,
+} from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
@@ -10,6 +20,8 @@ import { getUserProfile } from '../../api';
 import PageHeader from '../../Composites/PageHeader';
 import Link from '../../Composites/Link';
 import { useLoaderData } from '../utils';
+import { useWarcraftClassId } from '../../Composites/WarcraftClassUtils';
+import { useClassIcon } from '../../Composites/Icons';
 
 import raiderIoLogo from '../../assets/raider-io-logo.png';
 import warcraftLogo from '../../assets/wow-square-logo.png';
@@ -55,9 +67,14 @@ interface ListItemCharacterProps {
 function ListItemCharacter({ character }: ListItemCharacterProps) {
   const primaryText = `${character.name}`;
   const secondaryText = `Level ${character.level} | ${character.playable_race.name}, ${character.playable_class.name}`;
+  const classId = useWarcraftClassId(character.playable_class.name);
+  const icon = useClassIcon(classId);
 
   return (
     <ListItem divider>
+      <ListItemAvatar>
+        <Avatar src={icon} />
+      </ListItemAvatar>
       <ListItemText
         primary={
           <Grid container spacing={2}>
