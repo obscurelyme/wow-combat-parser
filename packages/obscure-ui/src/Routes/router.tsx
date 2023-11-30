@@ -37,8 +37,20 @@ export const router = createBrowserRouter([
             loader: encounterLoader,
             children: [
               {
+                path: 'overview',
+                element: <>Overview</>,
+              },
+              {
+                path: 'abilities',
+                element: <>Abilities</>,
+              },
+              {
                 path: 'loot',
                 element: <>Loot</>,
+              },
+              {
+                path: 'team',
+                element: <>Team</>,
               },
             ],
           },
