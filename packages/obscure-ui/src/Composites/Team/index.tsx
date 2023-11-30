@@ -1,4 +1,4 @@
-import { Avatar, Card, CardHeader, Box, Grid, Divider } from '@mui/material';
+import { Avatar, Card, CardHeader, CardContent, Box, Grid, Divider, Typography } from '@mui/material';
 
 import { Combatant } from '@obscure/types';
 
@@ -64,10 +64,13 @@ function TeamMember({ combatant }: TeamMemberProps): React.ReactElement {
                 <Grid item>{`${specName} - ${className}`}</Grid>
               </Grid>
               <Divider />
-              <TeamMemberLinks combatantName={combatant.playerName} />
             </>
           }
         />
+        <CardContent>
+          <Typography variant="subtitle1">Damage Dealer</Typography>
+          <TeamMemberLinks combatantName={combatant.playerName} />
+        </CardContent>
       </Card>
     </Grid>
   );

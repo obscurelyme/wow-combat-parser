@@ -171,4 +171,3 @@ export function EncounterPage() {
     </Box>
   );
 }
-5;
