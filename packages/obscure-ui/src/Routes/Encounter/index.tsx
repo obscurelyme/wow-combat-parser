@@ -24,6 +24,7 @@ import JournalEncounterLootTable from '../../Composites/JournalEncounterLootTabl
 import PageHeader from '../../Composites/PageHeader';
 import { BnetCommon } from '@obscure/types/dist';
 import Team from '../../Composites/Team';
+import { Link, Outlet } from 'react-router-dom';
 
 interface EncounterPhaseProps {
   phase: BnetCommon.Phase;
@@ -153,10 +154,10 @@ export function EncounterPage() {
       <TabContext value={value}>
         <Box display="flex" justifyContent="center" sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <TabList onChange={handleChange}>
-            <Tab label="Overview" value="1" />
-            <Tab label="Abilities" value="2" />
-            <Tab label="Loot" value="3" />
-            <Tab label="Team" value="4" />
+            <Tab label="Overview" value="1" component={Link} to="." />
+            <Tab label="Abilities" value="2" component={Link} to="." />
+            <Tab label="Loot" value="3" component={Link} to="loot" />
+            <Tab label="Team" value="4" component={Link} to="." />
           </TabList>
         </Box>
         <TabPanel value="1">{overview && <EncounterOverview overview={overview} />}</TabPanel>
@@ -165,9 +166,13 @@ export function EncounterPage() {
             return <EncounterPhase key={`encounter-ability-${index}`} phase={ability} />;
           })}
         </TabPanel>
-        <TabPanel value="3">{bnet && <JournalEncounterLootTable drops={bnet?.encounterData.items} />}</TabPanel>
+        {/* <TabPanel value="3">
+          <Outlet />
+        </TabPanel> */}
+        {/* <TabPanel value="3">{bnet && <JournalEncounterLootTable drops={bnet?.encounterData.items} />}</TabPanel> */}
         <TabPanel value="4">{combatants && <Team combatants={combatants} />}</TabPanel>
       </TabContext>
+      {/* <Outlet /> */}
     </Box>
   );
 }

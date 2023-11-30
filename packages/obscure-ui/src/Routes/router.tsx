@@ -35,6 +35,12 @@ export const router = createBrowserRouter([
             path: '/encounter/:id',
             element: <EncounterPage />,
             loader: encounterLoader,
+            children: [
+              {
+                path: 'loot',
+                element: <>Loot</>,
+              },
+            ],
           },
           {
             path: '/authorize',

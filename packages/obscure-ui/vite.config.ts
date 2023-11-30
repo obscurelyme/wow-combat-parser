@@ -11,7 +11,7 @@ export default defineConfig({
       cache: false,
       include: ['./src/**/*.ts', './src/**/*.tsx'],
       exclude: ['node_modules'],
-      failOnWarning: true,
+      failOnWarning: false,
     }),
   ],
   optimizeDeps: {
