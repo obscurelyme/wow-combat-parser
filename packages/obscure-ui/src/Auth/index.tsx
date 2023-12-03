@@ -49,6 +49,7 @@ function authReducer(state: BNetAuthData, action: AuthAction): BNetAuthData {
     case 'login': {
       return {
         ...state,
+        profileToken: action.token,
       };
     }
     case 'logout': {
