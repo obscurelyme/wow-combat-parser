@@ -1,24 +1,37 @@
 import { app, BrowserWindow, ipcMain, session } from 'electron';
 import { join } from 'path';
+import type { Options } from 'open';
+
+let open: null | ((target: string, options?: Options) => Promise<ChildProcess>) = null;
+
+import('open')
+  .then(importedModule => {
+    open = importedModule.default;
+    console.log('sdfsd');
+  })
+  .catch(e => {
+    console.error(e);
+  });
 
 import { ElectronError } from '@obscure/types';
 
-import { getAllReports, getReport } from './handlers/reports';
-import { getAllEncountersFromReport } from './handlers/encounters';
-import { connectReportHandlers } from './handlers';
-import { fetchGeneralAuthToken } from './vendors/blizzard';
-import { buildElectronResponse } from './utils';
-import { getAuthTokens, isAuthTokenExpired, saveTokens, connectUserHandles } from './handlers/user';
-import { connectHandlers as connectJournalEncounterHandlers } from './handlers/journalEncounter';
-import { connectBattleNetCreatureDataHandlers } from './handlers/battlenet/gamedata/creature';
-import { connectBattleNetJournalDataHandlers } from './handlers/battlenet/gamedata/journal';
-import { connectBNetProfileHandlers } from './handlers/battlenet/profile';
-import { connectEncounterHandlers } from './handlers/encounters';
+import { getAllReports, getReport } from './handlers/reports/index.js';
+import { getAllEncountersFromReport } from './handlers/encounters/index.js';
+import { connectReportHandlers } from './handlers/index.js';
+import { fetchGeneralAuthToken } from './vendors/blizzard.js';
+import { buildElectronResponse } from './utils/index.js';
+import { getAuthTokens, isAuthTokenExpired, saveTokens, connectUserHandles } from './handlers/user/index.js';
+import { connectHandlers as connectJournalEncounterHandlers } from './handlers/journalEncounter/index.js';
+import { connectBattleNetCreatureDataHandlers } from './handlers/battlenet/gamedata/creature/index.js';
+import { connectBattleNetJournalDataHandlers } from './handlers/battlenet/gamedata/journal/index.js';
+import { connectBNetProfileHandlers } from './handlers/battlenet/profile/index.js';
+import { connectEncounterHandlers } from './handlers/encounters/index.js';
 
-import CombatDB from './database';
+import CombatDB from './database.js';
 import { config } from 'dotenv';
 
 import electronReload from 'electron-reload';
+import { ChildProcess } from 'child_process';
 
 electronReload(__dirname, {});
 
@@ -57,6 +70,8 @@ async function createWindow() {
     mainWindow.loadURL('http://localhost:5173');
     mainWindow.webContents.openDevTools();
   }
+
+  void open?.('https://github.com');
 }
 
 app.on('ready', () => {

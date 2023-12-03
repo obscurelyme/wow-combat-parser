@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider } from '@mui/material';
+import { Box, Button, Divider } from '@mui/material';
 
 import { Report } from '@obscure/types';
 
@@ -17,6 +17,12 @@ export default function HomePage(): React.ReactElement {
 
   return (
     <>
+      <Button
+        onClick={() => {
+          window.open('https://github.com');
+        }}>
+        Github
+      </Button>
       <UploadNewReport />
       <Divider />
       <Box mt={2}>

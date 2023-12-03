@@ -6,6 +6,8 @@
   "homepage": "https://github.com/obscurelyme/wow-combat-parser#readme",
   "license": "MIT",
   "main": "dist/main.js",
+  "exports": "./dist/main.js",
+  "type": "module",
   "directories": {
     "src": "src"
   },
