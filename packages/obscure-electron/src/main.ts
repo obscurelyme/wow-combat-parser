@@ -16,6 +16,7 @@ import { connectBNetProfileHandlers } from './handlers/battlenet/profile';
 import { connectEncounterHandlers } from './handlers/encounters';
 
 import CombatDB from './database';
+import openAppService from './vendors/open';
 import { config } from 'dotenv';
 
 import electronReload from 'electron-reload';
@@ -39,6 +40,7 @@ if (!app.requestSingleInstanceLock()) {
 let mainWindow: BrowserWindow | null = null;
 
 async function createWindow() {
+  await openAppService.startUp();
   await CombatDB.initialize();
   console.log(app.getPath('exe'));
   mainWindow = new BrowserWindow({
