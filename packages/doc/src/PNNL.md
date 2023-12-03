@@ -154,6 +154,10 @@ Contains all source code in a single location
 
 --
 
+Including this very presentation
+
+--
+
 Loosely coupled dependencies
 
 ---
