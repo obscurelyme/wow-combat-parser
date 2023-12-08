@@ -1,3 +1,4 @@
+import type { Options } from 'open';
 import {
   AuthToken,
   BnetCreatureData,
@@ -36,6 +37,8 @@ declare global {
       getUserProfile: () => Promise<any>;
       // BNet General --------------------------------------------------------------------------------------------------
       getBNetGeneralAuthToken: () => Promise<AuthToken>;
+      // OPEN ----------------------------------------------------------------------------------------------------------
+      openApplication: (target: string, options?: Options) => Promise<void>;
     };
   }
 }

@@ -10,13 +10,14 @@ import {
   ListItemButton,
   ListItemText,
   Typography,
+  IconButton,
 } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
 import { BNetUserProfile } from '@obscure/types';
 
-import { getUserProfile } from '../../api';
+import { getUserProfile, openApplication } from '../../api';
 import PageHeader from '../../Composites/PageHeader';
 import Link from '../../Composites/Link';
 import { useLoaderData } from '../utils';
@@ -82,11 +83,14 @@ function ListItemCharacter({ character }: ListItemCharacterProps) {
               <Typography variant="h6">{primaryText}</Typography>
             </Grid>
             <Grid item>
-              <Link
-                target="_blank"
-                to={`https://worldofwarcraft.com/en_us/character/us/${character.realm.slug}/${character.name}`}>
+              <IconButton
+                onClick={() =>
+                  openApplication(
+                    `https://worldofwarcraft.com/en_us/character/us/${character.realm.slug}/${character.name}`
+                  )
+                }>
                 <img height="25px" width="auto" src={warcraftLogo} />
-              </Link>
+              </IconButton>
             </Grid>
             <Grid item>
               <Link target="_blank" to={`https://raider.io/characters/us/${character.realm.slug}/${character.name}`}>

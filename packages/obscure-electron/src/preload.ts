@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
+import type { Options } from 'open';
 
 const WINDOW_API = {
   // BNET GAME DATA API ------------------------------------------------------------------------------------------------
@@ -28,6 +29,8 @@ const WINDOW_API = {
   getUserProfile: () => ipcRenderer.invoke('getUserProfile'),
   // BNET GENERAL AUTH -------------------------------------------------------------------------------------------------
   getBNetGeneralAuthToken: () => ipcRenderer.invoke('getBNetGeneralAuthToken'),
+  // OPEN APPLICATION --------------------------------------------------------------------------------------------------
+  openApplication: (target: string, options: Options) => ipcRenderer.invoke('openApplication', target, options),
 };
 
 contextBridge.exposeInMainWorld('api', WINDOW_API);

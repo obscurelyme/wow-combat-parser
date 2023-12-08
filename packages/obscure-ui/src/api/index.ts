@@ -11,6 +11,7 @@ import {
   Combatant,
   BNetUserProfile,
 } from '@obscure/types';
+import type { Options } from 'open';
 
 function makeErrorMessage(functionName: string) {
   return `Window API is not defined for "${functionName}". Either the Electron server not started, you have not defined this method, or you have not exposed this method.`;
@@ -141,4 +142,8 @@ export function getEncounter(encounterGuid: string): Promise<Encounter> {
 
 export function getCombatantsFromEncounter(encounterGuid: string): Promise<Combatant[]> {
   return window.api.getCombatantsFromEncounter(encounterGuid);
+}
+
+export function openApplication(target: string, options?: Options): Promise<void> {
+  return window.api.openApplication(target, options);
 }

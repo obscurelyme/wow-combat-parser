@@ -1,8 +1,8 @@
-import { Avatar, Card, CardHeader, CardContent, Box, Grid, Divider, Typography } from '@mui/material';
+import { Avatar, Card, CardHeader, CardContent, Box, IconButton, Grid, Divider, Typography } from '@mui/material';
 
 import { Combatant } from '@obscure/types';
 
-import Link from '../Link';
+import { openApplication } from '../../api';
 import { useClassSpecIcon } from '../Icons';
 import { useWarcraftClass, useWarcraftClassSpec } from '../WarcraftClassUtils';
 
@@ -29,19 +29,23 @@ function TeamMemberLinks({ combatantName }: TeamMemberLinksProps): React.ReactEl
   return (
     <Grid container spacing={2} mt={0.5}>
       <Grid item>
-        <Link target="_blank" to={`https://worldofwarcraft.com/en_us/character/us/${realmSlug}/${characterName}`}>
-          <img height="25px" width="auto" src={warcraftLogo} />
-        </Link>
+        <IconButton
+          onClick={() =>
+            openApplication(`https://worldofwarcraft.com/en_us/character/us/${realmSlug}/${characterName}`)
+          }>
+          <Avatar src={warcraftLogo} />
+        </IconButton>
       </Grid>
       <Grid item>
-        <Link target="_blank" to={`https://raider.io/characters/us/${realmSlug}/${characterName}`}>
-          <img height="25px" width="auto" src={raiderIoLogo} />
-        </Link>
+        <IconButton onClick={() => openApplication(`https://raider.io/characters/us/${realmSlug}/${characterName}`)}>
+          <Avatar src={raiderIoLogo} />
+        </IconButton>
       </Grid>
       <Grid item>
-        <Link target="_blank" to={`https://www.warcraftlogs.com/character/us/${realmSlug}/${characterName}`}>
-          <img height="25px" width="auto" src={warcraftLogsLogo} />
-        </Link>
+        <IconButton
+          onClick={() => openApplication(`https://www.warcraftlogs.com/character/us/${realmSlug}/${characterName}`)}>
+          <Avatar src={warcraftLogsLogo} />
+        </IconButton>
       </Grid>
     </Grid>
   );

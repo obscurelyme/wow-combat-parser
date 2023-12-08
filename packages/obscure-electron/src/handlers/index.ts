@@ -13,13 +13,12 @@ export async function createReport(
   filePath: string,
   reportGuid: string
 ): Promise<ElectronResult<Report>> {
-  const eventGuid = uuid();
   console.log(`Processing file upload...`);
   const fileReader = new FileReader();
   try {
     const valid = await fileReader.validate(filePath);
     if (valid) {
-      const contents = await fileReader.read2(reportName, filePath, reportGuid);
+      const contents = await fileReader.read(reportName, filePath, reportGuid);
       return buildElectronResponse(contents);
     } else {
       const err = new ElectronError('Invalid File');

@@ -14,6 +14,7 @@ import { connectBattleNetCreatureDataHandlers } from './handlers/battlenet/gamed
 import { connectBattleNetJournalDataHandlers } from './handlers/battlenet/gamedata/journal';
 import { connectBNetProfileHandlers } from './handlers/battlenet/profile';
 import { connectEncounterHandlers } from './handlers/encounters';
+import { connectOpenAppHandlers } from './handlers/openApp';
 
 import CombatDB from './database';
 import openAppService from './vendors/open';
@@ -138,3 +139,4 @@ connectBattleNetJournalDataHandlers(ipcMain);
 connectBattleNetCreatureDataHandlers(ipcMain);
 connectUserHandles(ipcMain);
 connectEncounterHandlers(ipcMain);
+connectOpenAppHandlers(ipcMain);

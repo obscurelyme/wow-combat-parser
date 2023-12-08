@@ -70,91 +70,7 @@ export class FileReader extends EventEmitter {
     return valid;
   }
 
-  /**
-   * @deprecated use read2 instead
-   * @param reportName
-   * @param filePath
-   * @param reportGuid
-   * @returns
-   */
   public async read(reportName: string, filePath: string, reportGuid: string): Promise<Report> {
-    this._currentLineIndex = 0;
-    let firstLine = true;
-    const report = new ReportBuilder(reportName, reportGuid);
-    this._currentFilePath = filePath;
-    this._readInterface = readline.createInterface({
-      input: fs.createReadStream(path.join(`${filePath}`)),
-    });
-
-    this._readInterface.on('line', async line => {
-      this._currentLineIndex++;
-      report.updateProgress(this.getProgress());
-      try {
-        const rawCombatLog = parseRawCombatLog(line);
-
-        if (firstLine) {
-          report.beginReport(rawCombatLog.timestamp);
-          firstLine = false;
-        }
-
-        switch (rawCombatLog.subevent) {
-          case 'ENCOUNTER_START': {
-            await report.beginEncounter(rawCombatLog);
-            console.log('encounter start');
-            break;
-          }
-          case 'ENCOUNTER_END': {
-            await report.endEncounter(rawCombatLog);
-            console.log('encounter end');
-            break;
-          }
-          case 'ZONE_CHANGE': {
-            await report.zoneChange(rawCombatLog);
-            break;
-          }
-          case 'MAP_CHANGE': {
-            await report.mapChange(rawCombatLog);
-            break;
-          }
-          case 'COMBATANT_INFO': {
-            if (report.inEncounter()) {
-              const s = await report.combatantInfo(rawCombatLog);
-              console.log('[IPC EVENT]=>combatant set', report.combatants().size);
-            }
-            break;
-          }
-          case 'SPELL_CAST_SUCCESS': {
-            if (report.inEncounter()) {
-              const { playerName, playerGuid } = parsePlayerInfo(rawCombatLog);
-              if (playerGuid) {
-                const combatant = report.combatants()?.get(playerGuid);
-                console.log(
-                  '[IPC EVENT]=>updateCombatant | found combatant, updating...',
-                  playerName,
-                  playerGuid,
-                  report.currentEncounterId()
-                );
-                report.combatants().delete(playerGuid);
-              }
-            }
-          }
-          default: {
-            if (report.inEncounter() && report.combatants().size > 0) {
-              // NOTE: do nothing, this code never worked. Don't bother, delete eventually
-            }
-          }
-        }
-      } catch (e) {
-        console.log(`Disgarding line ${line}`);
-        return;
-      }
-    });
-
-    await once(this._readInterface, 'close');
-    return report.getInfo();
-  }
-
-  public async read2(reportName: string, filePath: string, reportGuid: string): Promise<Report> {
     this._currentLineIndex = 0;
     this._currentFilePath = filePath;
     const report = new ReportBuilder(reportName, reportGuid);
@@ -224,9 +140,11 @@ export class FileReader extends EventEmitter {
             case 'CHALLENGE_MODE_START': {
               // NOTE: if in challenge mode and you start a new one, the old mark should be marked as completed and failed.
               console.log('Started challenge mode');
+              break;
             }
             case 'CHALLENGE_MODE_END': {
               console.log('Ending challenge mode');
+              break;
             }
             default: {
               if (report.inEncounter() && report.combatants().size > 0) {
