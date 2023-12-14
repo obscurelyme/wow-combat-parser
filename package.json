@@ -31,7 +31,8 @@
     "lint:electron": "yarn workspace @obscure/electron lint",
     "test:ui": "yarn workspace @obscure/ui test",
     "test:electron": "yarn workspace @obscure/electron test",
-    "storybook": "yarn workspace @obscure/ui storybook"
+    "storybook": "yarn workspace @obscure/ui storybook",
+    "debug": "yarn start:dbmine"
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",

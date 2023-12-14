@@ -22,9 +22,13 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "node ./dist/index.js"
+    "start": "node ./dist/index.js",
+    "test": "jest"
   },
   "bugs": {
     "url": "https://github.com/obscurelyme/wow-combat-parser/issues"
+  },
+  "dependencies": {
+    "@obscure/types": "^0.0.1"
   }
 }

@@ -14,8 +14,10 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "declaration": false
+    "declaration": false,
+    "strictNullChecks": false,
+    "sourceMap": true
   },
-  "exclude": ["node_modules"],
+  "exclude": ["./src/**/*.spec.tsx", "./src/**/*.spec.ts", "node_modules"],
   "include": ["./src/**/*"]
 }
