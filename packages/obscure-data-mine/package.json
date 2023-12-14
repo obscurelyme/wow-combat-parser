@@ -29,6 +29,7 @@
     "url": "https://github.com/obscurelyme/wow-combat-parser/issues"
   },
   "dependencies": {
+    "@obscure/queue": "^0.0.1",
     "@obscure/types": "^0.0.1"
   }
 }

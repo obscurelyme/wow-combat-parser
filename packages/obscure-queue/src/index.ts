@@ -46,5 +46,6 @@ export class Queue {
       await this.currentItem.task();
       this.currentItem = this.currentItem.next;
     }
+    this.finish(true);
   }
 }

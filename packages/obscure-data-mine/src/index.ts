@@ -4,9 +4,8 @@ import { parse } from 'csv';
 import knex, { Knex } from 'knex';
 import { performance, PerformanceObserver } from 'perf_hooks';
 
+import { Queue, QueueItem } from '@obscure/queue';
 import { JournalEncounter } from '@obscure/types';
-
-import { Queue, QueueItem } from './queue';
 
 const perfObserver = new PerformanceObserver(items => {
   items.getEntries().forEach(entry => {

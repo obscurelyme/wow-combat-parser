@@ -1,0 +1,21 @@
+{
+  "name": "@obscure/queue",
+  "version": "0.0.1",
+  "description": "Queue for streaming tasks",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.js",
+  "directories": {
+    "src": "src"
+  },
+  "files": [
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/obscurelyme/wow-combat-parser.git"
+  },
+  "scripts": {
+    "build": "tsc"
+  }
+}
