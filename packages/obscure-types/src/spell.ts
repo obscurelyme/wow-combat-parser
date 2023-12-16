@@ -35,4 +35,5 @@ export interface SpellDamageEvent extends AdvancedParams {
   glancing: boolean;
   crushing: boolean;
   isOffHand: boolean;
+  supportPlayerGuid?: string;
 }

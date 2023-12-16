@@ -51,6 +51,7 @@ describe('parseSpellDamageEvent', () => {
       spellPower: 0,
       spellSchool: 4,
       uiMapID: 731,
+      supportPlayerGuid: undefined,
     });
   });
 
@@ -127,6 +128,7 @@ describe('parseSpellDamageEvent', () => {
       spellPower: 1423,
       spellSchool: 8,
       uiMapID: 733,
+      supportPlayerGuid: undefined,
     });
   });
 
@@ -140,5 +142,17 @@ describe('parseSpellDamageEvent', () => {
     expect(rest.spellId).toBe(0);
     expect(rest.spellName).toBe('Melee Swing');
     expect(rest.spellSchool).toBe(1);
+  });
+
+  it('might parse SPELL_DAMAGE_SUPPORT events', () => {
+    const line =
+      '12/15 17:46:33.130  SPELL_DAMAGE_SUPPORT,Player-61-0F40F96E,"Obscürely-Zul\'jin",0x511,0x0,Creature-0-4212-1279-5286-81985-00007D0166,"Everbloom Cultivator",0x10a48,0x0,360828,"Blistering Scales",0xc,Creature-0-4212-1279-5286-81985-00007D0166,0000000000000000,9877664,9995816,0,0,5043,0,0,3155,3155,0,507.68,1422.10,620,4.1693,70,9647,4823,-1,12,0,0,0,1,nil,nil,Player-60-0F33486D';
+
+    const rawEvent = parseRawCombatLog(line);
+    const { guid, timestamp, ...rest } = parseSpellDamageEvent(rawEvent);
+
+    expect(guid).not.toBe(null);
+    expect(timestamp).not.toBe(null);
+    expect(rest.supportPlayerGuid).toBe('Player-60-0F33486D');
   });
 });

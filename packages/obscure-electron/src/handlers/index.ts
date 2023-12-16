@@ -23,7 +23,6 @@ export async function createReport(
     } else {
       const err = new ElectronError('Invalid File');
       console.log(`Failed event: `, err.serialize());
-      fileReader.removeAllListeners();
       return buildElectronResponse<Report>(undefined, err);
     }
   } catch (e) {
