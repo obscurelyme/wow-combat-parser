@@ -35,3 +35,6 @@ coverage
 tsconfig.tsbuildinfo
 
 *.env
+
+# database
+*.db
