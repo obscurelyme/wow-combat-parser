@@ -177,6 +177,28 @@ export class CombatDB {
     tb.boolean('glancing');
     tb.boolean('crushing');
     tb.boolean('isOffHand');
+    tb.string('supportPlayerGuid').nullable();
+    // Advanced Params
+    tb.string('infoGUID');
+    tb.string('ownerGUID');
+    tb.integer('currentHP');
+    tb.integer('maxHP');
+    tb.integer('attackPower');
+    tb.integer('spellPower');
+    tb.integer('armor');
+    tb.integer('absorb');
+    tb.integer('powerType');
+    tb.integer('currentPower');
+    tb.integer('maxPower');
+    tb.integer('powerCost');
+    tb.integer('positionX');
+    tb.integer('positionY');
+    tb.integer('uiMapID');
+    tb.integer('facing');
+    tb.integer('level');
+    // Custom
+    tb.string('reportGuid');
+    tb.string('encounterGuid');
   }
 }
 

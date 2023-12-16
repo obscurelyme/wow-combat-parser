@@ -4,15 +4,36 @@ import { once } from 'events';
 import path from 'path';
 import lineReader from 'line-reader';
 
-import { SpellDamageEvent } from '@obscure/types/dist';
+import { RawCombatLog, SpellDamageEvent } from '@obscure/types';
 
 import { Report } from './types';
 import { ReportBuilder } from './reportbuilder';
 import { parseRawCombatLog } from './parsers/rawcombatlog';
 import { parseCombatLogVersionEvent } from './parsers/combatlogversion';
 import { parseSpellDamageEvent } from './parsers/spellDamage';
-// import { parsePlayerInfo } from './parsers/parsePlayerName';
-// import { updateCombatant } from './handlers/events/update';
+import { parsePlayerInfo } from './parsers/parsePlayerName';
+import { updateCombatant } from './handlers/events/update';
+import { DataQueue } from './dataqueue';
+
+async function checkCombatant(report: ReportBuilder, rawCombatLog: RawCombatLog) {
+  if (report.inEncounter() && report.combatants().size > 0) {
+    try {
+      const { playerName, playerGuid } = parsePlayerInfo(rawCombatLog);
+      if (playerGuid) {
+        const combatant = report.combatants()?.get(playerGuid);
+        if (combatant) {
+          // player is in the list of combatants, update their name in the database
+          // and then remove them from the map
+          await updateCombatant(playerName, playerGuid, report.currentEncounterId());
+          report.combatants().delete(playerGuid);
+        }
+        // NOTE: player is not in the combatant map, we've already delt with this combatant
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
 
 export declare interface FileReader {
   on(event: 'done', listener: (contents: Report) => void): this;
@@ -73,8 +94,10 @@ export class FileReader {
     this._currentLineIndex = 0;
     this._currentFilePath = filePath;
     const report = new ReportBuilder(reportName, reportGuid);
+    const dataQueue = new DataQueue();
 
-    await this.readEachLine(report);
+    await this.readEachLine(report, dataQueue);
+    await dataQueue.pendingTasks();
 
     return report.getInfo();
   }
@@ -86,7 +109,7 @@ export class FileReader {
     return this._currentLineIndex / this._lineCount;
   }
 
-  private readEachLine(report: ReportBuilder): Promise<void> {
+  private readEachLine(report: ReportBuilder, dataQueue: DataQueue): Promise<void> {
     let firstLine = true;
 
     return new Promise(resolve => {
@@ -143,7 +166,10 @@ export class FileReader {
             case 'SPELL_PERIODIC_DAMAGE':
             case 'SPELL_BUILDING_DAMAGE': {
               if (report.inEncounter()) {
-                parseSpellDamageEvent(rawCombatLog);
+                if (report.combatants().size > 0) {
+                  await checkCombatant(report, rawCombatLog);
+                }
+                dataQueue.enqueue(parseSpellDamageEvent(rawCombatLog));
               }
               break;
             }
@@ -153,11 +179,15 @@ export class FileReader {
             case 'SPELL_PERIODIC_DAMAGE_SUPPORT':
             case 'SPELL_BUILDING_DAMAGE_SUPPORT': {
               if (report.inEncounter()) {
-                parseSpellDamageEvent(rawCombatLog);
+                if (report.combatants().size > 0) {
+                  await checkCombatant(report, rawCombatLog);
+                }
+                dataQueue.enqueue(parseSpellDamageEvent(rawCombatLog));
               }
               break;
             }
             default: {
+              break;
               // if (report.inEncounter() && report.combatants().size > 0) {
               //   try {
               //     const { playerName, playerGuid } = parsePlayerInfo(rawCombatLog);
@@ -178,6 +208,7 @@ export class FileReader {
             }
           }
         } catch (e) {
+          console.error(e);
           console.log(`Disgarding line ${line}`);
         }
 
