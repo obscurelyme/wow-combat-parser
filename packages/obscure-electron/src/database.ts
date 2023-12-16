@@ -150,6 +150,33 @@ export class CombatDB {
 
   private createSpellDamageTable(tb: Knex.CreateTableBuilder) {
     tb.increments('id').primary();
+    tb.timestamp('timestamp', { useTz: true });
+    tb.text('guid');
+    // Base Params
+    tb.text('sourceGuid');
+    tb.text('sourceName');
+    tb.integer('sourceFlags');
+    tb.integer('sourceRaidFlags');
+    tb.text('destGuid');
+    tb.text('destName');
+    tb.integer('destFlags');
+    tb.integer('destRaidFlags');
+    // Prefix Params
+    tb.integer('spellId');
+    tb.text('spellName');
+    tb.integer('spellSchool');
+    // Suffix Params
+    tb.integer('amount');
+    tb.integer('baseAmount');
+    tb.integer('overkill');
+    tb.integer('school');
+    tb.integer('resisted');
+    tb.integer('blocked');
+    tb.integer('absorbed');
+    tb.boolean('critical');
+    tb.boolean('glancing');
+    tb.boolean('crushing');
+    tb.boolean('isOffHand');
   }
 }
 
