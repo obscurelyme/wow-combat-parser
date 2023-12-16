@@ -11,6 +11,7 @@ import { parsePlayerInfo } from './parsers/parsePlayerName';
 import { updateCombatant } from './handlers/events/update';
 
 import lineReader from 'line-reader';
+import { parseSpellDamageEvent } from './parsers/spellDamage';
 
 export declare interface FileReader {
   on(event: 'done', listener: (contents: Report) => void): this;
@@ -144,6 +145,14 @@ export class FileReader extends EventEmitter {
             }
             case 'CHALLENGE_MODE_END': {
               console.log('Ending challenge mode');
+              break;
+            }
+            case 'SWING_DAMAGE':
+            case 'RANGE_DAMAGE':
+            case 'SPELL_DAMAGE':
+            case 'SPELL_PERIODIC_DAMAGE':
+            case 'SPELL_BUILDING_DAMAGE': {
+              parseSpellDamageEvent(rawCombatLog);
               break;
             }
             default: {

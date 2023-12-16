@@ -1,23 +1,38 @@
-export interface SpellDamageEvent {
+import { AdvancedParams, SpellSchool } from './warcraft';
+
+export interface SpellDamageEvent extends AdvancedParams {
+  guid: string;
+  timestamp: number;
+  // Base Params ///////////////////////////////////////////////////////////
   sourceGuid: string;
   sourceName: string;
-  sourceFlags: string;
+  sourceFlags: number;
   sourceRaidFlags: number;
   destGuid: string;
   destName: string;
-  destFlags: string;
+  destFlags: number;
   destRaidFlags: number;
+  // Prefix Params
   spellId: number;
   spellName: string;
-  spellSchool: number;
+  spellSchool: SpellSchool;
+  // Suffix Params ////////////////////////////////////////////////////////
   amount: number;
+  /**
+   * SWING_DAMAGE, SPELL_DAMAGE, SPELL_HEAL, SPELL_PERIODIC_DAMAGE, and SPELL_PERIODIC HEAL have an additional 2nd suffix parameter, baseAmount.
+   * This is the amount before critical strike bonus, and before percent modifiers on the target,
+   * including effects like damage reduction from armor, Ability demonhunter
+   * empowerwards [Chaos Brand], Ability warrior
+   * savageblow [Mortal Strike], etc.
+   */
+  baseAmount: number;
   overkill: number;
-  school: any;
+  school: number;
   resisted: number;
   blocked: number;
   absorbed: number;
-  critical: number;
-  glancing: number;
-  crushing: number;
-  isOffHand: number;
+  critical: boolean;
+  glancing: boolean;
+  crushing: boolean;
+  isOffHand: boolean;
 }

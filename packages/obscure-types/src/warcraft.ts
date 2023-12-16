@@ -134,3 +134,72 @@ export enum PowerType {
   AlternateMount,
   NumPowerTypes,
 }
+
+/**
+ * Advanced parameters found in advanced combat logs, these params will be present
+ * on all [PREFIX]_[SUFFIX] events
+ */
+export interface AdvancedParams {
+  /**
+   * GUID of the advanced params unit
+   */
+  infoGUID: string;
+  /**
+   * GUID of the owner in case of pets/minions
+   */
+  ownerGUID: string;
+  /**
+   * Unit current HP
+   */
+  currentHP: number;
+  /**
+   * Unit max HP
+   */
+  maxHP: number;
+  /**
+   * 	Unit attack power
+   */
+  attackPower: number;
+  /**
+   * Unit spell power
+   */
+  spellPower: number;
+  /**
+   * Unit armor
+   */
+  armor: number;
+  /**
+   * Unit applied absorb amount
+   */
+  absorb: number;
+  powerType: PowerType;
+  /**
+   * Unit current power
+   */
+  currentPower: number;
+  /**
+   * Unit max power
+   */
+  maxPower: number;
+  /**
+   * Required power amount for the ability
+   */
+  powerCost: number;
+  /**
+   * Unit X position on the map instance
+   */
+  positionX: number;
+  /**
+   * Unit Y position on the map instance
+   */
+  positionY: number;
+  uiMapID: number;
+  /**
+   * Unit facing direction in the [0, 2π] range
+   */
+  facing: number;
+  /**
+   * Level for NPCs, item level for players
+   */
+  level: number;
+}
