@@ -3,6 +3,8 @@ import { AdvancedParams, SpellSchool } from './warcraft';
 export interface SpellDamageEvent extends AdvancedParams {
   guid: string;
   timestamp: number;
+  reportGuid: string;
+  encounterGuid: string;
   // Base Params ///////////////////////////////////////////////////////////
   sourceGuid: string;
   sourceName: string;

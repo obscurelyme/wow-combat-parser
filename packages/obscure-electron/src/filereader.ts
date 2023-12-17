@@ -169,7 +169,7 @@ export class FileReader {
                 if (report.combatants().size > 0) {
                   await checkCombatant(report, rawCombatLog);
                 }
-                dataQueue.enqueue(parseSpellDamageEvent(rawCombatLog));
+                dataQueue.enqueue(report.combatLog(rawCombatLog));
               }
               break;
             }
@@ -182,7 +182,7 @@ export class FileReader {
                 if (report.combatants().size > 0) {
                   await checkCombatant(report, rawCombatLog);
                 }
-                dataQueue.enqueue(parseSpellDamageEvent(rawCombatLog));
+                dataQueue.enqueue(report.combatLog(rawCombatLog));
               }
               break;
             }

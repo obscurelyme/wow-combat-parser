@@ -1,9 +1,10 @@
-import { Combatant } from '@obscure/types';
+import { Combatant, SpellDamageEvent } from '@obscure/types';
 
 import CombatDB from './database';
 import { Report, Encounter, RawCombatLog } from './types';
 import { createEncounter, updateEncounter } from './handlers/encounters';
 import { createCombatant, createZoneChange } from './handlers/events/create';
+import { parseSpellDamageEvent } from './parsers/spellDamage';
 
 export class ReportBuilder {
   private _reportGuid: string;
@@ -104,8 +105,11 @@ export class ReportBuilder {
     return combatant;
   }
 
-  public async combatLog(line: RawCombatLog): Promise<void> {
-    return Promise.resolve();
+  public combatLog(line: RawCombatLog): SpellDamageEvent {
+    const spellDamageEvent = parseSpellDamageEvent(line);
+    spellDamageEvent.reportGuid = this._reportGuid;
+    spellDamageEvent.encounterGuid = this._currentEncounterGuid;
+    return spellDamageEvent;
   }
 
   public inEncounter(): boolean {

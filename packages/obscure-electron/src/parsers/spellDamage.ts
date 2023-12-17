@@ -93,6 +93,8 @@ export function parseSpellDamageEvent(combatLog: RawCombatLog): SpellDamageEvent
     // Suffix Params
     ...suffix,
     supportPlayerGuid: args[10],
+    reportGuid: '',
+    encounterGuid: '',
   };
 
   return s;
