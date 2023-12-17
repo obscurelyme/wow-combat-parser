@@ -120,6 +120,8 @@ export * from './combatant';
 export * from './zonechange';
 export * from './mapchange';
 export * from './combatlogversion';
+export * from './spell';
+export * from './flags';
 export * as BnetCommon from './bnet/common';
 export * as BnetJournalData from './bnet/journal';
 export * as BnetCreatureData from './bnet/creature';

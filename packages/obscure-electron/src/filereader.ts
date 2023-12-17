@@ -2,30 +2,50 @@ import * as fs from 'fs';
 import * as readline from 'readline';
 import { once } from 'events';
 import path from 'path';
-import { EventEmitter } from 'node:events';
+import lineReader from 'line-reader';
+
+import { RawCombatLog, SpellDamageEvent } from '@obscure/types';
+
 import { Report } from './types';
 import { ReportBuilder } from './reportbuilder';
 import { parseRawCombatLog } from './parsers/rawcombatlog';
 import { parseCombatLogVersionEvent } from './parsers/combatlogversion';
+import { parseSpellDamageEvent } from './parsers/spellDamage';
 import { parsePlayerInfo } from './parsers/parsePlayerName';
 import { updateCombatant } from './handlers/events/update';
+import { DataQueue } from './dataqueue';
 
-import lineReader from 'line-reader';
+async function checkCombatant(report: ReportBuilder, rawCombatLog: RawCombatLog) {
+  if (report.inEncounter() && report.combatants().size > 0) {
+    try {
+      const { playerName, playerGuid } = parsePlayerInfo(rawCombatLog);
+      if (playerGuid) {
+        const combatant = report.combatants()?.get(playerGuid);
+        if (combatant) {
+          // player is in the list of combatants, update their name in the database
+          // and then remove them from the map
+          await updateCombatant(playerName, playerGuid, report.currentEncounterId());
+          report.combatants().delete(playerGuid);
+        }
+        // NOTE: player is not in the combatant map, we've already delt with this combatant
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
 
 export declare interface FileReader {
   on(event: 'done', listener: (contents: Report) => void): this;
   on(event: 'valid', listener: (valid: boolean) => void): this;
 }
 
-export class FileReader extends EventEmitter {
+export class FileReader {
   private _currentFilePath: string;
   private _readInterface: readline.Interface;
   private _lineCount: number;
   private _currentLineIndex: number;
-
-  public constructor() {
-    super();
-  }
+  private _buffer: SpellDamageEvent[];
 
   public getCurrentFile(): string {
     return this._currentFilePath;
@@ -74,8 +94,10 @@ export class FileReader extends EventEmitter {
     this._currentLineIndex = 0;
     this._currentFilePath = filePath;
     const report = new ReportBuilder(reportName, reportGuid);
+    const dataQueue = new DataQueue();
 
-    await this.readEachLine(report);
+    await this.readEachLine(report, dataQueue);
+    await dataQueue.pendingTasks();
 
     return report.getInfo();
   }
@@ -87,15 +109,7 @@ export class FileReader extends EventEmitter {
     return this._currentLineIndex / this._lineCount;
   }
 
-  private emitDone(reportInfo: Report) {
-    this.emit('done', reportInfo);
-  }
-
-  private emitValid(valid: boolean) {
-    this.emit('valid', valid);
-  }
-
-  private readEachLine(report: ReportBuilder): Promise<void> {
+  private readEachLine(report: ReportBuilder, dataQueue: DataQueue): Promise<void> {
     let firstLine = true;
 
     return new Promise(resolve => {
@@ -132,7 +146,7 @@ export class FileReader extends EventEmitter {
             }
             case 'COMBATANT_INFO': {
               if (report.inEncounter()) {
-                const s = await report.combatantInfo(rawCombatLog);
+                await report.combatantInfo(rawCombatLog);
                 console.log('[IPC EVENT]=>combatant set', report.combatants().size);
               }
               break;
@@ -146,27 +160,55 @@ export class FileReader extends EventEmitter {
               console.log('Ending challenge mode');
               break;
             }
-            default: {
-              if (report.inEncounter() && report.combatants().size > 0) {
-                try {
-                  const { playerName, playerGuid } = parsePlayerInfo(rawCombatLog);
-                  if (playerGuid) {
-                    const combatant = report.combatants()?.get(playerGuid);
-                    if (combatant) {
-                      // player is in the list of combatants, update their name in the database
-                      // and then remove them from the map
-                      await updateCombatant(playerName, playerGuid, report.currentEncounterId());
-                      report.combatants().delete(playerGuid);
-                    }
-                    // NOTE: player is not in the combatant map, we've already delt with this combatant
-                  }
-                } catch (e) {
-                  console.log(e);
+            case 'SWING_DAMAGE':
+            case 'RANGE_DAMAGE':
+            case 'SPELL_DAMAGE':
+            case 'SPELL_PERIODIC_DAMAGE':
+            case 'SPELL_BUILDING_DAMAGE': {
+              if (report.inEncounter()) {
+                if (report.combatants().size > 0) {
+                  await checkCombatant(report, rawCombatLog);
                 }
+                dataQueue.enqueue(report.combatLog(rawCombatLog));
               }
+              break;
+            }
+            case 'SWING_DAMAGE_SUPPORT':
+            case 'RANGE_DAMAGE_SUPPORT':
+            case 'SPELL_DAMAGE_SUPPORT':
+            case 'SPELL_PERIODIC_DAMAGE_SUPPORT':
+            case 'SPELL_BUILDING_DAMAGE_SUPPORT': {
+              if (report.inEncounter()) {
+                if (report.combatants().size > 0) {
+                  await checkCombatant(report, rawCombatLog);
+                }
+                dataQueue.enqueue(report.combatLog(rawCombatLog));
+              }
+              break;
+            }
+            default: {
+              break;
+              // if (report.inEncounter() && report.combatants().size > 0) {
+              //   try {
+              //     const { playerName, playerGuid } = parsePlayerInfo(rawCombatLog);
+              //     if (playerGuid) {
+              //       const combatant = report.combatants()?.get(playerGuid);
+              //       if (combatant) {
+              //         // player is in the list of combatants, update their name in the database
+              //         // and then remove them from the map
+              //         await updateCombatant(playerName, playerGuid, report.currentEncounterId());
+              //         report.combatants().delete(playerGuid);
+              //       }
+              //       // NOTE: player is not in the combatant map, we've already delt with this combatant
+              //     }
+              //   } catch (e) {
+              //     console.log(e);
+              //   }
+              // }
             }
           }
         } catch (e) {
+          console.error(e);
           console.log(`Disgarding line ${line}`);
         }
 
