@@ -77,7 +77,6 @@ export function parseSpellDamageEvent(combatLog: RawCombatLog): SpellDamageEvent
   if (!combatLog.subevent.includes('SWING')) {
     prefix = prefixParams(args.splice(0, 3));
   }
-  // const prefix = prefixParams(args.splice(0, 3));
   const adv = advancedParams(args.splice(0, 17));
   const suffix = suffixParams(args);
 
