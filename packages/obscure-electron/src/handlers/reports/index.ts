@@ -1,4 +1,4 @@
-import { Encounter, Report, Combatant, CombatEvent, ZoneChange } from '@obscure/types';
+import { Encounter, Report, Combatant, CombatEvent, ZoneChange, SpellDamageEvent } from '@obscure/types';
 
 import CombatDB from '../../database';
 
@@ -56,6 +56,14 @@ export async function deleteReport(guid: string): Promise<{
       .del()
       .then(rows => Promise.resolve(rows)),
     conn<Combatant>('Combatants')
+      .where({ reportGuid: guid })
+      .del()
+      .then(rows => Promise.resolve(rows)),
+    conn<SpellDamageEvent>('ChallengeModes')
+      .where({ reportGuid: guid })
+      .del()
+      .then(rows => Promise.resolve(rows)),
+    conn<SpellDamageEvent>('SpellDamage')
       .where({ reportGuid: guid })
       .del()
       .then(rows => Promise.resolve(rows)),

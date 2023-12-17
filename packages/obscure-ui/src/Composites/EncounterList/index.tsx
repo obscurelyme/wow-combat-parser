@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { Box, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
 
 import type { Encounter } from '@obscure/types';
 import { WoWDifficultyMap } from '@obscure/types';
@@ -24,7 +24,21 @@ export default function EncounterList({ encounters }: EncounterListProps): React
               onClick={() => {
                 navigate(`/encounter/${encounter.guid}`);
               }}>
-              <ListItemText primary={primary} secondary={secondary} />
+              <ListItemText
+                primary={primary}
+                secondary={
+                  <Box>
+                    <Box>
+                      <Typography>{secondary}</Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="caption">
+                        Duration: {(encounter.endTime - encounter.startTime) / 1000}s
+                      </Typography>
+                    </Box>
+                  </Box>
+                }
+              />
             </ListItemButton>
           </ListItem>
         );
