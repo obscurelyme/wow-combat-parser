@@ -10,7 +10,6 @@ import { Report } from './types';
 import { ReportBuilder } from './reportbuilder';
 import { parseRawCombatLog } from './parsers/rawcombatlog';
 import { parseCombatLogVersionEvent } from './parsers/combatlogversion';
-import { parseSpellDamageEvent } from './parsers/spellDamage';
 import { parsePlayerInfo } from './parsers/parsePlayerName';
 import { updateCombatant } from './handlers/events/update';
 import { DataQueue } from './dataqueue';
@@ -164,15 +163,7 @@ export class FileReader {
             case 'RANGE_DAMAGE':
             case 'SPELL_DAMAGE':
             case 'SPELL_PERIODIC_DAMAGE':
-            case 'SPELL_BUILDING_DAMAGE': {
-              if (report.inEncounter()) {
-                if (report.combatants().size > 0) {
-                  await checkCombatant(report, rawCombatLog);
-                }
-                dataQueue.enqueue(report.combatLog(rawCombatLog));
-              }
-              break;
-            }
+            case 'SPELL_BUILDING_DAMAGE':
             case 'SWING_DAMAGE_SUPPORT':
             case 'RANGE_DAMAGE_SUPPORT':
             case 'SPELL_DAMAGE_SUPPORT':
@@ -186,25 +177,16 @@ export class FileReader {
               }
               break;
             }
+            case 'SPELL_HEAL':
+            case 'SPELL_PERIODIC_HEAL':
+            case 'SPELL_BUILDING_HEAL':
+            case 'SPELL_HEAL_SUPPORT':
+            case 'SPELL_PERIODIC_HEAL_SUPPORT':
+            case 'SPELL_BUILDING_HEAL_SUPPORT': {
+              break;
+            }
             default: {
               break;
-              // if (report.inEncounter() && report.combatants().size > 0) {
-              //   try {
-              //     const { playerName, playerGuid } = parsePlayerInfo(rawCombatLog);
-              //     if (playerGuid) {
-              //       const combatant = report.combatants()?.get(playerGuid);
-              //       if (combatant) {
-              //         // player is in the list of combatants, update their name in the database
-              //         // and then remove them from the map
-              //         await updateCombatant(playerName, playerGuid, report.currentEncounterId());
-              //         report.combatants().delete(playerGuid);
-              //       }
-              //       // NOTE: player is not in the combatant map, we've already delt with this combatant
-              //     }
-              //   } catch (e) {
-              //     console.log(e);
-              //   }
-              // }
             }
           }
         } catch (e) {

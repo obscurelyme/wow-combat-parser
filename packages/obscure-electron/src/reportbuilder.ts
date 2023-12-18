@@ -85,7 +85,7 @@ export class ReportBuilder {
       console.log(co.playerGuid);
     });
     console.log('========================================');
-    this._combatantMap.clear();
+    this.clearCombatants();
     return true;
   }
 
@@ -122,6 +122,10 @@ export class ReportBuilder {
 
   public combatants(): Map<string, Omit<Combatant, 'id' | 'playerName'>> {
     return this._combatantMap;
+  }
+
+  public clearCombatants(): void {
+    this._combatantMap.clear();
   }
 
   public currentEncounterId(): string {

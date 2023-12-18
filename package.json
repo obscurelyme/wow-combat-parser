@@ -24,7 +24,7 @@
     "debug:electron": "yarn workspace @obscure/electron debug",
     "build:electron": "yarn workspace @obscure/electron build",
     "build:types": "yarn workspace @obscure/types build",
-    "build": "yarn build:types && yarn build:ui && yarn build:electron && yarn package",
+    "build": "yarn build:types && yarn build:ui && yarn build:electron",
     "package": "electron-builder build --config ./electron-builder.config.js",
     "lint": "yarn lint:vite && yarn lint:electron",
     "lint:ui": "yarn workspace @obscure/ui lint",
